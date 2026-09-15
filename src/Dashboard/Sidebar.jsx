@@ -32,8 +32,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
   const [badges, setBadges] = useState(() => {
     const saved = loadBadges();
     return {
-      viajeros: saved.viajeros || 0,
-      conductores: saved.conductores || 0,
+      clientes: saved.clientes || 0,
+      repartidores: saved.repartidores || 0,
       usuarios: saved.usuarios || 0,
       documentos: saved.documentos || 0,
       solicitudes: saved.solicitudes || 0,
@@ -77,10 +77,10 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
         const rol = (data.rol || '').toUpperCase();
         setBadges(prev => {
           const updated = { ...prev, usuarios: prev.usuarios + 1 };
-          if (rol === 'CONDUCTOR' || rol === 'DRIVER') {
-            updated.conductores = prev.conductores + 1;
-          } else if (rol === 'PASAJERO' || rol === 'VIAJERO' || rol === 'PASSENGER') {
-            updated.viajeros = prev.viajeros + 1;
+          if (rol === 'REPARTIDOR' || rol === 'DRIVER') {
+            updated.repartidores = prev.repartidores + 1;
+          } else if (rol === 'CLIENTE' || rol === 'CLIENTE' || rol === 'CLIENTE') {
+            updated.clientes = prev.clientes + 1;
           }
           return updated;
         });
@@ -131,8 +131,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
 
   const menuItems = [
     { icon: <BsGrid1X2Fill />, label: "Dashboard", path: "/dashboard/home", badgeKey: null },
-    { icon: <BsPeopleFill />, label: "Viajeros", path: "/admin/viajeros", badgeKey: "viajeros" },
-    { icon: <BsFillGrid3X3GapFill />, label: "Conductores", path: "/admin/conductores", badgeKey: "conductores" },
+    { icon: <BsPeopleFill />, label: "Clientes", path: "/admin/clientes", badgeKey: "clientes" },
+    { icon: <BsFillGrid3X3GapFill />, label: "Repartidores", path: "/admin/repartidores", badgeKey: "repartidores" },
     { icon: <BsListCheck />, label: "Usuarios", path: "/admin/usuarios", badgeKey: "usuarios" },
     { icon: <BsMenuButtonWideFill />, label: "Vehículos", path: "/admin/vehiculos", badgeKey: null },
     { icon: <BsFileEarmarkTextFill />, label: "Documentos", path: "/admin/documentos", badgeKey: "documentos" },
@@ -194,7 +194,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
           minHeight: '91px'
         }}>
-          <img src={Logo} alt="Logo Moviflex" style={{ width: '100px', height: 'auto' }} />
+          <img src={Logo} alt="Logo DomiFlex" style={{ width: '100px', height: 'auto' }} />
           <button className="btn btn-link text-muted p-0" onClick={OpenSidebar}>
             <BsChevronLeft size={15} />
           </button>

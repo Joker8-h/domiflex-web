@@ -6,11 +6,11 @@ const FaqSection = () => {
     const secondaryColor = "#2d5a52";
 
     const questions = [
-        { q: "¿Es seguro viajar con MoviFlex?", a: "Absolutamente. Todos nuestros conductores pasan por un proceso de verificación de identidad, documentos del vehículo y antecedentes. Además, contamos con un sistema de calificación por estrellas." },
-        { q: "¿Cómo se dividen los gastos?", a: "MoviFlex calcula una tarifa sugerida justa basada en la distancia y el consumo de combustible, dividiéndola equitativamente entre los pasajeros." },
-        { q: "¿Puedo cancelar un viaje?", a: "Sí, puedes cancelar desde la app. Te recomendamos hacerlo con al menos 30 minutos de antelación para que el conductor o los pasajeros puedan reorganizar su ruta." },
-        { q: "¿Qué pasa si tengo un objeto perdido?", a: "Nuestra app permite contactar directamente al conductor después del viaje. También puedes escribirnos a soporte para ayudarte a recuperarlo." },
-        { q: "¿Qué métodos de pago aceptan?", a: "Actualmente manejamos pagos en efectivo directamente al conductor, pero estamos trabajando para integrar billeteras digitales muy pronto." }
+        { q: "¿Es seguro pedir domicilios con DomiFlex?", a: "Absolutamente. Todos nuestros repartidores pasan por un proceso de verificación de identidad, documentos del vehículo y antecedentes. Además, contamos con un sistema de calificación por estrellas." },
+        { q: "¿Cómo se calcula el costo de envío?", a: "DomiFlex estima un costo justo con base $2000 + $800 por km, más comisión por distancia (10% hasta 5 km, 12% hasta 15 km, 15% superior). Lo ves antes de confirmar tu pedido." },
+        { q: "¿Puedo cancelar un pedido?", a: "Sí, puedes cancelar desde la app. Te recomendamos hacerlo cuanto antes para que el repartidor o el comercio puedan reorganizar la entrega." },
+        { q: "¿Qué pasa si tengo un pedido incompleto o un objeto perdido?", a: "Nuestra app permite contactar directamente al repartidor después de la entrega. También puedes escribirnos a soporte para ayudarte." },
+        { q: "¿Qué métodos de pago aceptan?", a: "Actualmente manejamos pagos en efectivo contra entrega (tipoPago EFECTIVO asociado a tu idPedido), y estamos integrando billeteras digitales muy pronto." }
     ];
 
     return (

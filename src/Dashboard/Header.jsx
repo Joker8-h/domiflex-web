@@ -100,7 +100,7 @@ function Header() {
   };
 
   const getUserEmail = () => {
-    if (!usuario?.email) return "admin@moviflex.com";
+    if (!usuario?.email) return "admin@domiflex.com";
     return usuario.email;
   };
 
@@ -122,7 +122,7 @@ function Header() {
             <div className="text-center mb-2">
               <img
                 src={Logo}
-                alt="Logo Moviflexx"
+                alt="Logo DomiFlexx"
                 style={{
                   width: '100px',
                   height: 'auto',

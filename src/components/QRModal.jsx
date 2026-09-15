@@ -27,8 +27,9 @@ const QRModal = ({
   const getRolNombre = (idRol) => {
     const roles = {
       1: 'Administrador',
-      2: 'Conductor',
-      3: 'Viajero'
+      2: 'Repartidor',
+      3: 'Cliente',
+      4: 'Comercio'
     };
     return roles[idRol] || 'Usuario';
   };
@@ -36,8 +37,9 @@ const QRModal = ({
   const getRolColor = (idRol) => {
     const coloresRol = {
       1: '#ff6b6b',  // Rojo para admin
-      2: colores.secondary,  // Celeste para conductor
-      3: '#f59e0b'   // Naranja para viajero
+      2: colores.secondary,  // Celeste para repartidor
+      3: '#f59e0b',   // Naranja para cliente
+      4: '#8b5cf6'   // Morado para comercio
     };
     return coloresRol[idRol] || colores.secondary;
   };

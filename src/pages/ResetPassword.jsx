@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
-import LogoMoviflex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
@@ -84,7 +84,7 @@ function ResetPassword() {
                     <Col md={7} lg={6} className="d-none d-md-flex justify-content-center p-4">
                         <img
                             src={EscenaHomeBase}
-                            alt="Moviflex Reset"
+                            alt="DomiFlex Reset"
                             style={{ 
                                 width: '100%', 
                                 maxWidth: '550px', 
@@ -98,7 +98,7 @@ function ResetPassword() {
                         <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
                             <Card.Body className="p-4 p-md-5">
                                 <div className="text-center mb-4">
-                                    <img src={LogoMoviflex} alt="Logo" style={{ width: '150px' }} />
+                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
                                     <h4 className="mt-3 fw-bold" style={{ color: '#333' }}>Nueva Contraseña</h4>
                                     <p className="text-muted small">Ingresa tu nueva contraseña para acceder</p>
                                 </div>

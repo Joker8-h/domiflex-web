@@ -5,7 +5,7 @@ import { FaCar, FaFileImage, FaArrowLeft, FaCheckCircle, FaCamera, FaVideo, FaEx
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
 import Navbar from '../../components/Navbar';
-import LogoMoviflex from '../Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from '../Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from '../Imagenes/HomeBaseImage.png';
 import FondoPantalla from '../Imagenes/AutoresContacto.png';
 import toast, { Toaster } from 'react-hot-toast';
@@ -42,6 +42,7 @@ function VehicleRegistration() {
   const [modelo, setModelo] = useState("");
   const [placa, setPlaca] = useState("");
   const [capacidad, setCapacidad] = useState("");
+  const [tipo, setTipo] = useState("MOTO");
 
   const [fotoPlaca, setFotoPlaca] = useState("");
   const [fotoAuto1, setFotoAuto1] = useState("");
@@ -234,7 +235,6 @@ function VehicleRegistration() {
       const data = await resp.json();
       if (data.plate_text) {
         setPlaca(data.plate_text);
-        setFotoComprimida(base64);
         toast.success(`Placa detectada: ${data.plate_text}`, { id: toastId });
       } else {
         toast.error("No se pudo leer la placa automáticamente. Por favor ingrésala manual.", { id: toastId });
@@ -289,8 +289,15 @@ function VehicleRegistration() {
     }
 
     if (!capacidad || parseInt(capacidad) < 1) {
-      setError("La capacidad debe ser al menos 1 pasajero");
+      setError("La capacidad debe ser al menos 1 kg");
       toast.error("Capacidad inválida");
+      setLoading(false);
+      return;
+    }
+
+    if (!["MOTO", "BICICLETA", "CARRO", "FURGON"].includes(tipo)) {
+      setError("Selecciona un tipo de vehículo válido");
+      toast.error("Tipo de vehículo inválido");
       setLoading(false);
       return;
     }
@@ -318,6 +325,7 @@ function VehicleRegistration() {
         marca: marca.trim(),
         modelo: modelo.trim(),
         placa: placa.toUpperCase().trim(),
+        tipo,
         capacidad: parseInt(capacidad),
         fotoPlaca: fotoPlaca,
         fotoAuto1: fotoAuto1,
@@ -354,6 +362,7 @@ function VehicleRegistration() {
         setModelo("");
         setPlaca("");
         setCapacidad("");
+        setTipo("MOTO");
         setFotoPlaca("");
         setFotoAuto1("");
         setFotoAuto2("");
@@ -428,7 +437,7 @@ function VehicleRegistration() {
             <Col md={6} className="d-none d-md-flex justify-content-center p-4">
               <img
                 src={EscenaHomeBase}
-                alt="Moviflex Home"
+                alt="DomiFlex Home"
                 style={{ width: '100%', maxWidth: '500px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }}
               />
             </Col>
@@ -437,7 +446,7 @@ function VehicleRegistration() {
                 <Card.Body className="p-4 p-md-5">
 
                   <div className="text-center mb-4">
-                    <img src={LogoMoviflex} alt="Logo" style={{ width: '120px' }} />
+                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '120px' }} />
                   </div>
 
                   <h3 className="text-center mb-4" style={{ color: '#62d8d9', fontWeight: '600' }}>
@@ -515,17 +524,34 @@ function VehicleRegistration() {
                       </Col>
                       <Col md={6}>
                         <Form.Group className="mb-3">
-                          <Form.Label className="fw-bold small">Capacidad <span className="text-danger">*</span></Form.Label>
+                          <Form.Label className="fw-bold small">Tipo de vehículo <span className="text-danger">*</span></Form.Label>
+                          <Form.Select
+                            value={tipo}
+                            onChange={(e) => setTipo(e.target.value)}
+                            disabled={loading}
+                            style={{ borderRadius: '12px', backgroundColor: '#f8fafb', border: '1px solid #eee', padding: '10px 15px' }}
+                          >
+                            <option value="MOTO">MOTO</option>
+                            <option value="BICICLETA">BICICLETA</option>
+                            <option value="CARRO">CARRO</option>
+                            <option value="FURGON">FURGÓN</option>
+                          </Form.Select>
+                          <Form.Text className="text-muted small">Medio de reparto del domicilio</Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-bold small">Capacidad (kg) <span className="text-danger">*</span></Form.Label>
                           <Form.Control
                             type="number"
                             value={capacidad}
                             onChange={(e) => setCapacidad(e.target.value)}
-                            placeholder="Ej: 4"
+                            placeholder="Ej: 10"
                             min="1"
                             disabled={loading}
                             style={{ borderRadius: '12px', backgroundColor: '#f8fafb', border: '1px solid #eee', padding: '10px 15px' }}
                           />
-                          <Form.Text className="text-muted small">Número de pasajeros</Form.Text>
+                          <Form.Text className="text-muted small">Capacidad de carga en kilogramos</Form.Text>
                         </Form.Group>
                       </Col>
                     </Row>

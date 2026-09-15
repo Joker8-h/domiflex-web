@@ -92,7 +92,7 @@ const AdminVehicleRequests = () => {
                 <Row className="mb-4 align-items-center">
                     <Col>
                         <h2 className="fw-bold" style={{ color: '#333' }}>Solicitudes de Cambio de Vehículo</h2>
-                        <p className="text-muted">Revisa y aprueba las modificaciones de vehículos de los conductores.</p>
+                        <p className="text-muted">Revisa y aprueba las modificaciones de vehículos de los repartidores.</p>
                     </Col>
                     <Col xs="auto">
                         <Button
@@ -124,7 +124,7 @@ const AdminVehicleRequests = () => {
                             <Table responsive hover className="mb-0 align-middle">
                                 <thead className="bg-light">
                                     <tr>
-                                        <th className="px-4 py-3 border-0">Conductor</th>
+                                        <th className="px-4 py-3 border-0">Repartidor</th>
                                         <th className="py-3 border-0">Vehículo</th>
                                         <th className="py-3 border-0">Cambios Solicitados</th>
                                         <th className="py-3 border-0">Fecha</th>
@@ -199,7 +199,7 @@ const AdminVehicleRequests = () => {
                                     <div className="p-3 bg-light rounded-3">
                                         <p className="mb-1"><strong>Marca:</strong> {selectedSolicitud.vehiculo.marca}</p>
                                         <p className="mb-1"><strong>Modelo:</strong> {selectedSolicitud.vehiculo.modelo}</p>
-                                        <p className="mb-0"><strong>Capacidad:</strong> {selectedSolicitud.vehiculo.capacidad} pasajeros</p>
+                                        <p className="mb-0"><strong>Capacidad:</strong> {selectedSolicitud.vehiculo.capacidad} kg</p>
                                     </div>
                                 </Col>
                                 <Col md={6}>
@@ -214,7 +214,7 @@ const AdminVehicleRequests = () => {
                                             {selectedSolicitud.modeloNuevo && selectedSolicitud.modeloNuevo !== selectedSolicitud.vehiculo.modelo && <FaExchangeAlt className="ms-2 text-primary" size={12} />}
                                         </p>
                                         <p className="mb-0">
-                                            <strong>Capacidad:</strong> {selectedSolicitud.capacidadNueva || selectedSolicitud.vehiculo.capacidad} pasajeros
+                                            <strong>Capacidad:</strong> {selectedSolicitud.capacidadNueva || selectedSolicitud.vehiculo.capacidad} kg
                                             {selectedSolicitud.capacidadNueva && selectedSolicitud.capacidadNueva !== selectedSolicitud.vehiculo.capacidad && <FaExchangeAlt className="ms-2 text-primary" size={12} />}
                                         </p>
                                     </div>

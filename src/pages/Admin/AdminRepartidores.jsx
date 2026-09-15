@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from '../../config';
+import { API_URL } from "../../config";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Form, InputGroup } from "react-bootstrap";
 import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
 
@@ -189,7 +189,7 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
     );
 };
 
-const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, viajerosFiltrados, indicePrimerElemento, indiceUltimoElemento, busqueda, viajerosTotales }) => {
+const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, repartidoresFiltrados, indicePrimerElemento, indiceUltimoElemento, busqueda, repartidoresTotales }) => {
     if (totalPaginas <= 1) return null;
 
     const generarBotones = () => {
@@ -326,8 +326,8 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, viajerosFiltrad
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 px-4 pb-4" style={{ gap: '1rem' }}>
             <div className="text-muted text-center text-md-start" style={{ color: '#113d69', fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
-                Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, viajerosFiltrados.length)} de {viajerosFiltrados.length} viajeros
-                {busqueda && ` (filtrados de ${viajerosTotales} totales)`}
+                Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, repartidoresFiltrados.length)} de {repartidoresFiltrados.length} repartidores
+                {busqueda && ` (filtrados de ${repartidoresTotales} totales)`}
             </div>
             <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {generarBotones()}
@@ -336,9 +336,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, viajerosFiltrad
     );
 };
 
-function AdminViajeros() {
+function AdminRepartidores() {
     const { token } = useAuth();
-    const [viajeros, setViajeros] = useState([]);
+    const [repartidores, setRepartidores] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [paginaActual, setPaginaActual] = useState(1);
@@ -347,35 +347,35 @@ function AdminViajeros() {
     const elementosPorPagina = 10;
 
     useEffect(() => {
-        traerViajeros();
+        traerRepartidores();
     }, []);
 
-    const viajerosFiltrados = viajeros.filter(viajero => {
+    const repartidoresFiltrados = repartidores.filter(repartidor => {
         const terminoBusqueda = busqueda.toLowerCase();
         return (
-            viajero.email?.toLowerCase().includes(terminoBusqueda) ||
-            viajero.nombre?.toLowerCase().includes(terminoBusqueda) ||
-            viajero.idUsuarios?.toString().includes(terminoBusqueda) ||
-            viajero.telefono?.toLowerCase().includes(terminoBusqueda)
+            repartidor.email?.toLowerCase().includes(terminoBusqueda) ||
+            repartidor.nombre?.toLowerCase().includes(terminoBusqueda) ||
+            repartidor.idUsuarios?.toString().includes(terminoBusqueda) ||
+            repartidor.telefono?.toLowerCase().includes(terminoBusqueda)
         );
     });
 
     const indiceUltimoElemento = paginaActual * elementosPorPagina;
     const indicePrimerElemento = indiceUltimoElemento - elementosPorPagina;
-    const viajerosPaginados = viajerosFiltrados.slice(indicePrimerElemento, indiceUltimoElemento);
-    const totalPaginas = Math.ceil(viajerosFiltrados.length / elementosPorPagina);
+    const repartidoresPaginados = repartidoresFiltrados.slice(indicePrimerElemento, indiceUltimoElemento);
+    const totalPaginas = Math.ceil(repartidoresFiltrados.length / elementosPorPagina);
 
     const cambiarPagina = (numeroPagina) => {
         setPaginaActual(numeroPagina);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    async function traerViajeros() {
+    async function traerRepartidores() {
         try {
             setLoading(true);
             setError("");
 
-            const response = await fetch(`${API_URL}/auth/pasajeros`, {
+            const response = await fetch(`${API_URL}/auth/repartidores`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -396,13 +396,13 @@ function AdminViajeros() {
                 throw new Error("La respuesta del servidor no es válida");
             }
 
-            setViajeros(data);
+            setRepartidores(data);
             setPaginaActual(1);
 
         } catch (error) {
-            console.error("Error al traer viajeros:", error);
+            console.error("Error al traer repartidores:", error);
             setError(error.message);
-            setViajeros([]);
+            setRepartidores([]);
         } finally {
             setLoading(false);
         }
@@ -423,7 +423,7 @@ function AdminViajeros() {
         return new Date(fecha).toLocaleDateString();
     };
 
-    const cambiarEstadoViajero = async (id, estadoActual) => {
+    const cambiarEstadoRepartidor = async (id, estadoActual) => {
         try {
             const nuevoEstado = estadoActual === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
             const response = await fetch(`${API_URL}/auth/${id}/estado`, {
@@ -436,13 +436,13 @@ function AdminViajeros() {
             });
 
             if (!response.ok) throw new Error("Error al cambiar estado");
-            traerViajeros();
+            traerRepartidores();
         } catch (err) {
             setError(err.message);
         }
     };
 
-    const suspenderViajero = async (id) => {
+    const suspenderRepartidor = async (id) => {
         try {
             const response = await fetch(`${API_URL}/auth/${id}/estado`, {
                 method: "PATCH",
@@ -453,8 +453,8 @@ function AdminViajeros() {
                 body: JSON.stringify({ estado: 'SUSPENDIDO' })
             });
 
-            if (!response.ok) throw new Error("Error al suspender viajero");
-            traerViajeros();
+            if (!response.ok) throw new Error("Error al suspender repartidor");
+            traerRepartidores();
         } catch (err) {
             setError(err.message);
         }
@@ -480,10 +480,10 @@ function AdminViajeros() {
                                     color: '#113d69',
                                     letterSpacing: '-0.02em'
                                 }}>
-                                    Lista de Viajeros
+                                    Lista de Repartidores
                                 </h1>
                                 <p className="mb-0 small" style={{ color: '#113d69' }}>
-                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los viajeros registrados en la plataforma
+                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los repartidores registrados en la plataforma
                                 </p>
                             </Card.Body>
                         </Card>
@@ -525,21 +525,21 @@ function AdminViajeros() {
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
                             <StatsBadge bgColor="transparent" color="#113d69">
-                                Total: {viajeros.length}
+                                Total: {repartidores.length}
                             </StatsBadge>
                             {busqueda && (
                                 <StatsBadge isWhite>
-                                    Resultados: {viajerosFiltrados.length}
+                                    Resultados: {repartidoresFiltrados.length}
                                 </StatsBadge>
                             )}
                             <StatsBadge bgColor="#62d8d9" color="#ffffff">
-                                Activos: {viajeros.filter(v => v.estado === 'ACTIVO').length}
+                                Activos: {repartidores.filter(v => v.estado === 'ACTIVO').length}
                             </StatsBadge>
                             <StatsBadge bgColor="#cccbd2af" color="#113d69">
-                                Inactivos: {viajeros.filter(v => v.estado === 'INACTIVO').length}
+                                Inactivos: {repartidores.filter(v => v.estado === 'INACTIVO').length}
                             </StatsBadge>
                             <StatsBadge bgColor="#113d69" color="#ffffff">
-                                Suspendidos: {viajeros.filter(v => v.estado === 'SUSPENDIDO').length}
+                                Suspendidos: {repartidores.filter(v => v.estado === 'SUSPENDIDO').length}
                             </StatsBadge>
                         </div>
                     </Col>
@@ -566,7 +566,7 @@ function AdminViajeros() {
                                 {loading ? (
                                     <div className="text-center py-5">
                                         <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando viajeros...</p>
+                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando repartidores...</p>
                                     </div>
                                 ) : (
                                     <>
@@ -587,15 +587,15 @@ function AdminViajeros() {
                                                     </tr>
                                                 </thead>
                                                 <tbody style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
-                                                    {viajerosFiltrados.length === 0 ? (
+                                                    {repartidoresFiltrados.length === 0 ? (
                                                         <tr>
                                                             <td colSpan="7" className="text-center py-4" style={{ color: '#113d69' }}>
-                                                                {busqueda ? "No se encontraron viajeros con esos criterios" : "No hay viajeros registrados"}
+                                                                {busqueda ? "No se encontraron repartidores con esos criterios" : "No hay repartidores registrados"}
                                                             </td>
                                                         </tr>
                                                     ) : (
-                                                        viajerosPaginados.map((viajero, index) => (
-                                                            <tr key={viajero.idUsuarios} style={{
+                                                        repartidoresPaginados.map((repartidor, index) => (
+                                                            <tr key={repartidor.idUsuarios} style={{
                                                                 backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0.9)' : 'rgba(250, 250, 250, 0.9)'
                                                             }}>
                                                                 <td className="fw-semibold px-4">
@@ -609,7 +609,7 @@ function AdminViajeros() {
                                                                         minWidth: '50px',
                                                                         textAlign: 'center'
                                                                     }}>
-                                                                        {viajero.idUsuarios}
+                                                                        {repartidor.idUsuarios}
                                                                     </span>
                                                                 </td>
                                                                 <td>
@@ -626,10 +626,10 @@ function AdminViajeros() {
                                                                             border: '2px solid #62d8d9',
                                                                             flexShrink: 0
                                                                         }}>
-                                                                            {viajero.fotoPerfil ? (
+                                                                            {repartidor.fotoPerfil ? (
                                                                                 <img
-                                                                                    src={viajero.fotoPerfil}
-                                                                                    alt={viajero.nombre}
+                                                                                    src={repartidor.fotoPerfil}
+                                                                                    alt={repartidor.nombre}
                                                                                     style={{
                                                                                         width: '100%',
                                                                                         height: '100%',
@@ -639,7 +639,7 @@ function AdminViajeros() {
                                                                                         e.target.onerror = null;
                                                                                         e.target.style.display = 'none';
                                                                                         e.target.parentElement.innerHTML = '<span style="color: #113d69; font-weight: 600;">' +
-                                                                                            viajero.nombre?.charAt(0).toUpperCase() +
+                                                                                            repartidor.nombre?.charAt(0).toUpperCase() +
                                                                                             '</span>';
                                                                                     }}
                                                                                 />
@@ -649,32 +649,32 @@ function AdminViajeros() {
                                                                                     fontWeight: '600',
                                                                                     fontSize: '1rem'
                                                                                 }}>
-                                                                                    {viajero.nombre?.charAt(0).toUpperCase()}
+                                                                                    {repartidor.nombre?.charAt(0).toUpperCase()}
                                                                                 </span>
                                                                             )}
                                                                         </div>
                                                                         <div>
-                                                                            <div className="fw-medium" style={{ color: '#113d69' }}>{viajero.nombre}</div>
-                                                                            <small className="text-muted">ID: {viajero.idUsuarios}</small>
+                                                                            <div className="fw-medium" style={{ color: '#113d69' }}>{repartidor.nombre}</div>
+                                                                            <small className="text-muted">ID: {repartidor.idUsuarios}</small>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td style={{ color: '#113d69' }}>{viajero.email}</td>
+                                                                <td style={{ color: '#113d69' }}>{repartidor.email}</td>
                                                                 <td style={{ color: '#113d69' }}>
-                                                                    {viajero.telefono || <span className="text-muted fst-italic">No especificado</span>}
+                                                                    {repartidor.telefono || <span className="text-muted fst-italic">No especificado</span>}
                                                                 </td>
                                                                 <td>
-                                                                    <EstadoBadge estado={viajero.estado} />
+                                                                    <EstadoBadge estado={repartidor.estado} />
                                                                 </td>
                                                                 <td>
-                                                                    <div style={{ color: '#113d69' }}>{formatearFecha(viajero.creadoEn)}</div>
+                                                                    <div style={{ color: '#113d69' }}>{formatearFecha(repartidor.creadoEn)}</div>
                                                                 </td>
                                                                 <td>
                                                                     <div style={{ minWidth: '140px' }}>
                                                                         <AccionButton
-                                                                            estado={viajero.estado}
-                                                                            onActivarDesactivar={() => cambiarEstadoViajero(viajero.idUsuarios, viajero.estado)}
-                                                                            onSuspender={() => suspenderViajero(viajero.idUsuarios)}
+                                                                            estado={repartidor.estado}
+                                                                            onActivarDesactivar={() => cambiarEstadoRepartidor(repartidor.idUsuarios, repartidor.estado)}
+                                                                            onSuspender={() => suspenderRepartidor(repartidor.idUsuarios)}
                                                                         />
                                                                     </div>
                                                                 </td>
@@ -688,11 +688,11 @@ function AdminViajeros() {
                                             totalPaginas={totalPaginas}
                                             paginaActual={paginaActual}
                                             cambiarPagina={cambiarPagina}
-                                            viajerosFiltrados={viajerosFiltrados}
+                                            repartidoresFiltrados={repartidoresFiltrados}
                                             indicePrimerElemento={indicePrimerElemento}
                                             indiceUltimoElemento={indiceUltimoElemento}
                                             busqueda={busqueda}
-                                            viajerosTotales={viajeros.length}
+                                            repartidoresTotales={repartidores.length}
                                         />
                                     </>
                                 )}
@@ -705,4 +705,4 @@ function AdminViajeros() {
     );
 }
 
-export default AdminViajeros;
+export default AdminRepartidores;

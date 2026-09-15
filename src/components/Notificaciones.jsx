@@ -159,7 +159,7 @@ function Notificaciones() {
   const getIcono = (tipo) => {
     const iconos = {
       SISTEMA: { icon: FaExclamationCircle, color: '#6366f1', bg: '#EEF2FF' },
-      VIAJE: { icon: FaCar, color: '#10b981', bg: '#E7F7F0' },
+      PEDIDO: { icon: FaCar, color: '#10b981', bg: '#E7F7F0' },
       PAGO: { icon: FaMoneyBillWave, color: '#f59e0b', bg: '#FEF3C7' },
       MENSAJE: { icon: FaEnvelope, color: '#3b82f6', bg: '#E8F0FE' }
     };

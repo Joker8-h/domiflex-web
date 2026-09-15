@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../../config";
+import { API_URL } from '../../config';
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Form, InputGroup } from "react-bootstrap";
 import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
 
@@ -189,7 +189,7 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
     );
 };
 
-const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, conductoresFiltrados, indicePrimerElemento, indiceUltimoElemento, busqueda, conductoresTotales }) => {
+const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrados, indicePrimerElemento, indiceUltimoElemento, busqueda, clientesTotales }) => {
     if (totalPaginas <= 1) return null;
 
     const generarBotones = () => {
@@ -326,8 +326,8 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, conductoresFilt
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 px-4 pb-4" style={{ gap: '1rem' }}>
             <div className="text-muted text-center text-md-start" style={{ color: '#113d69', fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
-                Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, conductoresFiltrados.length)} de {conductoresFiltrados.length} conductores
-                {busqueda && ` (filtrados de ${conductoresTotales} totales)`}
+                Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, clientesFiltrados.length)} de {clientesFiltrados.length} clientes
+                {busqueda && ` (filtrados de ${clientesTotales} totales)`}
             </div>
             <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {generarBotones()}
@@ -336,9 +336,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, conductoresFilt
     );
 };
 
-function AdminConductores() {
+function AdminClientes() {
     const { token } = useAuth();
-    const [conductores, setConductores] = useState([]);
+    const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [paginaActual, setPaginaActual] = useState(1);
@@ -347,35 +347,35 @@ function AdminConductores() {
     const elementosPorPagina = 10;
 
     useEffect(() => {
-        traerConductores();
+        traerClientes();
     }, []);
 
-    const conductoresFiltrados = conductores.filter(conductor => {
+    const clientesFiltrados = clientes.filter(cliente => {
         const terminoBusqueda = busqueda.toLowerCase();
         return (
-            conductor.email?.toLowerCase().includes(terminoBusqueda) ||
-            conductor.nombre?.toLowerCase().includes(terminoBusqueda) ||
-            conductor.idUsuarios?.toString().includes(terminoBusqueda) ||
-            conductor.telefono?.toLowerCase().includes(terminoBusqueda)
+            cliente.email?.toLowerCase().includes(terminoBusqueda) ||
+            cliente.nombre?.toLowerCase().includes(terminoBusqueda) ||
+            cliente.idUsuarios?.toString().includes(terminoBusqueda) ||
+            cliente.telefono?.toLowerCase().includes(terminoBusqueda)
         );
     });
 
     const indiceUltimoElemento = paginaActual * elementosPorPagina;
     const indicePrimerElemento = indiceUltimoElemento - elementosPorPagina;
-    const conductoresPaginados = conductoresFiltrados.slice(indicePrimerElemento, indiceUltimoElemento);
-    const totalPaginas = Math.ceil(conductoresFiltrados.length / elementosPorPagina);
+    const clientesPaginados = clientesFiltrados.slice(indicePrimerElemento, indiceUltimoElemento);
+    const totalPaginas = Math.ceil(clientesFiltrados.length / elementosPorPagina);
 
     const cambiarPagina = (numeroPagina) => {
         setPaginaActual(numeroPagina);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    async function traerConductores() {
+    async function traerClientes() {
         try {
             setLoading(true);
             setError("");
 
-            const response = await fetch(`${API_URL}/auth/conductores`, {
+            const response = await fetch(`${API_URL}/auth/clientes`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -396,13 +396,13 @@ function AdminConductores() {
                 throw new Error("La respuesta del servidor no es válida");
             }
 
-            setConductores(data);
+            setClientes(data);
             setPaginaActual(1);
 
         } catch (error) {
-            console.error("Error al traer conductores:", error);
+            console.error("Error al traer clientes:", error);
             setError(error.message);
-            setConductores([]);
+            setClientes([]);
         } finally {
             setLoading(false);
         }
@@ -423,7 +423,7 @@ function AdminConductores() {
         return new Date(fecha).toLocaleDateString();
     };
 
-    const cambiarEstadoConductor = async (id, estadoActual) => {
+    const cambiarEstadoCliente = async (id, estadoActual) => {
         try {
             const nuevoEstado = estadoActual === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
             const response = await fetch(`${API_URL}/auth/${id}/estado`, {
@@ -436,13 +436,13 @@ function AdminConductores() {
             });
 
             if (!response.ok) throw new Error("Error al cambiar estado");
-            traerConductores();
+            traerClientes();
         } catch (err) {
             setError(err.message);
         }
     };
 
-    const suspenderConductor = async (id) => {
+    const suspenderCliente = async (id) => {
         try {
             const response = await fetch(`${API_URL}/auth/${id}/estado`, {
                 method: "PATCH",
@@ -453,8 +453,8 @@ function AdminConductores() {
                 body: JSON.stringify({ estado: 'SUSPENDIDO' })
             });
 
-            if (!response.ok) throw new Error("Error al suspender conductor");
-            traerConductores();
+            if (!response.ok) throw new Error("Error al suspender cliente");
+            traerClientes();
         } catch (err) {
             setError(err.message);
         }
@@ -480,10 +480,10 @@ function AdminConductores() {
                                     color: '#113d69',
                                     letterSpacing: '-0.02em'
                                 }}>
-                                    Lista de Conductores
+                                    Lista de Clientes
                                 </h1>
                                 <p className="mb-0 small" style={{ color: '#113d69' }}>
-                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los conductores registrados en la plataforma
+                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los clientes registrados en la plataforma
                                 </p>
                             </Card.Body>
                         </Card>
@@ -525,21 +525,21 @@ function AdminConductores() {
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
                             <StatsBadge bgColor="transparent" color="#113d69">
-                                Total: {conductores.length}
+                                Total: {clientes.length}
                             </StatsBadge>
                             {busqueda && (
                                 <StatsBadge isWhite>
-                                    Resultados: {conductoresFiltrados.length}
+                                    Resultados: {clientesFiltrados.length}
                                 </StatsBadge>
                             )}
                             <StatsBadge bgColor="#62d8d9" color="#ffffff">
-                                Activos: {conductores.filter(v => v.estado === 'ACTIVO').length}
+                                Activos: {clientes.filter(v => v.estado === 'ACTIVO').length}
                             </StatsBadge>
                             <StatsBadge bgColor="#cccbd2af" color="#113d69">
-                                Inactivos: {conductores.filter(v => v.estado === 'INACTIVO').length}
+                                Inactivos: {clientes.filter(v => v.estado === 'INACTIVO').length}
                             </StatsBadge>
                             <StatsBadge bgColor="#113d69" color="#ffffff">
-                                Suspendidos: {conductores.filter(v => v.estado === 'SUSPENDIDO').length}
+                                Suspendidos: {clientes.filter(v => v.estado === 'SUSPENDIDO').length}
                             </StatsBadge>
                         </div>
                     </Col>
@@ -566,7 +566,7 @@ function AdminConductores() {
                                 {loading ? (
                                     <div className="text-center py-5">
                                         <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando conductores...</p>
+                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando clientes...</p>
                                     </div>
                                 ) : (
                                     <>
@@ -587,15 +587,15 @@ function AdminConductores() {
                                                     </tr>
                                                 </thead>
                                                 <tbody style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
-                                                    {conductoresFiltrados.length === 0 ? (
+                                                    {clientesFiltrados.length === 0 ? (
                                                         <tr>
                                                             <td colSpan="7" className="text-center py-4" style={{ color: '#113d69' }}>
-                                                                {busqueda ? "No se encontraron conductores con esos criterios" : "No hay conductores registrados"}
+                                                                {busqueda ? "No se encontraron clientes con esos criterios" : "No hay clientes registrados"}
                                                             </td>
                                                         </tr>
                                                     ) : (
-                                                        conductoresPaginados.map((conductor, index) => (
-                                                            <tr key={conductor.idUsuarios} style={{
+                                                        clientesPaginados.map((cliente, index) => (
+                                                            <tr key={cliente.idUsuarios} style={{
                                                                 backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0.9)' : 'rgba(250, 250, 250, 0.9)'
                                                             }}>
                                                                 <td className="fw-semibold px-4">
@@ -609,7 +609,7 @@ function AdminConductores() {
                                                                         minWidth: '50px',
                                                                         textAlign: 'center'
                                                                     }}>
-                                                                        {conductor.idUsuarios}
+                                                                        {cliente.idUsuarios}
                                                                     </span>
                                                                 </td>
                                                                 <td>
@@ -626,10 +626,10 @@ function AdminConductores() {
                                                                             border: '2px solid #62d8d9',
                                                                             flexShrink: 0
                                                                         }}>
-                                                                            {conductor.fotoPerfil ? (
+                                                                            {cliente.fotoPerfil ? (
                                                                                 <img
-                                                                                    src={conductor.fotoPerfil}
-                                                                                    alt={conductor.nombre}
+                                                                                    src={cliente.fotoPerfil}
+                                                                                    alt={cliente.nombre}
                                                                                     style={{
                                                                                         width: '100%',
                                                                                         height: '100%',
@@ -639,7 +639,7 @@ function AdminConductores() {
                                                                                         e.target.onerror = null;
                                                                                         e.target.style.display = 'none';
                                                                                         e.target.parentElement.innerHTML = '<span style="color: #113d69; font-weight: 600;">' +
-                                                                                            conductor.nombre?.charAt(0).toUpperCase() +
+                                                                                            cliente.nombre?.charAt(0).toUpperCase() +
                                                                                             '</span>';
                                                                                     }}
                                                                                 />
@@ -649,32 +649,32 @@ function AdminConductores() {
                                                                                     fontWeight: '600',
                                                                                     fontSize: '1rem'
                                                                                 }}>
-                                                                                    {conductor.nombre?.charAt(0).toUpperCase()}
+                                                                                    {cliente.nombre?.charAt(0).toUpperCase()}
                                                                                 </span>
                                                                             )}
                                                                         </div>
                                                                         <div>
-                                                                            <div className="fw-medium" style={{ color: '#113d69' }}>{conductor.nombre}</div>
-                                                                            <small className="text-muted">ID: {conductor.idUsuarios}</small>
+                                                                            <div className="fw-medium" style={{ color: '#113d69' }}>{cliente.nombre}</div>
+                                                                            <small className="text-muted">ID: {cliente.idUsuarios}</small>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td style={{ color: '#113d69' }}>{conductor.email}</td>
+                                                                <td style={{ color: '#113d69' }}>{cliente.email}</td>
                                                                 <td style={{ color: '#113d69' }}>
-                                                                    {conductor.telefono || <span className="text-muted fst-italic">No especificado</span>}
+                                                                    {cliente.telefono || <span className="text-muted fst-italic">No especificado</span>}
                                                                 </td>
                                                                 <td>
-                                                                    <EstadoBadge estado={conductor.estado} />
+                                                                    <EstadoBadge estado={cliente.estado} />
                                                                 </td>
                                                                 <td>
-                                                                    <div style={{ color: '#113d69' }}>{formatearFecha(conductor.creadoEn)}</div>
+                                                                    <div style={{ color: '#113d69' }}>{formatearFecha(cliente.creadoEn)}</div>
                                                                 </td>
                                                                 <td>
                                                                     <div style={{ minWidth: '140px' }}>
                                                                         <AccionButton
-                                                                            estado={conductor.estado}
-                                                                            onActivarDesactivar={() => cambiarEstadoConductor(conductor.idUsuarios, conductor.estado)}
-                                                                            onSuspender={() => suspenderConductor(conductor.idUsuarios)}
+                                                                            estado={cliente.estado}
+                                                                            onActivarDesactivar={() => cambiarEstadoCliente(cliente.idUsuarios, cliente.estado)}
+                                                                            onSuspender={() => suspenderCliente(cliente.idUsuarios)}
                                                                         />
                                                                     </div>
                                                                 </td>
@@ -688,11 +688,11 @@ function AdminConductores() {
                                             totalPaginas={totalPaginas}
                                             paginaActual={paginaActual}
                                             cambiarPagina={cambiarPagina}
-                                            conductoresFiltrados={conductoresFiltrados}
+                                            clientesFiltrados={clientesFiltrados}
                                             indicePrimerElemento={indicePrimerElemento}
                                             indiceUltimoElemento={indiceUltimoElemento}
                                             busqueda={busqueda}
-                                            conductoresTotales={conductores.length}
+                                            clientesTotales={clientes.length}
                                         />
                                     </>
                                 )}
@@ -705,4 +705,4 @@ function AdminConductores() {
     );
 }
 
-export default AdminConductores;
+export default AdminClientes;

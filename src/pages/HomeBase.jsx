@@ -89,20 +89,20 @@ function HomeBase() {
 
   const verdeMenta = '#56bca7';
 
-  // TARJETAS PARA USUARIOS (4)
+  // TARJETAS PARA CLIENTES (4) — DomiFlex domicilios
   const slidesUsuario = [
-    { id: 1, titulo: "Regístrate Como Viajero", desc: "¡Crea tu cuenta desde nuestra app!" },
-    { id: 2, titulo: "Busca Rutas", desc: "Busca rutas disponibles para tu destino." },
-    { id: 3, titulo: "Reserva tu Viaje", desc: "Selecciona tu asiento y confirma tu reserva." },
-    { id: 4, titulo: "Viaja Seguro", desc: "Disfruta de un viaje con conductores verificados." },
+    { id: 1, titulo: "Regístrate Como Cliente", desc: "¡Crea tu cuenta desde nuestra app!" },
+    { id: 2, titulo: "Pide tu Domicilio", desc: "Solicita la recogida y entrega de tu pedido." },
+    { id: 3, titulo: "Confirma tu Pedido", desc: "Revisa el costo de envío y confirma tu pedido." },
+    { id: 4, titulo: "Recibe Seguro", desc: "Sigue tu pedido con repartidores verificados." },
   ];
 
-  // TARJETAS PARA CONDUCTORES (4)
-  const slidesConductor = [
-    { id: 1, titulo: "Regístrate Como Conductor", desc: "¡Registrate como conductor desde la web!" },
-    { id: 2, titulo: "Crea Rutas", desc: "Crea tu propia ruta fija y compártela." },
-    { id: 3, titulo: "Recibe Solicitudes", desc: "Acepta viajeros que quieran unirse a tu ruta." },
-    { id: 4, titulo: "Gana Dinero", desc: "Optimiza tus viajes y genera ingresos extras." },
+  // TARJETAS PARA REPARTIDORES (4)
+  const slidesRepartidor = [
+    { id: 1, titulo: "Regístrate Como Repartidor", desc: "¡Regístrate como repartidor desde la web!" },
+    { id: 2, titulo: "Acepta Pedidos", desc: "Recibe solicitudes de domicilios cerca de ti." },
+    { id: 3, titulo: "Entrega y Confirma", desc: "Acepta pedidos y actualiza su estado de entrega." },
+    { id: 4, titulo: "Gana Dinero", desc: "Optimiza tus entregas y genera ingresos extras." },
   ];
 
   // =======================
@@ -194,7 +194,7 @@ function HomeBase() {
           <Row className="justify-content-center text-center">
             <Col lg={10}>
               <h1 className="display-4 fw-bold mb-3 animate__animated animate__fadeInDown" style={{ color: '#113d69' }}>
-                Conectamos personas. <span style={{ color: '#56bca7' }}>Optimizamos trayectos.</span>
+                Domicilios rápidos. <span style={{ color: '#56bca7' }}>Repartidores verificados.</span>
               </h1>
             </Col>
           </Row>
@@ -244,8 +244,8 @@ function HomeBase() {
             </Col>
           </Row>
 
-          {/* SECCIÓN PARA USUARIOS */}
-          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Viajero</h3>
+          {/* SECCIÓN PARA CLIENTES */}
+          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Cliente</h3>
           <Row className="g-4 mb-5">
             {slidesUsuario.map((item) => (
               <Col key={item.id} xs={12} sm={6} lg={3}>
@@ -303,10 +303,10 @@ function HomeBase() {
             ))}
           </Row>
 
-          {/* SECCIÓN PARA CONDUCTORES */}
-          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Conductor</h3>
+          {/* SECCIÓN PARA REPARTIDORES */}
+          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Repartidor</h3>
           <Row className="g-4">
-            {slidesConductor.map((item) => (
+            {slidesRepartidor.map((item) => (
               <Col key={item.id} xs={12} sm={6} lg={3}>
                 <div style={{
                   background: 'white',
@@ -398,8 +398,8 @@ function HomeBase() {
                 <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
                 
                 <div className="text-center mb-5" style={{ position: 'relative', zIndex: 2 }}>
-                  <h2 className="fw-bold" style={{ color: '#fff', fontSize: '3rem', letterSpacing: '-1px' }}>Equipo MoviFlex</h2>
-                  <p className="text-white" style={{ fontSize: '1.2rem', opacity: 0.95 }}>Los cerebros mela detrás de tu nueva forma de viajar</p>
+                  <h2 className="fw-bold" style={{ color: '#fff', fontSize: '3rem', letterSpacing: '-1px' }}>Equipo DomiFlex</h2>
+                  <p className="text-white" style={{ fontSize: '1.2rem', opacity: 0.95 }}>Los cerebros detrás de tu nueva forma de pedir domicilios</p>
                 </div>
                 <Row className="justify-content-center g-4" style={{ position: 'relative', zIndex: 2 }}>
                   {autores.map((autor) => (
@@ -608,7 +608,7 @@ function HomeBase() {
           >
             Registrarse Ahora
           </Button>
-          <p className="mt-5 text-white small">© 2025 MoviFlexx.</p>
+          <p className="mt-5 text-white small">© 2026 DomiFlex.</p>
         </Container>
       </footer>
     </div>

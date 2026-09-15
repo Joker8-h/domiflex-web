@@ -242,7 +242,7 @@ function AdminReportesPago() {
             });
             if (res.ok) {
                 const data = await res.json();
-                toast.success(`Verificación completada. ${data.suspendidos} conductores suspendidos de ${data.verificados} verificados.`);
+                toast.success(`Verificación completada. ${data.suspendidos} repartidores suspendidos de ${data.verificados} verificados.`);
                 cargarReportes();
             }
         } catch (err) {
@@ -314,7 +314,7 @@ function AdminReportesPago() {
                         <BsCashStack style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
                         Reportes de Pago
                     </h3>
-                    <p style={{ color: '#6c757d', margin: 0 }}>Gestión de comprobantes de pago de conductores</p>
+                    <p style={{ color: '#6c757d', margin: 0 }}>Gestión de comprobantes de pago de repartidores</p>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <CustomButton
@@ -440,7 +440,7 @@ function AdminReportesPago() {
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead style={{ backgroundColor: '#f8f9fa' }}>
                                 <tr>
-                                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#113d69' }}>Conductor</th>
+                                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#113d69' }}>Repartidor</th>
                                     <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#113d69' }}>Mes</th>
                                     <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#113d69' }}>Monto Comisión</th>
                                     <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#113d69' }}>Cant. Enviada</th>
@@ -586,7 +586,7 @@ function AdminReportesPago() {
                             {reporteSeleccionado && (
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                     <div>
-                                        <p style={{ marginBottom: '0.5rem' }}><strong style={{ color: '#113d69' }}>Conductor:</strong> <span style={{ color: '#113d69' }}>{reporteSeleccionado.usuario?.nombre}</span></p>
+                                        <p style={{ marginBottom: '0.5rem' }}><strong style={{ color: '#113d69' }}>Repartidor:</strong> <span style={{ color: '#113d69' }}>{reporteSeleccionado.usuario?.nombre}</span></p>
                                         <p style={{ marginBottom: '0.5rem' }}><strong style={{ color: '#113d69' }}>Email:</strong> <span style={{ color: '#113d69' }}>{reporteSeleccionado.usuario?.email}</span></p>
                                         <p style={{ marginBottom: '0.5rem' }}><strong style={{ color: '#113d69' }}>Mes:</strong> <span style={{ color: '#113d69' }}>{formatearMes(reporteSeleccionado.mesCorrespondiente)}</span></p>
                                         <p style={{ marginBottom: '0.5rem' }}><strong style={{ color: '#113d69' }}>Monto Esperado:</strong> <span style={{ fontWeight: 'bold', color: '#62d8d9' }}>${Number(reporteSeleccionado.montoComision).toLocaleString()} COP</span></p>
@@ -730,7 +730,7 @@ function AdminReportesPago() {
                         </h4>
                         <p style={{ color: '#6c757d', marginBottom: '1.5rem', lineHeight: '1.5' }}>
                             ¿Está seguro de ejecutar la verificación mensual?<br />
-                            Los conductores sin pago aprobado serán suspendidos.
+                            Los repartidores sin pago aprobado serán suspendidos.
                         </p>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
                             <CustomButton

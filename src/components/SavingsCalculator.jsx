@@ -4,34 +4,40 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { FaWallet } from "react-icons/fa";
 
 const SavingsCalculator = () => {
-    const [distancia, setDistancia] = useState(15); 
-    const [dias, setDias] = useState(5); 
+    const [distancia, setDistancia] = useState(5); 
+    const [pedidos, setPedidos] = useState(8); 
     
     const [datos, setDatos] = useState([]);
 
     const brandColor = "#56bca7"; 
     const secondaryColor = "#2d5a52"; 
     const [isMelo, setIsMelo] = useState(false);
-    const savings = (datos[0]?.valor || 0) - (datos[1]?.valor || 0);
+    const costoTotal = datos[0]?.valor || 0;
 
     useEffect(() => {
-        if (savings > 500000) setIsMelo(true);
+        if (costoTotal > 100000) setIsMelo(true);
         else setIsMelo(false);
-    }, [savings]);
+    }, [costoTotal]);
     useEffect(() => {
-        // DATOS REALES APROXIMADOS COLOMBIA 2024
-        // Costo promedio Taxi/Uber por km: ~$3.500 COP
-        // Costo promedio MoviFlex (compartido): ~$1.800 COP
-        
-        const kmMensuales = distancia * dias * 4;
-        const costoSolo = kmMensuales * 3500; 
-        const costoMoviflex = kmMensuales * 1800; 
+        // DomiFlex: costo de envío base $2000 + $800/km
+        // Comisión por distancia: <=5km 10%, <=15km 12%, >15km 15%
+        const redondearCop = (monto) => {
+            if (!monto || monto <= 0) return 0;
+            const res = Math.ceil(monto / 100) * 100;
+            return Math.max(res, 500);
+        };
+        const subtotal = redondearCop(2000 + 800 * distancia);
+        let tasa = 0.15;
+        if (distancia <= 5) tasa = 0.10;
+        else if (distancia <= 15) tasa = 0.12;
+        const comision = redondearCop(subtotal * tasa);
+        const totalPedido = redondearCop(subtotal + comision);
         
         setDatos([
-            { name: "Transporte Solo", valor: costoSolo, color: "#d1d8d6" },
-            { name: "Con MoviFlex", valor: costoMoviflex, color: brandColor }
+            { name: "Subtotal envío", valor: subtotal, color: "#d1d8d6" },
+            { name: "Total con comisión", valor: totalPedido, color: brandColor }
         ]);
-    }, [distancia, dias]);
+    }, [distancia, pedidos]);
 
     const formatCurrency = (val) => {
         if (isNaN(val) || val === undefined) return "$ 0";
@@ -51,15 +57,15 @@ const SavingsCalculator = () => {
                     <Col lg={6} className="mb-4 mb-lg-0">
                         <div className="pe-lg-5">
                             <h2 className="fw-bold mb-4" style={{ color: brandColor, fontSize: '2.5rem' }}>
-                                Tu bolsillo y el planeta <span style={{ color: secondaryColor }}>te lo agradecerán</span>
+                                Calcula tu <span style={{ color: secondaryColor }}>costo de envío</span>
                             </h2>
                             <p className="text-muted mb-5" style={{ fontSize: '1.1rem' }}>
-                                Ajusta tu rutina y mira cuánto dinero ahorras al mes simplemente compartiendo tu viaje.
+                                Ajusta la distancia y mira el costo estimado de tu domicilio con DomiFlex: base $2000 + $800/km.
                             </p>
 
                             <Form.Group className="mb-4">
                                 <div className="d-flex justify-content-between">
-                                    <Form.Label className="fw-bold" style={{ color: secondaryColor }}>Recorrido diario total (km)</Form.Label>
+                                    <Form.Label className="fw-bold" style={{ color: secondaryColor }}>Distancia del domicilio (km)</Form.Label>
                                     <span className="badge rounded-pill" style={{ backgroundColor: brandColor }}>{distancia} km</span>
                                 </div>
                                 <Form.Range 
@@ -71,13 +77,13 @@ const SavingsCalculator = () => {
 
                             <Form.Group className="mb-4">
                                 <div className="d-flex justify-content-between">
-                                    <Form.Label className="fw-bold" style={{ color: secondaryColor }}>Días compartidos a la semana</Form.Label>
-                                    <span className="badge rounded-pill" style={{ backgroundColor: brandColor }}>{dias} días</span>
+                                    <Form.Label className="fw-bold" style={{ color: secondaryColor }}>Pedidos al mes</Form.Label>
+                                    <span className="badge rounded-pill" style={{ backgroundColor: brandColor }}>{pedidos} pedidos</span>
                                 </div>
                                 <Form.Range 
-                                    min="1" max="7" 
-                                    value={dias} 
-                                    onChange={(e) => setDias(parseInt(e.target.value))} 
+                                    min="1" max="60" 
+                                    value={pedidos} 
+                                    onChange={(e) => setPedidos(parseInt(e.target.value))} 
                                 />
                             </Form.Group>
 
@@ -96,9 +102,9 @@ const SavingsCalculator = () => {
                                         <FaWallet size={28} />
                                     </div>
                                     <div>
-                                        <h6 className="mb-0 opacity-75 fw-bold">{isMelo ? '¡Ahorro nivel PRO!' : 'Ahorro mensual certificado'}</h6>
+                                        <h6 className="mb-0 opacity-75 fw-bold">{isMelo ? '¡Pedido largo detectado!' : 'Costo estimado por pedido'}</h6>
                                         <h2 className="fw-bold mb-0">
-                                            {formatCurrency(savings)} <small style={{ fontSize: '1rem' }}>COP</small>
+                                            {formatCurrency(costoTotal)} <small style={{ fontSize: '1rem' }}>COP</small>
                                         </h2>
                                     </div>
                                 </div>
@@ -108,7 +114,7 @@ const SavingsCalculator = () => {
                     
                     <Col lg={6}>
                         <div className="bg-white p-4 rounded-4 shadow-sm border" style={{ minHeight: "420px" }}>
-                            <h5 className="text-center mb-4 fw-bold" style={{ color: brandColor }}>Análisis de Gastos Mensuales (Pesos COP)</h5>
+                            <h5 className="text-center mb-4 fw-bold" style={{ color: brandColor }}>Costo de Envío DomiFlex (Pesos COP)</h5>
                             <div style={{ width: '100%', height: '320px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={datos} margin={{ top: 20, right: 30, left: 50, bottom: 5 }}>
@@ -131,7 +137,7 @@ const SavingsCalculator = () => {
                                 </ResponsiveContainer>
                             </div>
                             <div className="text-center mt-3 small text-muted italic">
-                                * Cálculos basados en promedios de tarifas de transporte privado en Colombia (2024).
+                                * Base $2000 + $800/km. Comisión por distancia: 10% hasta 5 km, 12% hasta 15 km, 15% superior.
                             </div>
                         </div>
                     </Col>

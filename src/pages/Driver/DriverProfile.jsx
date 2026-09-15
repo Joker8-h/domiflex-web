@@ -182,7 +182,7 @@ function DriverProfile() {
     promedio: 0,
     total: 0
   });
-  const [totalViajes, setTotalViajes] = useState(0);
+  const [totalPedidos, setTotalPedidos] = useState(0);
 
   const [documentos, setDocumentos] = useState([]);
   const [cargandoDocumentos, setCargandoDocumentos] = useState(false);
@@ -253,10 +253,10 @@ function DriverProfile() {
   }, [token, usuario?.idUsuarios]);
 
   useEffect(() => {
-    const obtenerEstadisticasViajes = async () => {
+    const obtenerEstadisticasPedidos = async () => {
       if (!token || !usuario?.idUsuarios) return;
       try {
-        const respuesta = await fetch(`${API_URL}/viajes/mis-viajes`, {
+        const respuesta = await fetch(`${API_URL}/pedidos/mis-pedidos`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -264,23 +264,23 @@ function DriverProfile() {
         });
         if (respuesta.ok) {
           const data = await respuesta.json();
-          console.log("🚗 Viajes recibidos:", data);
+          console.log("🚗 Pedidos recibidos:", data);
 
           if (Array.isArray(data)) {
-            const viajesCompletados = data.filter(v => v.estado === 'FINALIZADO');
-            setTotalViajes(viajesCompletados.length);
-          } else if (data && data.totalViajes) {
-            setTotalViajes(data.totalViajes);
+            const pedidosEntregados = data.filter(v => v.estado === 'ENTREGADO');
+            setTotalPedidos(pedidosEntregados.length);
+          } else if (data && data.totalPedidos) {
+            setTotalPedidos(data.totalPedidos);
           } else {
-            setTotalViajes(0);
+            setTotalPedidos(0);
           }
         }
       } catch (error) {
         console.error("Error al obtener estadísticas:", error);
-        setTotalViajes(0);
+        setTotalPedidos(0);
       }
     };
-    obtenerEstadisticasViajes();
+    obtenerEstadisticasPedidos();
   }, [token, usuario?.idUsuarios]);
 
   useEffect(() => {
@@ -460,7 +460,7 @@ function DriverProfile() {
                   borderBottom: '1px solid #e9ecef',
                   backgroundColor: '#ffffff'
                 }}>
-                  <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Mi Perfil de Conductor</h2>
+                  <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Mi Perfil de Repartidor</h2>
                 </div>
 
                 <div style={{
@@ -528,8 +528,8 @@ function DriverProfile() {
                     <hr style={{ margin: '1rem 0' }} />
                     
                     <div style={{ textAlign: 'left', padding: '0 1rem' }}>
-                      <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>VIAJES COMPLETADOS</p>
-                      <p style={{ fontWeight: 'bold', color: '#113d69', margin: 0 }}>{totalViajes} servicios</p>
+                      <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>PEDIDOS ENTREGADOS</p>
+                      <p style={{ fontWeight: 'bold', color: '#113d69', margin: 0 }}>{totalPedidos} servicios</p>
                     </div>
                   </div>
 
@@ -696,7 +696,10 @@ function DriverProfile() {
                               </span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-                              Capacidad: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.capacidad || 'N/A'} pasajeros</span>
+                              Tipo: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.tipo || 'No registrado'}</span>
+                            </p>
+                            <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+                              Capacidad: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.capacidad || 'N/A'} kg</span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                               <span style={{ color: '#6c757d' }}>Estado:</span>

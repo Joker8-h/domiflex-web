@@ -5,7 +5,7 @@ import { FaIdCard, FaFileImage, FaArrowLeft, FaCheckCircle, FaCamera, FaVideo, F
 import { useAuth } from "./context/AuthContext";
 import { API_URL } from "../config";
 import Navbar from '../components/Navbar';
-import LogoMoviflex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import toast, { Toaster } from 'react-hot-toast';
@@ -250,7 +250,7 @@ function Documents() {
         }
 
         setTimeout(() => {
-          navigate("/driver-profile");
+          navigate("/repartidor-profile");
         }, 2000);
       } else {
         let mensajeError = data.error || data.message || 'Error al enviar la documentación';
@@ -330,7 +330,7 @@ function Documents() {
             <Col md={6} className="d-none d-md-flex justify-content-center p-4">
               <img
                 src={EscenaHomeBase}
-                alt="Moviflex Home"
+                alt="DomiFlex Home"
                 style={{ width: '100%', maxWidth: '500px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }}
               />
             </Col>
@@ -340,7 +340,7 @@ function Documents() {
                 <Card.Body className="p-4 p-md-5">
 
                   <div className="text-center mb-4">
-                    <img src={LogoMoviflex} alt="Logo" style={{ width: '120px' }} />
+                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '120px' }} />
                   </div>
 
                   <h3 className="text-center mb-4" style={{ color: '#62d8d9', fontWeight: '600' }}>
@@ -495,7 +495,7 @@ function Documents() {
 
                       <Button
                         variant="outline-secondary"
-                        onClick={() => navigate("/driver-profile")}
+                        onClick={() => navigate("/repartidor-profile")}
                         className="px-4"
                         style={{ borderRadius: '12px' }}
                       >

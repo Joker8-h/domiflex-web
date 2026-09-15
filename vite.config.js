@@ -6,6 +6,6 @@ export default defineConfig({
   preview: {
     host: true,
     port: process.env.PORT || 5173,
-    allowedHosts: ['moviflexconreact-production.up.railway.app']
+    allowedHosts: ['domiflex-web-production.up.railway.app', 'domiflex-backend-production.up.railway.app']
   }
 })

@@ -123,8 +123,8 @@ function Home() {
     const [retryCount, setRetryCount] = useState(0);
     const [stats, setStats] = useState({
         totalUsuarios: 0,
-        totalConductores: 0,
-        totalViajeros: 0,
+        totalRepartidores: 0,
+        totalClientes: 0,
         totalVehiculos: 0
     });
 
@@ -139,8 +139,8 @@ function Home() {
         { name: 'Inactivos', value: 0, color: '#cccbd2af' },
         { name: 'Suspendidos', value: 0, color: '#113d69' }
     ]);
-    const [topConductores, setTopConductores] = useState([]);
-    const [topViajeros, setTopViajeros] = useState([]);
+    const [topRepartidores, setTopRepartidores] = useState([]);
+    const [topClientes, setTopClientes] = useState([]);
     const [cargandoTop, setCargandoTop] = useState(false);
     const [erroresPorSeccion, setErroresPorSeccion] = useState({
         usuarios: false,
@@ -236,11 +236,11 @@ function Home() {
             const usuarios = await response.json();
 
             if (Array.isArray(usuarios)) {
-                const conductores = usuarios.filter(u => u.idRol === 2 || u.rol?.nombre?.toUpperCase() === 'CONDUCTOR').length;
-                const viajeros = usuarios.filter(u => u.idRol === 3 || u.rol?.nombre?.toUpperCase() === 'VIAJERO' || u.rol?.nombre?.toUpperCase() === 'PASAJERO').length;
+                const repartidores = usuarios.filter(u => u.idRol === 2 || u.rol?.nombre?.toUpperCase() === 'REPARTIDOR').length;
+                const clientes = usuarios.filter(u => u.idRol === 3 || u.rol?.nombre?.toUpperCase() === 'CLIENTE' || u.rol?.nombre?.toUpperCase() === 'COMERCIO').length;
                 const { activos, inactivos, suspendidos } = calcularEstadoUsuarios(usuarios);
 
-                setStats(prev => ({ ...prev, totalUsuarios: usuarios.length, totalConductores: conductores, totalViajeros: viajeros }));
+                setStats(prev => ({ ...prev, totalUsuarios: usuarios.length, totalRepartidores: repartidores, totalClientes: clientes }));
                 setDonutData([
                     { name: 'Activos', value: activos, color: '#62d8d9' },
                     { name: 'Inactivos', value: inactivos, color: '#cccbd2af' },
@@ -269,22 +269,22 @@ function Home() {
         }
     }
 
-    async function traerViajesPorDia() {
+    async function traerPedidosPorDia() {
         try {
             const diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-            const promesasViajes = diasSemana.map(async (nombre, dia) => {
+            const promesasPedidos = diasSemana.map(async (nombre, dia) => {
                 try {
-                    const response = await fetch(`${API_URL}/viajes/dia/${dia}`, {
+                    const response = await fetch(`${API_URL}/pedidos/dia/${dia}`, {
                         headers: { "Authorization": "Bearer " + token }
                     });
                     if (!response.ok) return { nombre, cantidad: 0 };
-                    const ViajesDelDia = await response.json();
-                    return { nombre, cantidad: Array.isArray(ViajesDelDia) ? ViajesDelDia.length : 0 };
+                    const PedidosDelDia = await response.json();
+                    return { nombre, cantidad: Array.isArray(PedidosDelDia) ? PedidosDelDia.length : 0 };
                 } catch (error) {
                     return { nombre, cantidad: 0 };
                 }
             });
-            return await Promise.all(promesasViajes);
+            return await Promise.all(promesasPedidos);
         } catch (error) {
             return [];
         }
@@ -309,15 +309,15 @@ function Home() {
                 }
             });
 
-            const [UsuariosPorDia, ViajesPorDia] = await Promise.all([
+            const [UsuariosPorDia, PedidosPorDia] = await Promise.all([
                 Promise.all(promesasUsuarios),
-                traerViajesPorDia()
+                traerPedidosPorDia()
             ]);
 
             setChartData(UsuariosPorDia.map(item => ({
                 name: item.name,
                 usuarios: item.usuarios,
-                viajes: ViajesPorDia.find(v => v.nombre === item.name)?.cantidad || 0
+                pedidos: PedidosPorDia.find(v => v.nombre === item.name)?.cantidad || 0
             })));
         } catch (error) {
             manejarError('graficos', error);
@@ -331,18 +331,18 @@ function Home() {
             if (!token) return;
 
             const headers = { "Authorization": "Bearer " + token };
-            const [resConductores, resViajeros] = await Promise.allSettled([
-                fetch(`${API_URL}/calificaciones/top-conductores`, { headers }),
-                fetch(`${API_URL}/calificaciones/top-viajeros`, { headers })
+            const [resRepartidores, resClientes] = await Promise.allSettled([
+                fetch(`${API_URL}/calificaciones/top-repartidores`, { headers }),
+                fetch(`${API_URL}/calificaciones/top-clientes`, { headers })
             ]);
 
-            if (resConductores.status === 'fulfilled' && resConductores.value.ok) {
-                const data = await resConductores.value.json();
-                setTopConductores(Array.isArray(data) ? data : []);
+            if (resRepartidores.status === 'fulfilled' && resRepartidores.value.ok) {
+                const data = await resRepartidores.value.json();
+                setTopRepartidores(Array.isArray(data) ? data : []);
             }
-            if (resViajeros.status === 'fulfilled' && resViajeros.value.ok) {
-                const data = await resViajeros.value.json();
-                setTopViajeros(Array.isArray(data) ? data : []);
+            if (resClientes.status === 'fulfilled' && resClientes.value.ok) {
+                const data = await resClientes.value.json();
+                setTopClientes(Array.isArray(data) ? data : []);
             }
         } catch (error) {
             manejarError('rankings', error);
@@ -396,7 +396,7 @@ function Home() {
                         </div>
                         <div style={{ flex: 1, textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
                             <h2 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: colores.azulFuerte }}>¡Bienvenido de nuevo, {usuario?.nombre || 'Administrador'}!</h2>
-                            <p style={{ color: '#6c757d', margin: 0 }}>Gestión global de la plataforma MoviFlex</p>
+                            <p style={{ color: '#6c757d', margin: 0 }}>Gestión global de la plataforma DomiFlex</p>
                         </div>
                         <div style={{ marginTop: window.innerWidth < 768 ? '1rem' : 0, display: 'flex', gap: '0.5rem' }}>
                             <CustomBadge
@@ -447,8 +447,8 @@ function Home() {
                             />
                             <StatsCard
                                 icon={<BsTruck size={20} />}
-                                title="Conductores"
-                                value={stats.totalConductores}
+                                title="Repartidores"
+                                value={stats.totalRepartidores}
                                 iconBgColor="#ebf3f9"
                                 iconColor="#113d69"
                             />
@@ -504,7 +504,7 @@ function Home() {
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
                                 padding: '1.5rem'
                             }}>
-                                <h5 style={{ fontWeight: 'bold', marginBottom: '1rem', color: colores.azulFuerte }}>Actividad de Registro y Viajes</h5>
+                                <h5 style={{ fontWeight: 'bold', marginBottom: '1rem', color: colores.azulFuerte }}>Actividad de Registro y Pedidos</h5>
                                 <div style={{ height: '300px' }}>
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={chartData}>
@@ -514,7 +514,7 @@ function Home() {
                                             <Tooltip cursor={{ fill: '#f8f9fa' }} contentStyle={{ borderRadius: '12px', border: 'none' }} />
                                             <Legend wrapperStyle={{ paddingTop: '20px' }} />
                                             <Bar dataKey="usuarios" fill="#62d8d9" name="Reg. Usuarios" radius={[4, 4, 0, 0]} barSize={25} />
-                                            <Bar dataKey="viajes" fill="#113d69" name="Viajes Realizados" radius={[4, 4, 0, 0]} barSize={25} />
+                                            <Bar dataKey="pedidos" fill="#113d69" name="Pedidos Realizados" radius={[4, 4, 0, 0]} barSize={25} />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -575,15 +575,15 @@ function Home() {
                                 padding: '1.5rem'
                             }}>
                                 <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: '#113d69' }}>
-                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Conductores
+                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Repartidores
                                 </h6>
                                 <CustomListGroup>
                                     {cargandoTop ? (
                                         <div style={{ textAlign: 'center', padding: '2rem' }}><Spinner size="sm" style={{ color: colores.verdeMenta }} /></div>
-                                    ) : topConductores.length === 0 ? (
+                                    ) : topRepartidores.length === 0 ? (
                                         <p style={{ color: '#6c757d', textAlign: 'center', padding: '2rem' }}>Sin datos</p>
                                     ) : (
-                                        topConductores.slice(0, 5).map((c, i) => (
+                                        topRepartidores.slice(0, 5).map((c, i) => (
                                             <CustomListItem key={i} style={{ padding: '0.75rem 0' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -618,15 +618,15 @@ function Home() {
                                 padding: '1.5rem'
                             }}>
                                 <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: '#113d69' }}>
-                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Pasajeros
+                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Clientes
                                 </h6>
                                 <CustomListGroup>
                                     {cargandoTop ? (
                                         <div style={{ textAlign: 'center', padding: '2rem' }}><Spinner size="sm" style={{ color: colores.verdeMenta }} /></div>
-                                    ) : topViajeros.length === 0 ? (
+                                    ) : topClientes.length === 0 ? (
                                         <p style={{ color: '#6c757d', textAlign: 'center', padding: '2rem' }}>Sin datos</p>
                                     ) : (
-                                        topViajeros.slice(0, 5).map((v, i) => (
+                                        topClientes.slice(0, 5).map((v, i) => (
                                             <CustomListItem key={i} style={{ padding: '0.75rem 0' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>

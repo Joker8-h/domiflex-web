@@ -17,22 +17,22 @@ const SustainabilitySection = () => {
     }, []);
 
     const impacts = [
-        { icon: <FaLeaf size={40} />, title: "450kg", desc: "Reducción de CO2 por persona al año compartiendo ruta.", delay: "0.2s" },
-        { icon: <FaCarSide size={40} />, title: "30%", desc: "Menos combustible consumido en trayectos diarios.", delay: "0.4s" },
-        { icon: <FaCity size={40} />, title: "25%", desc: "Disminución estimada en la congestión vehicular local.", delay: "0.6s" }
+        { icon: <FaLeaf size={40} />, title: "10/12/15%", desc: "Comisión justa por distancia en cada domicilio entregado.", delay: "0.2s" },
+        { icon: <FaCarSide size={40} />, title: "$2000 + $800/km", desc: "Costo de envío transparente calculado por distancia real.", delay: "0.4s" },
+        { icon: <FaCity size={40} />, title: "100%", desc: "Pedidos trazables con repartidores verificados en Popayán.", delay: "0.6s" }
     ];
 
     return (
         <section className="py-5" style={{ backgroundColor: lightGreen }}>
             <Container>
                 <div className="text-center mb-5 animate__animated animate__fadeIn">
-                    <h2 className="fw-bold mb-3" style={{ color: brandColor, fontSize: '2.5rem' }}>Nuestro Impacto Ambiental</h2>
+                    <h2 className="fw-bold mb-3" style={{ color: brandColor, fontSize: '2.5rem' }}>Domicilios Eficientes</h2>
                     <div className="d-inline-block py-2 px-4 mb-4 rounded-pill shadow-sm bg-white border">
-                        <span className="fw-bold text-muted small me-2 uppercase">🌳 CO2 acumulado evitado hoy:</span>
-                        <span className="fw-bold fs-4" style={{ color: brandColor }}>{co2.toLocaleString()} kg</span>
+                        <span className="fw-bold text-muted small me-2 uppercase">🛵 Pedidos entregados hoy:</span>
+                        <span className="fw-bold fs-4" style={{ color: brandColor }}>{co2.toLocaleString()}</span>
                     </div>
                     <p className="text-muted" style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.2rem' }}>
-                        Compartir un vehículo no es solo ahorrar; es una declaración de conciencia ciudadana. Mira lo que logramos juntos cada día.
+                        Pedir un domicilio no es solo comodidad; es logística optimizada. Mira lo que logramos juntos cada día.
                     </p>
                 </div>
 

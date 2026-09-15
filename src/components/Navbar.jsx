@@ -103,9 +103,10 @@ export default function NavbarCustom({ transparent }) {
   }, [location.pathname, location.state, navigate]);
 
   const idRol = usuario?.idRol || usuario?.rol?.id;
-  const isDriver = idRol === 2 || idRol === "2";
-  const homePath = isDriver ? "/driver-home" : "/user-home";
-  const profilePath = isDriver ? "/driver-profile" : "/profile";
+  const rolNombre = (typeof usuario?.rol === 'string' ? usuario.rol : (usuario?.rol?.nombre || "")).toUpperCase();
+  const isRepartidor = idRol === 2 || idRol === "2" || rolNombre === "REPARTIDOR";
+  const homePath = isRepartidor ? "/repartidor-home" : "/cliente-home";
+  const profilePath = isRepartidor ? "/repartidor-profile" : "/profile";
   const fotoAMostrar = fotoPerfil || usuario?.fotoPerfil || usuario?.foto;
 
   // El botón "¿Cómo funciona?" se muestra en TODAS las páginas
@@ -132,7 +133,7 @@ export default function NavbarCustom({ transparent }) {
               height="65px"
               style={{ width: 'auto', objectFit: 'contain' }}
               className="me-1"
-              alt="Logo MoviFlexx"
+              alt="Logo DomiFlex"
             />
           </Navbar.Brand>
 

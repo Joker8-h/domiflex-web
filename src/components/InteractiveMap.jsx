@@ -24,23 +24,23 @@ const InteractiveMap = () => {
     // Ubicación central aproximada (ej. Cali, Colombia - ajusta según prefieras)
     const position = [3.4516, -76.5320]; 
 
-    const drivers = [
-        { id: 1, pos: [3.4550, -76.5350], name: "Carlos - En ruta", via: "Av. 6ta" },
+    const repartidores = [
+        { id: 1, pos: [3.4550, -76.5350], name: "Carlos - En entrega", via: "Av. 6ta" },
         { id: 2, pos: [3.4480, -76.5280], name: "Arlys - Disponible", via: "Calle 5ta" },
-        { id: 3, pos: [3.4600, -76.5400], name: "Janier - 2 espacios", via: "Norte" },
+        { id: 3, pos: [3.4600, -76.5400], name: "Janier - En entrega", via: "Norte" },
     ];
 
-    const passengers = [
-        { id: 1, pos: [3.4520, -76.5300], name: "Esperando en Chipichape" },
-        { id: 2, pos: [3.4400, -76.5380], name: "Esperando en Tequendama" },
+    const clientes = [
+        { id: 1, pos: [3.4520, -76.5300], name: "Pedido en Chipichape" },
+        { id: 2, pos: [3.4400, -76.5380], name: "Pedido en Tequendama" },
     ];
 
     return (
         <section className="py-5" style={{ backgroundColor: "#ffffff" }}>
             <Container>
                 <div className="text-center mb-5">
-                    <h2 className="fw-bold" style={{ color: brandColor }}>Rutas Activas en Tiempo Real</h2>
-                    <p className="text-muted">Mira cómo la comunidad <span style={{ color: accentColor }}>MoviFlex</span> se mueve hoy.</p>
+                    <h2 className="fw-bold" style={{ color: brandColor }}>Pedidos Activos en Tiempo Real</h2>
+                    <p className="text-muted">Mira cómo la comunidad <span style={{ color: accentColor }}>DomiFlex</span> entrega hoy.</p>
                 </div>
 
                 <div className="position-relative shadow-lg rounded-4 overflow-hidden border" style={{ height: "500px" }}>
@@ -50,19 +50,19 @@ const InteractiveMap = () => {
                             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                         />
                         
-                        {drivers.map(driver => (
-                            <Marker key={`driver-${driver.id}`} position={driver.pos}>
+                        {repartidores.map(rep => (
+                            <Marker key={`rep-${rep.id}`} position={rep.pos}>
                                 <Popup>
                                     <div className="text-center" style={{ minWidth: '150px' }}>
                                         <FaCar color={brandColor} className="mb-2" />
-                                        <h6 className="mb-1 fw-bold">{driver.name}</h6>
-                                        <small className="text-muted">{driver.via}</small>
+                                        <h6 className="mb-1 fw-bold">{rep.name}</h6>
+                                        <small className="text-muted">{rep.via}</small>
                                     </div>
                                 </Popup>
                             </Marker>
                         ))}
 
-                        {passengers.map(p => (
+                        {clientes.map(p => (
                             <Circle 
                                 key={`pass-${p.id}`} 
                                 center={p.pos} 
@@ -83,11 +83,11 @@ const InteractiveMap = () => {
                     <Card className="position-absolute bottom-0 start-0 m-3 p-3 border-0 shadow" style={{ zIndex: 1000, borderRadius: "15px" }}>
                         <div className="d-flex align-items-center mb-2">
                             <FaMapMarkerAlt color={brandColor} />
-                            <span className="ms-2 small fw-bold">Conductores</span>
+                            <span className="ms-2 small fw-bold">Repartidores</span>
                         </div>
                         <div className="d-flex align-items-center">
                             <div style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: accentColor, border: `2px solid ${accentColor}` }}></div>
-                            <span className="ms-2 small fw-bold">Pasajeros buscando</span>
+                            <span className="ms-2 small fw-bold">Clientes pidiendo</span>
                         </div>
                     </Card>
                 </div>

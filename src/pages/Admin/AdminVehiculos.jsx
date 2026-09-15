@@ -318,6 +318,7 @@ function AdminVehiculos() {
                 break;
             case 'MOTOCICLETA':
             case 'MOTO':
+            case 'BICICLETA':
                 estilo = { backgroundColor: '#6c757d', color: '#ffffff' };
                 break;
             case 'CAMIONETA':
@@ -453,7 +454,7 @@ function AdminVehiculos() {
         if (!capacidad) return <span className="text-muted fst-italic">No especificado</span>;
         if (typeof capacidad === 'number' || !isNaN(parseInt(capacidad))) {
             const numCapacidad = parseInt(capacidad);
-            return `${numCapacidad} ${numCapacidad === 1 ? 'persona' : 'personas'}`;
+            return `${numCapacidad} kg`;
         }
         return capacidad;
     }

@@ -11,9 +11,9 @@ const AppDownloadBanner = () => {
             <Container>
                 <Row className="align-items-center text-center text-lg-start">
                     <Col lg={7} className="text-white ps-lg-5">
-                        <h2 className="display-4 fw-bold mb-3 animate__animated animate__fadeInLeft">El viaje que mereces,<br />a un escaneo de distancia.</h2>
+                        <h2 className="display-4 fw-bold mb-3 animate__animated animate__fadeInLeft">El domicilio que mereces,<br />a un escaneo de distancia.</h2>
                         <p className="lead mb-4 opacity-75 animate__animated animate__fadeInLeft animate__delay-1s">
-                            Olvídate de las esperas. Únete a la comunidad de transporte más mela de la ciudad. Escanea y rueda con nosotros.
+                            Olvídate de las esperas. Únete a la comunidad de domicilios más rápida de la ciudad. Escanea y pide con nosotros.
                         </p>
                     </Col>
                     <Col lg={5} className="mt-5 mt-lg-0 text-center">
@@ -73,7 +73,7 @@ const AppDownloadBanner = () => {
                                         fluid 
                                         style={{ width: '85%', borderRadius: '10px' }} 
                                     />
-                                    <p className="mt-4 text-muted small fw-bold">MOVIFLEX MOBILE</p>
+                                    <p className="mt-4 text-muted small fw-bold">DOMIFLEX MOBILE</p>
                                 </div>
                                 
                                 {/* Reflection Effect */}

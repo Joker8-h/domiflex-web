@@ -23,8 +23,9 @@ function QRScanner({ show, onHide }) {
 
     const ROLES = {
         ADMIN: 1,
-        CONDUCTOR: 2,
-        VIAJERO: 3
+        REPARTIDOR: 2,
+        CLIENTE: 3,
+        COMERCIO: 4
     };
 
     const handleClose = () => {
@@ -70,9 +71,9 @@ function QRScanner({ show, onHide }) {
                     if (rolId === 1) {
                         navigate('/dashboard/home');
                     } else if (rolId === 2) {
-                        navigate('/driver-home');
-                    } else if (rolId === 3) {
-                        navigate('/user-home');
+                        navigate('/repartidor-home');
+                    } else if (rolId === 3 || rolId === 4) {
+                        navigate('/cliente-home');
                     }
                 }, 500);
 

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { Container, Row, Col, Card, Form, Button, Alert, Modal } from "react-bootstrap";
-import LogoMoviflex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaQrcode, FaCamera } from "react-icons/fa";
@@ -54,7 +54,7 @@ function Login() {
     const navigate = useNavigate();
     const { login, token, usuario } = useAuth();
 
-    const ROLES = { ADMIN: "ADMIN", CONDUCTOR: "CONDUCTOR", VIAJERO: "PASAJERO" };
+    const ROLES = { ADMIN: "ADMIN", REPARTIDOR: "REPARTIDOR", CLIENTE: "CLIENTE", COMERCIO: "COMERCIO" };
 
     useEffect(() => {
         // Obtenemos tanto el ID como el nombre del rol (normalizado)
@@ -66,10 +66,10 @@ function Login() {
 
         if (rolNombre === ROLES.ADMIN || rolId === 1) {
             navigate("/dashboard/home");
-        } else if (rolNombre === ROLES.CONDUCTOR || rolId === 2) {
-            navigate("/driver-home");
-        } else if (rolNombre === ROLES.VIAJERO || rolNombre === 'VIAJERO' || rolId === 3) {
-            navigate("/user-home");
+        } else if (rolNombre === ROLES.REPARTIDOR || rolId === 2) {
+            navigate("/repartidor-home");
+        } else if (rolNombre === ROLES.CLIENTE || rolNombre === ROLES.COMERCIO || rolId === 3 || rolId === 4) {
+            navigate("/cliente-home");
         }
     }, [token, usuario, navigate]);
 
@@ -164,7 +164,7 @@ function Login() {
                     <Col md={7} lg={6} className="d-none d-md-flex justify-content-center p-4">
                         <img
                             src={EscenaHomeBase}
-                            alt="Moviflex Home"
+                            alt="DomiFlex Home"
                             style={{ width: '100%', maxWidth: '550px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }}
                         />
                     </Col>
@@ -174,7 +174,7 @@ function Login() {
                             <Card.Body className="p-4 p-md-5">
 
                                 <div className="text-center mb-4">
-                                    <img src={LogoMoviflex} alt="Logo" style={{ width: '150px' }} />
+                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
                                 </div>
 
                                 <div className="d-flex gap-2 mb-4">

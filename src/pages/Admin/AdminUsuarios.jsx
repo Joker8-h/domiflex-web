@@ -36,13 +36,13 @@ const getRolNombre = (rolId, rolNombre) => {
             case 'ADMINISTRADOR':
             case 'ADMIN':
                 return "Administrador";
-            case 'CONDUCTOR':
+            case 'REPARTIDOR':
             case 'DRIVER':
-                return "Conductor";
-            case 'PASAJERO':
-            case 'PASSENGER':
-            case 'VIAJERO':
-                return "Viajero";
+                return "Repartidor";
+            case 'CLIENTE':
+            case 'CUSTOMER':
+            case 'COMERCIO':
+                return "Cliente";
             default:
                 return rolNombre;
         }
@@ -52,9 +52,9 @@ const getRolNombre = (rolId, rolNombre) => {
         case 1:
             return "Administrador";
         case 2:
-            return "Conductor";
+            return "Repartidor";
         case 3:
-            return "Viajero";
+            return "Cliente";
         default:
             return `Rol ${rolId}`;
     }
@@ -65,8 +65,8 @@ const RolBadge = ({ rolId, rolNombre }) => {
 
     const estilos = {
         "Administrador": { backgroundColor: '#113d69', color: '#ffffff' },
-        "Conductor": { backgroundColor: '#62d8d9', color: '#ffffff' },
-        "Viajero": { backgroundColor: '#cccbd2af', color: '#113d69' }
+        "Repartidor": { backgroundColor: '#62d8d9', color: '#ffffff' },
+        "Cliente": { backgroundColor: '#cccbd2af', color: '#113d69' }
     };
 
     const estilo = estilos[nombre] || { backgroundColor: '#e9ecef', color: '#113d69' };

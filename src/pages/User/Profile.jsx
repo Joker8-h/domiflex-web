@@ -166,7 +166,7 @@ const CustomListItem = ({ children, style }) => {
 };
 
 function Profile() {
-  const { usuario, token } = useAuth();
+  const { usuario, token, setUsuario } = useAuth();
   const navigate = useNavigate();
 
   // Colores exactos del DriverProfile
@@ -182,28 +182,28 @@ function Profile() {
   const [numeroEmergencia, setNumeroEmergencia] = useState(usuario?.numeroEmergencia || '');
 
   const [estadisticas, setEstadisticas] = useState({
-    totalViajes: 0,
-    viajesCompletados: 0,
-    viajesCancelados: 0,
+    totalPedidos: 0,
+    pedidosEntregados: 0,
+    pedidosCancelados: 0,
     totalGastado: 0,
     promedioCalificacion: 0,
     totalCalificaciones: 0
   });
 
   const [cargando, setCargando] = useState({
-    viajes: true,
+    pedidos: true,
     calificaciones: true,
     pagos: true
   });
 
-  // Obtener viajes
+  // Obtener pedidos
   useEffect(() => {
-    const obtenerViajes = async () => {
+    const obtenerPedidos = async () => {
       if (!token || !usuario?.idUsuarios) return;
       try {
-        setCargando(prev => ({ ...prev, viajes: true }));
+        setCargando(prev => ({ ...prev, pedidos: true }));
         const respuesta = await fetch(
-          `${API_URL}/viajes/mis-viajes`,
+          `${API_URL}/pedidos/mis-pedidos`,
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -214,26 +214,26 @@ function Profile() {
 
         if (respuesta.ok) {
           const data = await respuesta.json();
-          const viajesData = Array.isArray(data) ? data : [];
-          const completados = viajesData.filter(v => v.estado === 'COMPLETADO' || v.estado === 'FINALIZADO').length;
-          const cancelados = viajesData.filter(v => v.estado === 'CANCELADO').length;
-          const totalGastado = viajesData.reduce((sum, v) => sum + (v.precioFinal || 0), 0);
+          const pedidosData = Array.isArray(data) ? data : [];
+          const entregados = pedidosData.filter(v => v.estado === 'ENTREGADO' || v.estado === 'ENTREGADO').length;
+          const cancelados = pedidosData.filter(v => v.estado === 'CANCELADO').length;
+          const totalGastado = pedidosData.reduce((sum, v) => sum + (v.total || 0), 0);
 
           setEstadisticas(prev => ({
             ...prev,
-            totalViajes: viajesData.length,
-            viajesCompletados: completados,
-            viajesCancelados: cancelados,
+            totalPedidos: pedidosData.length,
+            pedidosEntregados: entregados,
+            pedidosCancelados: cancelados,
             totalGastado
           }));
         }
       } catch (error) {
-        console.error("Error en obtenerViajes:", error);
+        console.error("Error en obtenerPedidos:", error);
       } finally {
-        setCargando(prev => ({ ...prev, viajes: false }));
+        setCargando(prev => ({ ...prev, pedidos: false }));
       }
     };
-    obtenerViajes();
+    obtenerPedidos();
   }, [token, usuario?.idUsuarios]);
 
   // Obtener calificaciones - CORREGIDO
@@ -367,7 +367,7 @@ function Profile() {
     setShowQRModal(true);
   };
 
-  const estaCargando = cargando.viajes || cargando.calificaciones;
+  const estaCargando = cargando.pedidos || cargando.calificaciones;
 
   return (
     <div style={{
@@ -411,7 +411,7 @@ function Profile() {
                   backgroundColor: '#ffffff'
                 }}>
                   <h2 style={{ fontWeight: 'bold', margin: 0, color: brandColor }}>
-                    Mi Perfil de Pasajero
+                    Mi Perfil de Cliente
                   </h2>
                 </div>
 
@@ -496,9 +496,9 @@ function Profile() {
 
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>
                         <FaRoute style={{ marginRight: '0.5rem', color: accentColor }} />
-                        Viajes realizados
+                        Pedidos realizados
                       </p>
-                      <p style={{ fontWeight: 'bold', marginBottom: '1rem', color: brandColor }}>{estadisticas.totalViajes} viajes</p>
+                      <p style={{ fontWeight: 'bold', marginBottom: '1rem', color: brandColor }}>{estadisticas.totalPedidos} pedidos</p>
 
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>
                         <FaWallet style={{ marginRight: '0.5rem', color: accentColor }} />
@@ -681,9 +681,9 @@ function Profile() {
                         height: '100%'
                       }}>
                         <h5 style={{ fontWeight: 'bold', marginBottom: 0, color: accentColor, fontSize: '2rem' }}>
-                          {estadisticas.viajesCompletados}
+                          {estadisticas.pedidosEntregados}
                         </h5>
-                        <small style={{ color: '#6c757d', fontWeight: 'bold', textTransform: 'uppercase' }}>Completados</small>
+                        <small style={{ color: '#6c757d', fontWeight: 'bold', textTransform: 'uppercase' }}>Entregados</small>
                       </div>
                       <div style={{
                         backgroundColor: '#ffffff',
@@ -695,7 +695,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <h5 style={{ fontWeight: 'bold', marginBottom: 0, color: accentColor, fontSize: '2rem' }}>
-                          {estadisticas.viajesCancelados}
+                          {estadisticas.pedidosCancelados}
                         </h5>
                         <small style={{ color: '#6c757d', fontWeight: 'bold', textTransform: 'uppercase' }}>Cancelados</small>
                       </div>
@@ -740,7 +740,7 @@ function Profile() {
         qrValue={qrValue}
         usuario={usuario}
         titulo="Tu QR de Acceso"
-        mensajeExpiracion="Válido para abordar"
+        mensajeExpiracion="Valido para recibir tu domicilio"
       />
     </div>
   );

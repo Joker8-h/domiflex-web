@@ -5,7 +5,7 @@ import { FaUser, FaEnvelope, FaPhone, FaLock, FaEye, FaEyeSlash, FaArrowRight, F
 import toast, { Toaster } from 'react-hot-toast';
 import NavbarCustom from '../components/Navbar'
 import { API_URL } from '../config';
-import LogoMoviflex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 
@@ -43,122 +43,122 @@ const customStyles = `
 
 const termsText = `CONTRATO MARCO DE LICENCIA DE USO DE SOFTWARE, INTERMEDIACIÓN
 TECNOLÓGICA Y ESTATUTO DE TÉRMINOS Y CONDICIONES GLOBALES DE LA
-PLATAFORMA "MOVIFLEX"
-VERSIÓN: 1.0 (2024) DOMICILIO LEGAL: POPAYÁN, CAUCA, COLOMBIA.
-EMPRESA: MOVIFLEX S.A.S. (NIT EN TRÁMITE).
+PLATAFORMA "DOMIFLEX"
+VERSIÓN: 1.0 (2026) DOMICILIO LEGAL: POPAYÁN, CAUCA, COLOMBIA.
+EMPRESA: DOMIFLEX S.A.S. (NIT EN TRÁMITE).
 
 PREÁMBULO: DECLARACIÓN DE VOLUNTAD Y NATURALEZA JURÍDICA
 El presente documento constituye un acuerdo legal vinculante y obligatorio (en
-adelante, el "CONTRATO") entre MOVIFLEX S.A.S., una sociedad comercial
+adelante, el "CONTRATO") entre DOMIFLEX S.A.S., una sociedad comercial
 colombiana debidamente constituida, con domicilio principal en la Oficina
 Fábrica de Software Alto del Cauca SENA de la ciudad de Popayán (en adelante,
-"LA COMPAÑÍA" o "MOVIFLEX") y cualquier persona natural o jurídica que, de
+"LA COMPAÑÍA" o "DOMIFLEX") y cualquier persona natural o jurídica que, de
 forma libre y espontánea, decida registrarse, descargar o utilizar el ecosistema
-digital (en adelante, el "USUARIO" o el "CONDUCTOR", y colectivamente
+digital (en adelante, el "USUARIO" o el "REPARTIDOR", y colectivamente
 denominados las "PARTES").
 
 CAPÍTULO I: DE LA NATURALEZA DEL OBJETO SOCIAL Y LA ACTIVIDAD
 TECNOLÓGICA
 
 ARTÍCULO 1: DEFINICIÓN DE LA ACTIVIDAD
-MOVIFLEX S.A.S. declara, y las PARTES aceptan, que su objeto social no es la
-prestación del servicio de transporte público ni privado. MOVIFLEX es una
+DOMIFLEX S.A.S. declara, y las PARTES aceptan, que su objeto social no es la
+prestación del servicio de mensajería ni la operación logística directa. DOMIFLEX es una
 Empresa de Base Tecnológica (EBT) dedicada exclusivamente al desarrollo,
 mantenimiento y licenciamiento de una plataforma de software. La función de la
 App es la de un CORREDOR TECNOLÓGICO (Art. 1340 del Código de Comercio
 Colombiano), que simplemente facilita el contacto entre dos partes
-independientes: quien demanda un servicio de movilidad y quien ofrece su
-capacidad de transporte autónomo.
+independientes: quien demanda un servicio de domicilio y quien ofrece su
+capacidad de reparto autónomo.
 
-ARTÍCULO 2: AUSENCIA DE HABILITACIÓN DE TRANSPORTE
-Las PARTES reconocen que MOVIFLEX no ostenta, ni requiere, habilitación por
-parte del Ministerio de Transporte como empresa transportadora, toda vez que no
+ARTÍCULO 2: AUSENCIA DE HABILITACIÓN DE MENSAJERÍA
+Las PARTES reconocen que DOMIFLEX no ostenta, ni requiere, habilitación especial
+como empresa de mensajería, toda vez que no
 posee flota de vehículos, no ejerce el control de la operación, no despacha
 vehículos y no recibe remuneración por concepto de flete, sino por concepto de
 "Tarifa de Licencia de Uso de Software".
 
-CAPÍTULO II: RÉGIMEN DE CONTRATACIÓN DEL CONDUCTOR (BLINDAJE
+CAPÍTULO II: RÉGIMEN DE CONTRATACIÓN DEL REPARTIDOR (BLINDAJE
 LABORAL)
 
 ARTÍCULO 3: DECLARACIÓN EXPRESA DE INDEPENDENCIA (ART. 23 C.S.T.)
-El Conductor declara bajo la gravedad de juramento que su relación con
-MOVIFLEX es de naturaleza civil y comercial, regida por las normas del Corretaje
+El Repartidor declara bajo la gravedad de juramento que su relación con
+DOMIFLEX es de naturaleza civil y comercial, regida por las normas del Corretaje
 y Mandato (Código de Comercio). En consecuencia, se deja constancia de la
 inexistencia de los elementos del contrato de trabajo:
-1. NO SUBORDINACIÓN: El Conductor no está sujeto a reglamentos de
+1. NO SUBORDINACIÓN: El Repartidor no está sujeto a reglamentos de
 trabajo, órdenes, ni jerarquías. Conserva la potestad de aceptar o rechazar
-cualquier solicitud de viaje.
-2. NO PRESTACIÓN PERSONAL EXCLUSIVA: El Conductor puede utilizar
+cualquier solicitud de domicilio.
+2. NO PRESTACIÓN PERSONAL EXCLUSIVA: El Repartidor puede utilizar
 otras plataformas o dedicarse a otras actividades económicas sin
 restricción alguna.
-3. NO REMUNERACIÓN SALARIAL: Los ingresos percibidos por el Conductor
-son pagos directos del Usuario Pasajero. MOVIFLEX no paga nómina,
+3. NO REMUNERACIÓN SALARIAL: Los ingresos percibidos por el Repartidor
+son pagos directos del Usuario Cliente. DOMIFLEX no paga nómina,
 prestaciones, primas ni vacaciones.
 
 ARTÍCULO 4: ASUNCIÓN DE CARGAS PRESTACIONALES Y PARAFISCALES
-De conformidad con la Ley 1562 de 2012 y el Decreto 1072 de 2015, el Conductor,
+De conformidad con la Ley 1562 de 2012 y el Decreto 1072 de 2015, el Repartidor,
 como trabajador independiente y contratista autónomo, es el único responsable
 de su afiliación y pago al Sistema de Seguridad Social Integral (Salud, Pensión y
-ARL). El Conductor mantendrá indemne a MOVIFLEX ante cualquier reclamación
+ARL). El Repartidor mantendrá indemne a DOMIFLEX ante cualquier reclamación
 de la UGPP o entidades de seguridad social.
 
 CAPÍTULO III: MODELOS ECONÓMICOS Y PACTOS DE ESTABILIDAD
 
 ARTÍCULO 5: ESQUEMAS DE CONTRAPRESTACIÓN
-El Conductor podrá optar por dos modalidades de licenciamiento:
-• PLAN ESTÁNDAR: Comisión del siete por ciento (7%) por cada
-intermediación exitosa. Este valor se deduce de la tarifa sugerida por la
-plataforma.
-• PLAN PRO CONDUCTOR FUNDADOR: Pago de una suscripción mensual
+El Repartidor podrá optar por dos modalidades de licenciamiento:
+• PLAN ESTÁNDAR: Comisión por distancia sobre cada
+intermediación exitosa (10% hasta 5 km, 12% hasta 15 km, 15% superior). Este valor se deduce de la tarifa sugerida por la
+plataforma (base $2000 + $800/km).
+• PLAN PRO REPARTIDOR FUNDADOR: Pago de una suscripción mensual
 de TREINTA MIL PESOS M/CTE ($30.000 COP).
-o Párrafo Primero (Estabilidad): Los Conductores que se vinculen
+o Párrafo Primero (Estabilidad): Los Repartidores que se vinculen
 bajo esta modalidad durante la etapa de lanzamiento en Popayán
 gozarán de un Pacto de Estabilidad de Precio, manteniendo esta
 tarifa mensual de por vida, siempre que no interrumpan su
 suscripción por más de 30 días.
-o Párrafo Segundo: MOVIFLEX se reserva el derecho de ajustar el
+o Párrafo Segundo: DOMIFLEX podrá ajustar el
 valor de este plan para futuros usuarios según la inflación o el IPC,
-sin afectar a los "Conductores Fundadores".
+sin afectar a los "Repartidores Fundadores".
 
 CAPÍTULO IV: EXONERACIÓN ABSOLUTA DE RESPONSABILIDAD (BLINDAJE
 CIVIL Y PENAL)
 
 ARTÍCULO 6: CLÁUSULA DE INDEMNIDAD POR RIESGO OPERATIVO
-Dado que el transporte es una actividad peligrosa (Art. 2356 del Código Civil), el
-Conductor y el Usuario Pasajero asumen el riesgo total de la operación.
-MOVIFLEX no responderá solidaria ni directamente por:
+Dado que el reparto es una actividad con riesgo operativo, el
+Repartidor y el Usuario Cliente asumen el riesgo total de la operación.
+DOMIFLEX no responderá solidaria ni directamente por:
 1. Accidentes de Tránsito: Todo siniestro se rige por el SOAT del vehículo y la
 responsabilidad civil del propietario.
-2. Responsabilidad Penal: En caso de delitos cometidos dentro del vehículo
+2. Responsabilidad Penal: En caso de delitos cometidos durante el domicilio
 (hurto, acoso, lesiones, homicidio), la responsabilidad será estrictamente
-individual del autor. MOVIFLEX no garantiza la idoneidad moral de los
+individual del autor. DOMIFLEX no garantiza la idoneidad moral de los
 usuarios, limitándose a la verificación documental estándar.
-3. Contenidos y Objetos: Se prohíbe el transporte de armas, drogas o
-sustancias explosivas. El Conductor debe inspeccionar su vehículo;
-MOVIFLEX no custodia ni conoce el contenido de lo transportado.
+3. Contenidos y Objetos: Se prohíbe el envío de armas, drogas o
+sustancias explosivas. El Repartidor debe inspeccionar los paquetes;
+DOMIFLEX no custodia ni conoce el contenido de lo transportado.
 
 CAPÍTULO V: SEGURIDAD, PRUEBAS JUDICIALES Y TECNOLOGÍA
 
 ARTÍCULO 7: CONSENTIMIENTO PARA EL USO DE MEDIOS AUDIOVISUALES
 En virtud de la Ley 906 de 2004 (Código de Procedimiento Penal), las PARTES
-otorgan su consentimiento expreso para que la plataforma grabe audio y video
-durante los trayectos.
-• Finalidad: Estas grabaciones serán custodiadas bajo estándares de
-seguridad informática y solo serán reveladas ante orden judicial o para
+otorgan su consentimiento expreso para que la plataforma registre ubicación GPS
+durante los domicilios.
+• Finalidad: Estos registros serán custodiados bajo estándares de
+seguridad informática y solo serán revelados ante orden judicial o para
 dirimir conflictos internos de la plataforma.
-• Valor Probatorio: Las PARTES aceptan que estas grabaciones constituyen
+• Valor Probatorio: Las PARTES aceptan que estos registros constituyen
 prueba plena en procesos civiles o denuncias ante la Fiscalía General de la
 Nación.
 
 CAPÍTULO VI: POLÍTICA DE DATOS PERSONALES (HABEAS DATA)
 
 ARTÍCULO 8: CUMPLIMIENTO LEY 1581 DE 2012
-MOVIFLEX S.A.S., como Responsable del Tratamiento, recolectará datos
-sensibles (biometría, ubicación GPS, registros de voz). El titular autoriza el
+DOMIFLEX S.A.S., como Responsable del Tratamiento, recolectará datos
+sensibles (biometría, ubicación GPS, registros de entrega). El titular autoriza el
 tratamiento de estos datos para:
 1. Geolocalización en tiempo real del servicio.
 2. Verificación de identidad mediante reconocimiento facial.
-3. Fines comerciales y de marketing de MOVIFLEX.
+3. Fines comerciales y de marketing de DOMIFLEX.
 
 CAPÍTULO VII: RÉGIMEN DISCIPLINARIO Y PENALIDADES
 
@@ -176,19 +176,19 @@ ARTÍCULO 10: PROCEDIMIENTO DE LEY
 Toda controversia se resolverá bajo los principios de economía y celeridad
 procesal:
 1. Etapa de Arreglo Directo: 15 días hábiles mediante comunicación escrita
-a somosmoviflex@gmail.com.
+a somosdomiflex@gmail.com.
 2. Conciliación Obligatoria: En caso de fracaso, se acudirá a un Centro de
 Conciliación en Popayán, conforme a la Ley 640 de 2001.
 3. Jurisdicción Ordinaria: Los jueces civiles del circuito de Popayán serán los
 competentes para conocer cualquier demanda.
 
-DECLARACIÓN DE ACEPTACIÓN: El Usuario y/o Conductor manifiesta que ha
+DECLARACIÓN DE ACEPTACIÓN: El Usuario y/o Repartidor manifiesta que ha
 leído este documento de 25 Capítulos y 120 Artículos (representados en este
 estatuto marco), que entiende las implicaciones de la ausencia de relación laboral
-y la exoneración de responsabilidad de MOVIFLEX, y que acepta cada cláusula
+y la exoneración de responsabilidad de DOMIFLEX, y que acepta cada cláusula
 como ley para las partes.
 
-Declaro que he leído, entendido y aceptado de manera libre, previa, expresa e informada el Contrato Marco de Licencia de Uso de Software, Intermediación Tecnológica y Términos y Condiciones de la plataforma MOVIFLEX S.A.S.; reconozco la inexistencia de relación laboral con la compañía, acepto la exoneración de responsabilidad de MOVIFLEX como mero corredor tecnológico, autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 y otorgo consentimiento para el uso de medios audiovisuales como prueba judicial.`;
+Declaro que he leído, entendido y aceptado de manera libre, previa, expresa e informada el Contrato Marco de Licencia de Uso de Software, Intermediación Tecnológica y Términos y Condiciones de la plataforma DOMIFLEX S.A.S.; reconozco la inexistencia de relación laboral con la compañía, acepto la exoneración de responsabilidad de DOMIFLEX como mero corredor tecnológico, autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 y otorgo consentimiento para el uso de medios audiovisuales como prueba judicial.`;
 
 function Register() {
     const navigate = useNavigate();
@@ -204,7 +204,7 @@ function Register() {
     const [fotoPreview, setFotoPreview] = useState("");
     const [nombreEmergencia, setNombreEmergencia] = useState("");
     const [numeroEmergencia, setNumeroEmergencia] = useState("");
-    const rol = "CONDUCTOR";
+    const [rol, setRol] = useState("CLIENTE");
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -400,7 +400,7 @@ function Register() {
                             <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
                                 <Card.Body className="p-4 p-md-5">
                                     <div className="text-center mb-4">
-                                        <img src={LogoMoviflex} alt="Logo" style={{ width: '150px' }} />
+                                        <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
                                         <h5 className="fw-bold mt-3 mb-1">Crea tu cuenta</h5>
                                         <ProgressBar now={(step / 6) * 100} variant="info" className="mt-3" style={{ height: '5px', borderRadius: '10px', backgroundColor: '#e9ecef' }} />
                                         <small className="text-muted d-block mt-2">Paso {step} de 6</small>
@@ -451,6 +451,14 @@ function Register() {
                                                 </Form.Group>
                                                 <Form.Group className="mb-3">
                                                     <Form.Control type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="Teléfono" required style={inputStyle} />
+                                                </Form.Group>
+                                                <Form.Group className="mb-3">
+                                                    <Form.Label className="fw-bold small" style={{ color: '#113d69' }}>Tipo de cuenta DomiFlex</Form.Label>
+                                                    <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={inputStyle}>
+                                                        <option value="CLIENTE">CLIENTE — pide domicilios</option>
+                                                        <option value="REPARTIDOR">REPARTIDOR — entrega pedidos</option>
+                                                        <option value="COMERCIO">COMERCIO — vende con domicilios</option>
+                                                    </Form.Select>
                                                 </Form.Group>
 
                                                 <hr className="my-4" />

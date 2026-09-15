@@ -13,12 +13,13 @@ import { API_URL, API_BASE_URL } from "../../config";
 import fondo from "../Imagenes/AutoresContacto.png";
 import toast from "react-hot-toast";
 
-const EstadoViajeBadge = ({ estado }) => {
+const EstadoPedidoBadge = ({ estado }) => {
     const estilos = {
-        FINALIZADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        EN_CURSO: { backgroundColor: '#113d69', color: '#ffffff' },
+        ENTREGADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
+        EN_CAMINO: { backgroundColor: '#113d69', color: '#ffffff' },
+        RECOGIENDO: { backgroundColor: '#113d69', color: '#ffffff' },
+        ASIGNADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
         CANCELADO: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        PUBLICADO: { backgroundColor: '#cccbd2af', color: '#113d69' },
         CREADO: { backgroundColor: '#cccbd2af', color: '#113d69' }
     };
 
@@ -26,10 +27,11 @@ const EstadoViajeBadge = ({ estado }) => {
 
     const getTexto = () => {
         switch(estado) {
-            case 'FINALIZADO': return 'Completado';
-            case 'EN_CURSO': return 'En curso';
+            case 'ENTREGADO': return 'Entregado';
+            case 'EN_CAMINO': return 'En camino';
+            case 'RECOGIENDO': return 'Recogiendo';
+            case 'ASIGNADO': return 'Asignado';
             case 'CANCELADO': return 'Cancelado';
-            case 'PUBLICADO': return 'Publicado';
             case 'CREADO': return 'Creado';
             default: return estado || 'Desconocido';
         }
@@ -289,6 +291,8 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
     );
 };
 
+const SIGUIENTE_ESTADO = { ASIGNADO: 'RECOGIENDO', RECOGIENDO: 'EN_CAMINO', EN_CAMINO: 'ENTREGADO' };
+
 const DriverHome = () => {
     const { usuario, token } = useAuth();
     const { socket } = useSocket();
@@ -312,30 +316,30 @@ const DriverHome = () => {
     const [cargandoDocumentos, setCargandoDocumentos] = useState(false);
     const [errorDocumentos, setErrorDocumentos] = useState("");
 
-    const [viajesRecientes, setViajesRecientes] = useState([]);
-    const [todosLosViajes, setTodosLosViajes] = useState([]);
-    const [cargandoViajes, setCargandoViajes] = useState(false);
-    const [errorViajes, setErrorViajes] = useState("");
+    const [pedidosRecientes, setPedidosRecientes] = useState([]);
+    const [todosLosPedidos, setTodosLosPedidos] = useState([]);
+    const [cargandoPedidos, setCargandoPedidos] = useState(false);
+    const [errorPedidos, setErrorPedidos] = useState("");
     const [showHistorialCompleto, setShowHistorialCompleto] = useState(false);
-    const [estadisticasViajes, setEstadisticasViajes] = useState({
-        completados: 0,
+    const [estadisticasPedidos, setEstadisticasPedidos] = useState({
+        entregados: 0,
         cancelados: 0,
-        enCurso: 0
+        enCamino: 0
     });
 
     const [showPhotoModal, setShowPhotoModal] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState("");
 
-    const [busquedaViajes, setBusquedaViajes] = useState("");
+    const [busquedaPedidos, setBusquedaPedidos] = useState("");
     const [filtroEstado, setFiltroEstado] = useState("TODOS");
-    const [viajeSeleccionado, setViajeSeleccionado] = useState(null);
-    const [showDetalleViaje, setShowDetalleViaje] = useState(false);
+    const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
+    const [showDetallePedido, setShowDetallePedido] = useState(false);
 
     const [statsAvanzadas, setStatsAvanzadas] = useState({
         ganancias: { total: 0, historial: [] },
         tiempoEnLinea: { totalHoras: 0, historial: [] },
         rutasFrecuentes: [],
-        resumenViajes: { total: 0, rol: '' }
+        resumenPedidos: { total: 0, rol: '' }
     });
     const [periodo, setPeriodo] = useState('mensual');
     const [cargandoStats, setCargandoStats] = useState(false);
@@ -345,10 +349,18 @@ const DriverHome = () => {
         marca: '',
         modelo: '',
         placa: '',
+        tipo: 'MOTO',
         capacidad: ''
     });
     const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
     const [mensajeSolicitud, setMensajeSolicitud] = useState({ tipo: '', texto: '' });
+
+    // Pedidos en CREADO disponibles para auto-asignación + acciones sobre mis pedidos
+    const [pedidosDisponibles, setPedidosDisponibles] = useState([]);
+    const [cargandoDisponibles, setCargandoDisponibles] = useState(false);
+    const [asignandoId, setAsignandoId] = useState(null);
+    const [accionPedidoId, setAccionPedidoId] = useState(null);
+    const [paradasPedido, setParadasPedido] = useState([]);
 
     const [comisionInfo, setComisionInfo] = useState(null);
     const [cargandoComision, setCargandoComision] = useState(false);
@@ -358,7 +370,7 @@ const DriverHome = () => {
     const [misReportes, setMisReportes] = useState([]);
 
     useEffect(() => {
-        const hasSeenTutorial = localStorage.getItem("tutorial_conductor_visto");
+        const hasSeenTutorial = localStorage.getItem("tutorial_repartidor_visto");
         if (!hasSeenTutorial) setShowTutorial(true);
     }, []);
 
@@ -581,14 +593,14 @@ const DriverHome = () => {
     }, [token, usuario?.idUsuarios]);
 
     useEffect(() => {
-        const obtenerViajes = async () => {
+        const obtenerPedidos = async () => {
             if (!token || !usuario?.idUsuarios) return;
 
             try {
-                setCargandoViajes(true);
-                setErrorViajes("");
+                setCargandoPedidos(true);
+                setErrorPedidos("");
 
-                const respuesta = await fetch(`${API_URL}/viajes/mis-viajes`, {
+                const respuesta = await fetch(`${API_URL}/pedidos/mis-pedidos`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -598,51 +610,51 @@ const DriverHome = () => {
                 if (respuesta.ok) {
                     const data = await respuesta.json();
 
-                    const viajesData = Array.isArray(data) ? data : [];
+                    const pedidosData = Array.isArray(data) ? data : [];
 
-                    setTodosLosViajes(viajesData);
-                    setViajesRecientes(viajesData.slice(0, 3));
+                    setTodosLosPedidos(pedidosData);
+                    setPedidosRecientes(pedidosData.slice(0, 3));
 
-                    const completados = viajesData.filter(v => v.estado === 'FINALIZADO').length;
-                    const cancelados = viajesData.filter(v => v.estado === 'CANCELADO').length;
-                    const enCurso = viajesData.filter(v => v.estado === 'EN_CURSO').length;
+                    const entregados = pedidosData.filter(v => v.estado === 'ENTREGADO').length;
+                    const cancelados = pedidosData.filter(v => v.estado === 'CANCELADO').length;
+                    const enCamino = pedidosData.filter(v => v.estado === 'EN_CAMINO').length;
 
-                    setEstadisticasViajes({ completados, cancelados, enCurso });
+                    setEstadisticasPedidos({ entregados, cancelados, enCamino });
 
                 } else if (respuesta.status === 404) {
-                    setViajesRecientes([]);
-                    setTodosLosViajes([]);
+                    setPedidosRecientes([]);
+                    setTodosLosPedidos([]);
                 } else {
-                    setErrorViajes(`Error ${respuesta.status}: No se pudieron cargar los viajes`);
+                    setErrorPedidos(`Error ${respuesta.status}: No se pudieron cargar los pedidos`);
                 }
             } catch (error) {
-                setErrorViajes("Error de conexión con el servidor");
+                setErrorPedidos("Error de conexión con el servidor");
             } finally {
-                setCargandoViajes(false);
+                setCargandoPedidos(false);
             }
         };
 
-        obtenerViajes();
+        obtenerPedidos();
 
-        const intervaloViajes = setInterval(obtenerViajes, 60000);
-        return () => clearInterval(intervaloViajes);
+        const intervaloPedidos = setInterval(obtenerPedidos, 60000);
+        return () => clearInterval(intervaloPedidos);
 
     }, [token, usuario?.idUsuarios]);
 
-    const filtrarViajes = (viajes) => {
-        return viajes.filter(viaje => {
-            const textoBusqueda = busquedaViajes.toLowerCase();
+    const filtrarPedidos = (pedidos) => {
+        return pedidos.filter(pedido => {
+            const textoBusqueda = busquedaPedidos.toLowerCase();
             const coincideBusqueda = textoBusqueda === '' ||
-                viaje.idViajes.toString().includes(textoBusqueda) ||
-                (viaje.ruta?.nombre?.toLowerCase().includes(textoBusqueda));
+                pedido.idPedido.toString().includes(textoBusqueda) ||
+                (pedido.ruta?.nombre?.toLowerCase().includes(textoBusqueda));
 
-            const coincideEstado = filtroEstado === 'TODOS' || viaje.estado === filtroEstado;
+            const coincideEstado = filtroEstado === 'TODOS' || pedido.estado === filtroEstado;
 
             return coincideBusqueda && coincideEstado;
         });
     };
 
-    const viajesFiltrados = filtrarViajes(todosLosViajes);
+    const pedidosFiltrados = filtrarPedidos(todosLosPedidos);
 
     // --- COMISIÓN BASADA RECTAMENTE EN GANANCIAS ---
     const totalGananciasBackend = Number(statsAvanzadas.ganancias.total || 0);
@@ -656,11 +668,11 @@ const DriverHome = () => {
             setCargandoStats(true);
             const headers = { "Authorization": "Bearer " + token };
 
-            const [resGanancias, resTime, resRutas, resViajesHistory] = await Promise.all([
+            const [resGanancias, resTime, resRutas, resPedidosHistory] = await Promise.all([
                 fetch(`${API_URL}/estadisticas/ganancias?periodo=${periodo}`, { headers }),
                 fetch(`${API_URL}/estadisticas/online-time?periodo=${periodo}`, { headers }),
                 fetch(`${API_URL}/estadisticas/rutas`, { headers }),
-                fetch(`${API_URL}/estadisticas/viajes?periodo=${periodo}`, { headers })
+                fetch(`${API_URL}/estadisticas/pedidos?periodo=${periodo}`, { headers })
             ]);
 
             const nuevasStats = { ...statsAvanzadas };
@@ -668,7 +680,7 @@ const DriverHome = () => {
             if (resGanancias.ok) nuevasStats.ganancias = await resGanancias.json();
             if (resTime.ok) nuevasStats.tiempoEnLinea = await resTime.json();
             if (resRutas.ok) nuevasStats.rutasFrecuentes = await resRutas.json();
-            if (resViajesHistory.ok) nuevasStats.resumenViajes = await resViajesHistory.json();
+            if (resPedidosHistory.ok) nuevasStats.resumenPedidos = await resPedidosHistory.json();
 
             setStatsAvanzadas(nuevasStats);
         } catch (error) {
@@ -756,6 +768,7 @@ const DriverHome = () => {
                 marca: v.marca || '',
                 modelo: v.modelo || '',
                 placa: v.placa || '',
+                tipo: v.tipo || 'MOTO',
                 capacidad: v.capacidad || ''
             });
         }
@@ -839,6 +852,124 @@ const DriverHome = () => {
         }
     };
 
+    // --- DomiFlex: disponibles, asignación, avance de estado, chat y paradas ---
+    const cargarDisponibles = useCallback(async () => {
+        if (!token) return;
+        try {
+            setCargandoDisponibles(true);
+            const resp = await fetch(`${API_URL}/pedidos/buscar`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (resp.ok) {
+                const data = await resp.json();
+                const lista = Array.isArray(data) ? data : [];
+                setPedidosDisponibles(lista.filter(p => p.estado === 'CREADO'));
+            }
+        } catch (e) { console.error('Error cargando pedidos disponibles:', e); }
+        finally { setCargandoDisponibles(false); }
+    }, [token]);
+
+    useEffect(() => { cargarDisponibles(); }, [cargarDisponibles]);
+
+    const refrescarPedidoEnListas = (actualizado) => {
+        setTodosLosPedidos(prev => prev.map(p => p.idPedido === actualizado.idPedido ? { ...p, ...actualizado } : p));
+        setPedidosRecientes(prev => prev.map(p => p.idPedido === actualizado.idPedido ? { ...p, ...actualizado } : p));
+        setPedidoSeleccionado(prev => prev && prev.idPedido === actualizado.idPedido ? { ...prev, ...actualizado } : prev);
+    };
+
+    const asignarmePedido = async (idPedido) => {
+        try {
+            setAsignandoId(idPedido);
+            const resp = await fetch(`${API_URL}/pedidos/${idPedido}/asignar`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idRepartidor: usuario.idUsuarios })
+            });
+            const data = await resp.json();
+            if (data?.error) throw new Error(data.error);
+            const pedido = data.pedido || { idPedido, estado: 'ASIGNADO', idRepartidor: usuario.idUsuarios };
+            setPedidosDisponibles(prev => prev.filter(p => p.idPedido !== idPedido));
+            setTodosLosPedidos(prev => [pedido, ...prev]);
+            toast.success(`Pedido #${idPedido} asignado. Ve a recogerlo.`);
+        } catch (e) { toast.error(e.message || 'No se pudo asignar el pedido'); }
+        finally { setAsignandoId(null); }
+    };
+
+    const avanzarEstado = async (pedido) => {
+        const siguiente = SIGUIENTE_ESTADO[pedido.estado];
+        if (!siguiente) return;
+        try {
+            setAccionPedidoId(pedido.idPedido);
+            const resp = await fetch(`${API_URL}/pedidos/${pedido.idPedido}/estado`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: siguiente })
+            });
+            const data = await resp.json();
+            if (data?.error) throw new Error(data.error);
+            refrescarPedidoEnListas(data.pedido || { idPedido: pedido.idPedido, estado: siguiente });
+            toast.success(`Pedido #${pedido.idPedido} → ${siguiente.replace('_', ' ')}`);
+        } catch (e) { toast.error(e.message || 'No se pudo actualizar el estado'); }
+        finally { setAccionPedidoId(null); }
+    };
+
+    const cancelarPedidoRep = async (idPedido) => {
+        try {
+            setAccionPedidoId(idPedido);
+            const resp = await fetch(`${API_URL}/pedidos/${idPedido}/cancelar`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+            });
+            const data = await resp.json();
+            if (data?.error) throw new Error(data.error);
+            refrescarPedidoEnListas(data.pedido || { idPedido, estado: 'CANCELADO' });
+            toast.success('Pedido cancelado');
+        } catch (e) { toast.error(e.message || 'No se pudo cancelar el pedido'); }
+        finally { setAccionPedidoId(null); }
+    };
+
+    const iniciarChatRep = async (pedido) => {
+        if (!pedido?.idCliente) { toast.error('El pedido no tiene cliente asociado'); return; }
+        try {
+            const resp = await fetch(`${API_URL}/chat/conversaciones`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idPedido: pedido.idPedido, idCliente: pedido.idCliente, idRepartidor: usuario.idUsuarios })
+            });
+            const data = await resp.json();
+            if (data?.error) throw new Error(data.error);
+            toast.success(`Chat del pedido #${pedido.idPedido} listo`);
+        } catch (e) { toast.error(e.message || 'No se pudo iniciar el chat'); }
+    };
+
+    const cargarParadasRep = useCallback(async (idPedido) => {
+        try {
+            const resp = await fetch(`${API_URL}/pedido-paradas/pedido/${idPedido}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setParadasPedido(resp.ok ? await resp.json() : []);
+        } catch (e) { setParadasPedido([]); }
+    }, [token]);
+
+    useEffect(() => {
+        if (pedidoSeleccionado?.idPedido) cargarParadasRep(pedidoSeleccionado.idPedido);
+        else setParadasPedido([]);
+    }, [pedidoSeleccionado?.idPedido, cargarParadasRep]);
+
+    const completarParada = async (idPedido, idParada, completada) => {
+        try {
+            const resp = await fetch(`${API_URL}/pedido-paradas/completar`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idPedido, idParada, completada })
+            });
+            const data = await resp.json();
+            if (data?.error) throw new Error(data.error);
+            cargarParadasRep(idPedido);
+            toast.success(completada ? 'Parada completada' : 'Parada marcada pendiente');
+        } catch (e) { toast.error(e.message || 'No se pudo actualizar la parada'); }
+    };
+
     const obtenerLicencia = () => {
         if (!documentos || documentos.length === 0) return null;
         const licencia = documentos.find(doc =>
@@ -855,14 +986,14 @@ const DriverHome = () => {
     const manejarSiguiente = () => {
         if (currentStep < 3) setCurrentStep(currentStep + 1);
         else {
-            localStorage.setItem("tutorial_conductor_visto", "true");
+            localStorage.setItem("tutorial_repartidor_visto", "true");
             setShowTutorial(false);
             navigate("/documentacion");
         }
     };
 
     const manejarAtras = () => { if (currentStep > 1) setCurrentStep(currentStep - 1); };
-    const saltarTutorial = () => { localStorage.setItem("tutorial_conductor_visto", "true"); setShowTutorial(false); };
+    const saltarTutorial = () => { localStorage.setItem("tutorial_repartidor_visto", "true"); setShowTutorial(false); };
     const repetirTutorial = () => { setCurrentStep(1); setShowTutorial(true); };
 
     const stepCircleStyle = (stepNumber) => ({
@@ -946,7 +1077,7 @@ const DriverHome = () => {
                     }}>
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Panel de Conductor</h2>
+                                <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Panel de Repartidor</h2>
                                 <button
                                     onClick={repetirTutorial}
                                     style={{
@@ -1021,8 +1152,8 @@ const DriverHome = () => {
                     />
                     <StatsCard
                         icon={<FaCheckCircle size={20} />}
-                        title="Viajes Finalizados"
-                        value={statsAvanzadas.resumenViajes.total}
+                        title="Pedidos Entregados"
+                        value={statsAvanzadas.resumenPedidos.total}
                         color="#62d8d9"
                         bgColor="#62d8d915"
                     />
@@ -1071,16 +1202,16 @@ const DriverHome = () => {
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <h5 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Frecuencia</h5>
-                                <StatsBadge bgColor="#f8f9fa" color="#113d69">Viajes {periodo}</StatsBadge>
+                                <StatsBadge bgColor="#f8f9fa" color="#113d69">Pedidos {periodo}</StatsBadge>
                             </div>
                             <div style={{ height: '250px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={statsAvanzadas.resumenViajes.historial}>
+                                    <BarChart data={statsAvanzadas.resumenPedidos.historial}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <Tooltip cursor={{ fill: 'rgba(84, 199, 184, 0.05)' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                                        <Bar dataKey="value" fill="#62d8d9" radius={[4, 4, 0, 0]} name="Viajes" barSize={20} />
+                                        <Bar dataKey="value" fill="#62d8d9" radius={[4, 4, 0, 0]} name="Pedidos" barSize={20} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
@@ -1140,10 +1271,10 @@ const DriverHome = () => {
                                         <span style={{ fontWeight: 'bold', color: '#62d8d9' }}>${displayComisionEnBaseABackend.totalComision?.toLocaleString()} COP</span>
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: '#f8f9fa', borderRadius: '0.375rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                                        <span style={{ color: '#6c757d' }}>Viajes completados</span>
-                                        <span style={{ fontWeight: 'bold', color: '#113d69' }}>{displayComisionEnBaseABackend.viajesCompletados}</span>
+                                        <span style={{ color: '#6c757d' }}>Pedidos entregados</span>
+                                        <span style={{ fontWeight: 'bold', color: '#113d69' }}>{displayComisionEnBaseABackend.pedidosEntregados}</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: displayComisionEnBaseABackend.reporteEnviado ? '#62d8d915' : '#cccbd2af', borderRadius: '0.375rem', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: (displayComisionEnBaseABackend.tieneReportePendiente || displayComisionEnBaseABackend.estadoReporte) ? '#62d8d915' : '#cccbd2af', borderRadius: '0.375rem', flexWrap: 'wrap' }}>
                                         <span>Estado del reporte</span>
                                         <DocumentoBadge estado={displayComisionEnBaseABackend.estadoReporte || 'Sin enviar'} />
                                     </div>
@@ -1167,7 +1298,7 @@ const DriverHome = () => {
                                 <h5 style={{ margin: 0, fontWeight: 'bold', color: '#62d8d9' }}>Enviar Comprobante de Pago</h5>
                             </div>
 
-                            {displayComisionEnBaseABackend?.reporteEnviado && displayComisionEnBaseABackend?.estadoReporte !== 'RECHAZADO' ? (
+                            {(displayComisionEnBaseABackend?.tieneReportePendiente || (displayComisionEnBaseABackend?.estadoReporte && displayComisionEnBaseABackend?.estadoReporte !== 'RECHAZADO')) ? (
                                 <div style={{
                                     padding: '1rem',
                                     backgroundColor: displayComisionEnBaseABackend.estadoReporte === 'APROBADO' ? '#d4edda' : '#cce5ff',
@@ -1344,7 +1475,7 @@ const DriverHome = () => {
                                                 {vehiculoPrincipal.marca} {vehiculoPrincipal.modelo}
                                             </h6>
                                             <p style={{ marginBottom: '0.25rem', color: '#6c757d', fontSize: '0.875rem' }}>Placa: <span style={{ fontWeight: '600', color: '#62d8d9' }}>{vehiculoPrincipal.placa}</span></p>
-                                            <p style={{ marginBottom: 0, color: '#6c757d', fontSize: '0.875rem' }}>Capacidad: {vehiculoPrincipal.capacidad} pasajeros</p>
+                                            <p style={{ marginBottom: 0, color: '#6c757d', fontSize: '0.875rem' }}>Capacidad: {vehiculoPrincipal.capacidad} kg · {vehiculoPrincipal.tipo || 'Sin tipo'}</p>
                                             {vehiculoPrincipal.placaValidada && (
                                                 <span style={{
                                                     marginTop: '0.5rem',
@@ -1498,7 +1629,7 @@ const DriverHome = () => {
                             <FaInfoCircle size={24} style={{ marginRight: '0.75rem', color: '#dc3545' }} />
                             <div style={{ flex: 1 }}>
                                 <h5 style={{ marginBottom: '0.25rem', fontWeight: '600' }}>Documentación Rechazada</h5>
-                                <p style={{ marginBottom: 0, fontSize: '0.875rem' }}>Tu documentación no ha sido aprobada. No podrás publicar nuevos viajes hasta que actualices tus documentos.</p>
+                                <p style={{ marginBottom: 0, fontSize: '0.875rem' }}>Tu documentación no ha sido aprobada. No podrás publicar nuevos pedidos hasta que actualices tus documentos.</p>
                             </div>
                             <AccionButton
                                 variant="danger"
@@ -1509,6 +1640,52 @@ const DriverHome = () => {
                             </AccionButton>
                         </div>
                     )}
+
+                    {/* Pedidos en CREADO disponibles para auto-asignación */}
+                    <div style={{ ...cardStyle, borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', marginBottom: '1.5rem' }}>
+                        <div style={{ padding: '1.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: '#62d8d915', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
+                                        <FaList size={20} style={{ color: '#62d8d9' }} />
+                                    </div>
+                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos disponibles</h5>
+                                </div>
+                                <AccionButton variant="outline-secondary" onClick={cargarDisponibles} disabled={cargandoDisponibles}>
+                                    {cargandoDisponibles ? 'Actualizando...' : 'Actualizar'}
+                                </AccionButton>
+                            </div>
+                            {cargandoDisponibles ? (
+                                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                                    <Spinner animation="border" size="sm" style={{ color: '#62d8d9' }} />
+                                </div>
+                            ) : pedidosDisponibles.length === 0 ? (
+                                <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay pedidos en estado CREADO por ahora.</p>
+                            ) : (
+                                <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                    {pedidosDisponibles.slice(0, 5).map((pedido) => (
+                                        <div key={pedido.idPedido} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 0', borderBottom: '1px solid #F3F4F6', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                            <div>
+                                                <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
+                                                <small style={{ color: '#6c757d' }}>
+                                                    {(pedido.dirRecogida || 'Recogida')} → {(pedido.dirEntrega || pedido.detallePedido || 'Entrega')}
+                                                    {pedido.total ? ` · $${Number(pedido.total).toLocaleString()}` : ''}
+                                                    {pedido.distanciaKm ? ` · ${Number(pedido.distanciaKm).toFixed(1)} km` : ''}
+                                                </small>
+                                            </div>
+                                            <AccionButton
+                                                variant="primary"
+                                                onClick={() => asignarmePedido(pedido.idPedido)}
+                                                disabled={asignandoId === pedido.idPedido}
+                                            >
+                                                {asignandoId === pedido.idPedido ? 'Asignando...' : 'Asignarme'}
+                                            </AccionButton>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
                     <div style={{ ...cardStyle, borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
                         <div style={{ padding: '1.5rem' }}>
@@ -1526,33 +1703,33 @@ const DriverHome = () => {
                                     }}>
                                         <FaHistory size={20} style={{ color: '#62d8d9' }} />
                                     </div>
-                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Viajes Recientes</h5>
+                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos Recientes</h5>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                                     <StatsBadge bgColor="#62d8d9" color="#ffffff">
-                                        {estadisticasViajes.completados} Completados
+                                        {estadisticasPedidos.entregados} Entregados
                                     </StatsBadge>
-                                    {estadisticasViajes.enCurso > 0 && (
+                                    {estadisticasPedidos.enCamino > 0 && (
                                         <StatsBadge bgColor="#113d69" color="#ffffff">
-                                            {estadisticasViajes.enCurso} En curso
+                                            {estadisticasPedidos.enCamino} En camino
                                         </StatsBadge>
                                     )}
                                 </div>
                             </div>
 
-                            {cargandoViajes ? (
+                            {cargandoPedidos ? (
                                 <div style={{ textAlign: 'center', padding: '1rem' }}>
                                     <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                    <p style={{ marginTop: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>Cargando viajes...</p>
+                                    <p style={{ marginTop: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>Cargando pedidos...</p>
                                 </div>
-                            ) : errorViajes ? (
+                            ) : errorPedidos ? (
                                 <div style={{ textAlign: 'center', padding: '1rem' }}>
-                                    <p style={{ color: '#dc3545', fontSize: '0.875rem' }}>{errorViajes}</p>
+                                    <p style={{ color: '#dc3545', fontSize: '0.875rem' }}>{errorPedidos}</p>
                                     <AccionButton variant="outline-secondary" onClick={() => window.location.reload()}>
                                         Reintentar
                                     </AccionButton>
                                 </div>
-                            ) : viajesRecientes.length === 0 ? (
+                            ) : pedidosRecientes.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
                                     <div style={{
                                         width: '60px',
@@ -1566,22 +1743,22 @@ const DriverHome = () => {
                                     }}>
                                         <FaHistory size={24} style={{ color: '#6c757d' }} />
                                     </div>
-                                    <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay viajes recientes</p>
+                                    <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay pedidos recientes</p>
                                 </div>
                             ) : (
                                 <>
                                     <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                        {viajesRecientes.map((viaje) => (
+                                        {pedidosRecientes.map((pedido) => (
                                             <div
-                                                key={viaje.idViajes}
+                                                key={pedido.idPedido}
                                                 style={{
                                                     padding: '0.75rem 0',
                                                     borderBottom: '1px solid #F3F4F6',
                                                     cursor: 'pointer'
                                                 }}
                                                 onClick={() => {
-                                                    setViajeSeleccionado(viaje);
-                                                    setShowDetalleViaje(true);
+                                                    setPedidoSeleccionado(pedido);
+                                                    setShowDetallePedido(true);
                                                 }}
                                             >
                                                 <div style={{
@@ -1613,39 +1790,39 @@ const DriverHome = () => {
                                                         )}
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                        <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Viaje #{viaje.idViajes}</p>
+                                                        <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
                                                         <small style={{ color: '#6c757d' }}>
-                                                            {formatearFecha(viaje.fechaHoraSalida)}
+                                                            {formatearFecha(pedido.fechaHoraSalida)}
                                                         </small>
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <FaRoute size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
                                                             <small style={{ color: '#113d69' }}>
-                                                                {viaje.ruta?.nombre || 'Ruta no disponible'}
+                                                                {pedido.ruta?.nombre || 'Ruta no disponible'}
                                                             </small>
                                                         </div>
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                         <small style={{ color: '#6c757d' }}>
-                                                            {viaje.cuposTotales - viaje.cuposDisponibles}/{viaje.cuposTotales} pasajeros
+                                                            {pedido.detallePedido || pedido.dirEntrega || 'Domicilio'}
                                                         </small>
                                                     </div>
                                                     <div style={{ textAlign: window.innerWidth < 768 ? 'left' : 'right', gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                        <EstadoViajeBadge estado={viaje.estado} />
+                                                        <EstadoPedidoBadge estado={pedido.estado} />
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
-                                    {todosLosViajes.length > 3 && (
+                                    {todosLosPedidos.length > 3 && (
                                         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                                             <AccionButton
                                                 variant="outline-secondary"
                                                 onClick={() => setShowHistorialCompleto(true)}
                                             >
-                                                Ver historial completo ({todosLosViajes.length} viajes)
+                                                Ver historial completo ({todosLosPedidos.length} pedidos)
                                             </AccionButton>
                                         </div>
                                     )}
@@ -1746,7 +1923,7 @@ const DriverHome = () => {
                                                             )}
                                                         </h6>
                                                         <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem', color: '#6c757d' }}>Placa: <span style={{ color: '#62d8d9' }}>{vehiculo.placa}</span></p>
-                                                        <p style={{ marginBottom: 0, fontSize: '0.875rem', color: '#6c757d' }}>Capacidad: {vehiculo.capacidad} pasajeros</p>
+                                                        <p style={{ marginBottom: 0, fontSize: '0.875rem', color: '#6c757d' }}>Capacidad: {vehiculo.capacidad} kg · {vehiculo.tipo || 'Sin tipo'}</p>
                                                         {vehiculo.placaValidada && (
                                                             <span style={{
                                                                 marginTop: '0.25rem',
@@ -1877,7 +2054,7 @@ const DriverHome = () => {
                             borderBottom: 'none'
                         }}>
                             <h5 style={{ fontWeight: '600', color: '#62d8d9' }}>
-                                <FaHistory style={{ marginRight: '0.5rem' }} /> Historial Completo de Viajes
+                                <FaHistory style={{ marginRight: '0.5rem' }} /> Historial Completo de Pedidos
                             </h5>
                         </div>
                         <div style={{ padding: '1rem 1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 120px)' }}>
@@ -1898,9 +2075,9 @@ const DriverHome = () => {
                                             <FaSearch color="#62d8d9" />
                                         </span>
                                         <input
-                                            placeholder="Buscar por # de viaje o nombre de ruta..."
-                                            value={busquedaViajes}
-                                            onChange={(e) => setBusquedaViajes(e.target.value)}
+                                            placeholder="Buscar por # de pedido o nombre de ruta..."
+                                            value={busquedaPedidos}
+                                            onChange={(e) => setBusquedaPedidos(e.target.value)}
                                             style={{
                                                 flex: 1,
                                                 padding: '0.375rem 0.75rem',
@@ -1935,22 +2112,23 @@ const DriverHome = () => {
                                             }}
                                         >
                                             <option value="TODOS">Todos los estados</option>
-                                            <option value="FINALIZADO">Completados</option>
-                                            <option value="EN_CURSO">En curso</option>
+                                            <option value="ENTREGADO">Entregados</option>
+                                            <option value="EN_CAMINO">En camino</option>
+                                            <option value="RECOGIENDO">Recogiendo</option>
+                                            <option value="ASIGNADO">Asignados</option>
                                             <option value="CANCELADO">Cancelados</option>
-                                            <option value="PUBLICADO">Publicados</option>
                                             <option value="CREADO">Creados</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: window.innerWidth < 768 ? 'left' : 'right' }}>
                                     <StatsBadge bgColor="#62d8d9" color="#ffffff">
-                                        {viajesFiltrados.length} viajes
+                                        {pedidosFiltrados.length} pedidos
                                     </StatsBadge>
                                 </div>
                             </div>
 
-                            {viajesFiltrados.length === 0 ? (
+                            {pedidosFiltrados.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
                                     <div style={{
                                         width: '60px',
@@ -1964,10 +2142,10 @@ const DriverHome = () => {
                                     }}>
                                         <FaHistory size={24} style={{ color: '#62d8d9' }} />
                                     </div>
-                                    <p style={{ color: '#6c757d' }}>No se encontraron viajes con los filtros seleccionados</p>
+                                    <p style={{ color: '#6c757d' }}>No se encontraron pedidos con los filtros seleccionados</p>
                                     <button
                                         onClick={() => {
-                                            setBusquedaViajes('');
+                                            setBusquedaPedidos('');
                                             setFiltroEstado('TODOS');
                                         }}
                                         style={{
@@ -1983,17 +2161,17 @@ const DriverHome = () => {
                                 </div>
                             ) : (
                                 <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                    {viajesFiltrados.map((viaje) => (
+                                    {pedidosFiltrados.map((pedido) => (
                                         <div
-                                            key={viaje.idViajes}
+                                            key={pedido.idPedido}
                                             style={{
                                                 padding: '0.75rem 0',
                                                 borderBottom: '1px solid #F3F4F6',
                                                 cursor: 'pointer'
                                             }}
                                             onClick={() => {
-                                                setViajeSeleccionado(viaje);
-                                                setShowDetalleViaje(true);
+                                                setPedidoSeleccionado(pedido);
+                                                setShowDetallePedido(true);
                                             }}
                                         >
                                             <div style={{
@@ -2025,31 +2203,31 @@ const DriverHome = () => {
                                                     )}
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                    <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Viaje #{viaje.idViajes}</p>
+                                                    <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
                                                     <small style={{ color: '#6c757d' }}>
-                                                        {formatearFecha(viaje.fechaHoraSalida)}
+                                                        {formatearFecha(pedido.fechaHoraSalida)}
                                                     </small>
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                         <FaRoute size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
                                                         <small style={{ fontWeight: '600', color: '#113d69' }}>Ruta:</small>
-                                                        <span style={{ marginLeft: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>{viaje.ruta?.nombre || 'No disponible'}</span>
+                                                        <span style={{ marginLeft: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>{pedido.ruta?.nombre || 'No disponible'}</span>
                                                     </div>
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <small style={{ color: '#6c757d' }}>
-                                                        {viaje.cuposTotales - viaje.cuposDisponibles}/{viaje.cuposTotales} pasajeros
+                                                        {pedido.detallePedido || pedido.dirEntrega || 'Domicilio'}
                                                     </small>
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <small style={{ color: '#6c757d', display: 'block' }}>
                                                         <FaClock style={{ marginRight: '0.25rem' }} size={10} />
-                                                        {Math.round((viaje.cuposTotales - viaje.cuposDisponibles) * 100 / viaje.cuposTotales)}% ocupado
+                                                        {pedido.distanciaKm ? `${Number(pedido.distanciaKm).toFixed(1)} km` : (pedido.dirEntrega || 'Domicilio')}
                                                     </small>
                                                 </div>
                                                 <div style={{ textAlign: window.innerWidth < 768 ? 'left' : 'right', gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                    <EstadoViajeBadge estado={viaje.estado} />
+                                                    <EstadoPedidoBadge estado={pedido.estado} />
                                                 </div>
                                             </div>
                                         </div>
@@ -2069,7 +2247,7 @@ const DriverHome = () => {
                 </div>
             )}
 
-            {showDetalleViaje && viajeSeleccionado && (
+            {showDetallePedido && pedidoSeleccionado && (
                 <div style={{
                     position: 'fixed',
                     top: 0,
@@ -2082,7 +2260,7 @@ const DriverHome = () => {
                     justifyContent: 'center',
                     zIndex: 1050,
                     padding: '1rem'
-                }} onClick={() => setShowDetalleViaje(false)}>
+                }} onClick={() => setShowDetallePedido(false)}>
                     <div style={{
                         backgroundColor: 'white',
                         borderRadius: '0.5rem',
@@ -2097,7 +2275,7 @@ const DriverHome = () => {
                             padding: '1.5rem'
                         }}>
                             <h5 style={{ fontWeight: '600', color: '#113d69' }}>
-                                <FaCar style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Detalle del Viaje #{viajeSeleccionado.idViajes}
+                                <FaCar style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
                             </h5>
                         </div>
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
@@ -2113,21 +2291,20 @@ const DriverHome = () => {
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Fecha y hora:</span>
-                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{formatearFecha(viajeSeleccionado.fechaHoraSalida)}</span>
+                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{formatearFecha(pedidoSeleccionado.fechaHoraSalida)}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Estado:</span>
-                                                <EstadoViajeBadge estado={viajeSeleccionado.estado} />
+                                                <EstadoPedidoBadge estado={pedidoSeleccionado.estado} />
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
-                                                <span style={{ color: '#6c757d' }}>Capacidad:</span>
-                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{viajeSeleccionado.cuposTotales} pasajeros</span>
+                                                <span style={{ color: '#6c757d' }}>Detalle:</span>
+                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{pedidoSeleccionado.detallePedido || pedidoSeleccionado.dirEntrega || 'Domicilio'}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
-                                                <span style={{ color: '#6c757d' }}>Ocupación:</span>
+                                                <span style={{ color: '#6c757d' }}>Distancia:</span>
                                                 <span style={{ fontWeight: '600', color: '#62d8d9' }}>
-                                                    {viajeSeleccionado.cuposTotales - viajeSeleccionado.cuposDisponibles} / {viajeSeleccionado.cuposTotales}
-                                                    ({Math.round((viajeSeleccionado.cuposTotales - viajeSeleccionado.cuposDisponibles) * 100 / viajeSeleccionado.cuposTotales)}%)
+                                                    {pedidoSeleccionado.distanciaKm ? `${Number(pedidoSeleccionado.distanciaKm).toFixed(1)} km` : 'N/A'}
                                                 </span>
                                             </div>
                                         </div>
@@ -2135,23 +2312,23 @@ const DriverHome = () => {
                                 </div>
                                 <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #113d6920`, borderRadius: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
-                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#113d69' }}>Ruta del Viaje</h6>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#113d69' }}>Ruta del Pedido</h6>
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            {viajeSeleccionado.ruta?.nombre && (
+                                            {pedidoSeleccionado.ruta?.nombre && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
                                                     <FaRoute size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Ruta:</span>
-                                                        <span style={{ fontWeight: '600', display: 'block', color: '#113d69' }}>{viajeSeleccionado.ruta.nombre}</span>
+                                                        <span style={{ fontWeight: '600', display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.nombre}</span>
                                                     </div>
                                                 </div>
                                             )}
-                                            {viajeSeleccionado.ruta?.descripcion && (
+                                            {pedidoSeleccionado.ruta?.descripcion && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
                                                     <FaInfoCircle size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Descripción:</span>
-                                                        <span style={{ display: 'block', color: '#113d69' }}>{viajeSeleccionado.ruta.descripcion}</span>
+                                                        <span style={{ display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.descripcion}</span>
                                                     </div>
                                                 </div>
                                             )}
@@ -2160,12 +2337,12 @@ const DriverHome = () => {
                                 </div>
                             </div>
 
-                            {viajeSeleccionado.ruta?.paradas && viajeSeleccionado.ruta.paradas.length > 0 && (
+                            {pedidoSeleccionado.ruta?.paradas && pedidoSeleccionado.ruta.paradas.length > 0 && (
                                 <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #62d8d920`, borderRadius: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
                                         <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#62d8d9' }}>Paradas del Recorrido</h6>
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            {viajeSeleccionado.ruta.paradas
+                                            {pedidoSeleccionado.ruta.paradas
                                                 .sort((a, b) => a.orden - b.orden)
                                                 .map((parada, index) => (
                                                     <div key={parada.idParada} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
@@ -2173,7 +2350,7 @@ const DriverHome = () => {
                                                             width: '24px',
                                                             height: '24px',
                                                             borderRadius: '50%',
-                                                            backgroundColor: index === 0 ? '#62d8d9' : index === viajeSeleccionado.ruta.paradas.length - 1 ? '#113d69' : '#e0e0e0',
+                                                            backgroundColor: index === 0 ? '#62d8d9' : index === pedidoSeleccionado.ruta.paradas.length - 1 ? '#113d69' : '#e0e0e0',
                                                             color: 'white',
                                                             display: 'flex',
                                                             alignItems: 'center',
@@ -2204,11 +2381,70 @@ const DriverHome = () => {
                                     </div>
                                 </div>
                             )}
+                            {/* Recogida / entrega + acciones del repartidor */}
+                            <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #113d6920`, borderRadius: '1rem', marginTop: '1rem' }}>
+                                <div style={{ padding: '1rem' }}>
+                                    <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#113d69' }}>Recogida y entrega</h6>
+                                    {pedidoSeleccionado.dirRecogida && (
+                                        <p style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}><strong>Recogida:</strong> {pedidoSeleccionado.dirRecogida}</p>
+                                    )}
+                                    {pedidoSeleccionado.dirEntrega && (
+                                        <p style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}><strong>Entrega:</strong> {pedidoSeleccionado.dirEntrega}</p>
+                                    )}
+                                    {pedidoSeleccionado.cliente?.nombre && (
+                                        <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}><strong>Cliente:</strong> {pedidoSeleccionado.cliente.nombre}</p>
+                                    )}
+                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                                        {SIGUIENTE_ESTADO[pedidoSeleccionado.estado] && (
+                                            <AccionButton
+                                                variant="primary"
+                                                onClick={() => avanzarEstado(pedidoSeleccionado)}
+                                                disabled={accionPedidoId === pedidoSeleccionado.idPedido}
+                                            >
+                                                <FaCheckCircle style={{ marginRight: '0.5rem' }} />
+                                                {accionPedidoId === pedidoSeleccionado.idPedido ? 'Actualizando...' : `Marcar ${SIGUIENTE_ESTADO[pedidoSeleccionado.estado].replace('_', ' ')}`}
+                                            </AccionButton>
+                                        )}
+                                        <AccionButton variant="outline-primary" onClick={() => iniciarChatRep(pedidoSeleccionado)}>
+                                            Chatear con cliente
+                                        </AccionButton>
+                                        {pedidoSeleccionado.estado !== 'ENTREGADO' && pedidoSeleccionado.estado !== 'CANCELADO' && (
+                                            <AccionButton
+                                                variant="outline-secondary"
+                                                onClick={() => cancelarPedidoRep(pedidoSeleccionado.idPedido)}
+                                                disabled={accionPedidoId === pedidoSeleccionado.idPedido}
+                                            >
+                                                Cancelar pedido
+                                            </AccionButton>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            {paradasPedido.length > 0 && (
+                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #62d8d920`, borderRadius: '1rem', marginTop: '1rem' }}>
+                                    <div style={{ padding: '1rem' }}>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#62d8d9' }}>Paradas multi-entrega del pedido</h6>
+                                        {paradasPedido.map((pp) => (
+                                            <div key={`${pp.idPedido}-${pp.idParada}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                <span style={{ fontSize: '0.875rem', color: '#113d69', fontWeight: '600' }}>
+                                                    {pp.parada?.nombre || `Parada ${pp.orden ?? ''}`} ({pp.tipo || 'ENTREGA'})
+                                                </span>
+                                                <AccionButton
+                                                    variant={pp.completada ? 'outline-secondary' : 'primary'}
+                                                    onClick={() => completarParada(pp.idPedido, pp.idParada, !pp.completada)}
+                                                >
+                                                    {pp.completada ? 'Marcar pendiente' : 'Completar'}
+                                                </AccionButton>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div style={{ padding: '1rem 1.5rem 1.5rem', borderTop: 'none' }}>
                             <AccionButton
                                 variant="outline-secondary"
-                                onClick={() => setShowDetalleViaje(false)}
+                                onClick={() => setShowDetallePedido(false)}
                             >
                                 Cerrar
                             </AccionButton>
@@ -2300,7 +2536,7 @@ const DriverHome = () => {
                                         )}
                                     </div>
                                     <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#113d69' }}>Vehículo</h3>
-                                    <p style={{ color: '#6c757d' }}>Seguridad garantizada para ti y tus pasajeros.</p>
+                                    <p style={{ color: '#6c757d' }}>Seguridad garantizada para ti y tus clientes.</p>
                                 </div>
                             )}
                             {currentStep === 3 && (
@@ -2445,8 +2681,27 @@ const DriverHome = () => {
                                     }}
                                 />
                             </div>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Tipo de vehículo</label>
+                                <select
+                                    value={formDataSolicitud.tipo}
+                                    onChange={(e) => setFormDataSolicitud({ ...formDataSolicitud, tipo: e.target.value })}
+                                    required
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.375rem 0.75rem',
+                                        border: `1px solid #62d8d9`,
+                                        borderRadius: '0.375rem'
+                                    }}
+                                >
+                                    <option value="MOTO">MOTO</option>
+                                    <option value="BICICLETA">BICICLETA</option>
+                                    <option value="CARRO">CARRO</option>
+                                    <option value="FURGON">FURGÓN</option>
+                                </select>
+                            </div>
                             <div style={{ marginBottom: '1.5rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Capacidad (Pasajeros)</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Capacidad (kg)</label>
                                 <input
                                     type="number"
                                     value={formDataSolicitud.capacidad}
