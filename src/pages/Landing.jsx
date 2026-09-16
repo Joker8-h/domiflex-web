@@ -147,7 +147,7 @@ const styles = {
     height: "auto",
   },
   heroTitle: {
-    fontSize: "clamp(26px, 7vw, 40px)",
+    fontSize: "clamp(24px, 6vw, 40px)",
     fontWeight: theme.fontWeight.extrabold,
     lineHeight: 1.15,
     marginBottom: "16px",
