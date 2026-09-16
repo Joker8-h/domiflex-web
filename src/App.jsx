@@ -1,46 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
 import "./design/global.css";
 import { AuthProvider, useAuth } from "./pages/context/AuthContext";
 import { SocketProvider } from "./pages/context/SocketContext";
 import { Toaster } from "react-hot-toast";
+import tokens from "./design/tokens";
 
-// Public pages
+// Eager solo lo crítico del primer pintado; el resto va por rol (code-splitting).
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+const Register = lazy(() => import("./pages/Register"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // Client pages
-import HomeBase from "./pages/HomeBase";
-import Restaurantes from "./pages/Restaurantes";
-import RestauranteDetalle from "./pages/RestauranteDetalle";
-import Carrito from "./pages/Carrito";
-import Tracking from "./pages/Tracking";
-import PedidoDetalle from "./pages/PedidoDetalle";
-import NotificacionesPage from "./pages/Notificaciones";
-import Perfil from "./pages/Perfil";
-import UserHome from "./pages/User/UserHome";
-import Profile from "./pages/User/Profile";
-import Documents from "./pages/Documents";
+const HomeBase = lazy(() => import("./pages/HomeBase"));
+const Restaurantes = lazy(() => import("./pages/Restaurantes"));
+const RestauranteDetalle = lazy(() => import("./pages/RestauranteDetalle"));
+const Carrito = lazy(() => import("./pages/Carrito"));
+const Tracking = lazy(() => import("./pages/Tracking"));
+const PedidoDetalle = lazy(() => import("./pages/PedidoDetalle"));
+const NotificacionesPage = lazy(() => import("./pages/Notificaciones"));
+const Perfil = lazy(() => import("./pages/Perfil"));
+const UserHome = lazy(() => import("./pages/User/UserHome"));
+const Profile = lazy(() => import("./pages/User/Profile"));
+const Documents = lazy(() => import("./pages/Documents"));
 
 // Driver pages
-import DriverHome from "./pages/Driver/DriverHome";
-import DriverProfile from "./pages/Driver/DriverProfile";
-import VehicleRegistration from "./pages/Driver/VehicleRegistration";
+const DriverHome = lazy(() => import("./pages/Driver/DriverHome"));
+const DriverProfile = lazy(() => import("./pages/Driver/DriverProfile"));
+const VehicleRegistration = lazy(() => import("./pages/Driver/VehicleRegistration"));
 
 // Admin pages
-import DashboardLayout from "./Dashboard/DashboardLayout";
-import Home from "./Dashboard/Home";
-import AdminRepartidores from "./pages/Admin/AdminRepartidores";
-import AdminClientes from "./pages/Admin/AdminClientes";
-import AdminUsuarios from "./pages/Admin/AdminUsuarios";
-import AdminVehiculos from "./pages/Admin/AdminVehiculos";
-import AdminDocumentos from "./pages/Admin/AdminDocuments";
-import AdminVehicleRequests from "./pages/Admin/AdminVehicleRequests";
-import AdminReportesPago from "./pages/Admin/AdminReportesPago";
+const DashboardLayout = lazy(() => import("./Dashboard/DashboardLayout"));
+const Home = lazy(() => import("./Dashboard/Home"));
+const AdminRepartidores = lazy(() => import("./pages/Admin/AdminRepartidores"));
+const AdminClientes = lazy(() => import("./pages/Admin/AdminClientes"));
+const AdminUsuarios = lazy(() => import("./pages/Admin/AdminUsuarios"));
+const AdminVehiculos = lazy(() => import("./pages/Admin/AdminVehiculos"));
+const AdminDocumentos = lazy(() => import("./pages/Admin/AdminDocuments"));
+const AdminVehicleRequests = lazy(() => import("./pages/Admin/AdminVehicleRequests"));
+const AdminReportesPago = lazy(() => import("./pages/Admin/AdminReportesPago"));
+
+function RouteLoader() {
+  return (
+    <div
+      role="status"
+      aria-label="Cargando página"
+      style={{
+        minHeight: "100vh",
+        backgroundColor: tokens.colors.bgPrimary,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          width: "40px",
+          height: "40px",
+          border: `3px solid ${tokens.colors.border}`,
+          borderTopColor: tokens.colors.accent,
+          borderRadius: "50%",
+          animation: "df-spin 1s linear infinite",
+        }}
+      />
+    </div>
+  );
+}
 
 // Components
 import BottomTabs from "./components/BottomTabs";
@@ -89,6 +118,7 @@ function App() {
         />
         <BrowserRouter>
           <ErrorBoundary>
+          <Suspense fallback={<RouteLoader />}>
           <Routes>
             {/* Public */}
             <Route path="/" element={<Landing />} />
@@ -191,6 +221,7 @@ function App() {
             <Route path="/driver-home" element={<Navigate to="/repartidor-home" replace />} />
             <Route path="/driver-profile" element={<Navigate to="/repartidor-profile" replace />} />
           </Routes>
+          </Suspense>
           </ErrorBoundary>
           <MobileNav />
         </BrowserRouter>

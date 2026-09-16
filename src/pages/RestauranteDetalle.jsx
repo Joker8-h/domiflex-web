@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaStar, FaClock, FaMapMarkerAlt, FaPhone, FaPlus } from "react-icons/fa";
+import { MapPin, ArrowLeft, Clock, Phone, Plus, Star } from "lucide-react";
 import theme from "../styles/theme";
 import { api } from "../api/client";
 import { SkeletonCard } from "../components/ui/Skeleton";
@@ -100,7 +100,7 @@ export default function RestauranteDetalle() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Negocio</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -119,7 +119,7 @@ export default function RestauranteDetalle() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Negocio</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -140,7 +140,7 @@ export default function RestauranteDetalle() {
       {/* Header */}
       <div style={styles.header}>
         <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>{negocio.nombre}</h1>
         <div style={{ width: "44px" }} aria-hidden="true" />
@@ -162,10 +162,10 @@ export default function RestauranteDetalle() {
         <h2 style={styles.name}>{negocio.nombre}</h2>
         <div style={styles.meta}>
           <span style={styles.rating}>
-            <FaStar size={14} color={theme.colors.warning} aria-hidden="true" /> {Number(negocio.calificacion || 0).toFixed(1)}
+            <Star size={14} color={theme.colors.warning} aria-hidden="true" /> {Number(negocio.calificacion || 0).toFixed(1)}
           </span>
           <span style={styles.metaItem}>
-            <FaClock size={12} aria-hidden="true" /> {negocio.tiempoEstimadoMin} min
+            <Clock size={12} aria-hidden="true" /> {negocio.tiempoEstimadoMin} min
           </span>
           <span style={styles.metaItem}>
             Envío ${Number(negocio.costoEnvio || 0).toLocaleString()}
@@ -175,12 +175,12 @@ export default function RestauranteDetalle() {
           <p style={styles.description}>{negocio.descripcion}</p>
         )}
         <div style={styles.addressRow}>
-          <FaMapMarkerAlt size={14} color={theme.colors.textMuted} aria-hidden="true" />
+          <MapPin size={14} color={theme.colors.textMuted} aria-hidden="true" />
           <span style={styles.address}>{negocio.direccion}</span>
         </div>
         {negocio.telefono && (
           <div style={styles.addressRow}>
-            <FaPhone size={14} color={theme.colors.textMuted} aria-hidden="true" />
+            <Phone size={14} color={theme.colors.textMuted} aria-hidden="true" />
             <span style={styles.address}>{negocio.telefono}</span>
           </div>
         )}
@@ -247,7 +247,7 @@ export default function RestauranteDetalle() {
                   style={styles.addBtn}
                   onClick={() => addToCart(producto)}
                 >
-                  <FaPlus size={14} aria-hidden="true" />
+                  <Plus size={14} aria-hidden="true" />
                 </button>
               </div>
             </div>

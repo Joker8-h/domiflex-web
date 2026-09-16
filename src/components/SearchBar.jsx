@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { Search, X } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function SearchBar({ placeholder = "Buscar...", onSearch, value = "" }) {
@@ -24,7 +24,7 @@ export default function SearchBar({ placeholder = "Buscar...", onSearch, value =
         boxShadow: focused ? theme.shadows.input : "none",
       }}
     >
-      <FaSearch style={{ color: theme.colors.textMuted, fontSize: "16px" }} />
+      <Search style={{ color: theme.colors.textMuted, fontSize: "16px" }} />
       <input
         style={styles.input}
         type="text"
@@ -36,7 +36,7 @@ export default function SearchBar({ placeholder = "Buscar...", onSearch, value =
       />
       {query && (
         <button style={styles.clearBtn} onClick={handleClear}>
-          <FaTimes size={12} />
+          <X size={12} />
         </button>
       )}
     </div>

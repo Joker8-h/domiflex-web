@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap"
 import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
-import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { EyeOff, Lock, Eye } from "lucide-react";
 import NavbarCustom from '../components/Navbar';
 import { API_URL } from '../config';
 
@@ -113,7 +113,7 @@ function ResetPassword() {
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-3">
                                         <div className="position-relative">
-                                            <FaLock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
+                                            <Lock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
                                             <Form.Control
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Nueva contraseña" 
@@ -135,14 +135,14 @@ function ResetPassword() {
                                                 style={{ cursor: 'pointer' }} 
                                                 onClick={() => setShowPassword(!showPassword)}
                                             >
-                                                {showPassword ? <FaEyeSlash color="#8899a6" /> : <FaEye color="#8899a6" />}
+                                                {showPassword ? <EyeOff color="#8899a6" /> : <Eye color="#8899a6" />}
                                             </span>
                                         </div>
                                     </Form.Group>
 
                                     <Form.Group className="mb-4">
                                         <div className="position-relative">
-                                            <FaLock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
+                                            <Lock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
                                             <Form.Control
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Confirmar contraseña" 

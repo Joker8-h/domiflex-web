@@ -1,16 +1,16 @@
 import React from "react";
-import { FaShoppingBag, FaTag, FaBell, FaEnvelope } from "react-icons/fa";
+import { ShoppingBag, Mail, Bell, Tag } from "lucide-react";
 import theme from "../styles/theme";
 
 const iconMap = {
-  PEDIDO: FaShoppingBag,
-  PROMOCION: FaTag,
-  SISTEMA: FaBell,
-  MENSAJE: FaEnvelope,
+  PEDIDO: ShoppingBag,
+  PROMOCION: Tag,
+  SISTEMA: Bell,
+  MENSAJE: Mail,
 };
 
 export default function NotificationItem({ notification, onRead }) {
-  const Icon = iconMap[notification.tipo] || FaBell;
+  const Icon = iconMap[notification.tipo] || Bell;
 
   return (
     <div

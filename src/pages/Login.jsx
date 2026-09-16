@@ -5,7 +5,7 @@ import { Container, Row, Col, Card, Form, Button, Alert, Modal } from "react-boo
 import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaQrcode, FaCamera } from "react-icons/fa";
+import { Mail, EyeOff, QrCode, Camera, Lock, Eye } from "lucide-react";
 import NavbarCustom from '../components/Navbar';
 import QRScanner from '../components/QRScanner';
 import { API_URL } from '../config';
@@ -183,7 +183,7 @@ function Login() {
                                             e.target.style.color = theme.colors.textSecondary;
                                         }}
                                     >
-                                        <FaQrcode className="me-1" /> QR
+                                        <QrCode className="me-1" /> QR
                                     </Button>
                                     <Button
                                         onClick={abrirFacialModal}
@@ -208,7 +208,7 @@ function Login() {
                                             e.target.style.color = theme.colors.textSecondary;
                                         }}
                                     >
-                                        <FaCamera className="me-1" /> Facial
+                                        <Camera className="me-1" /> Facial
                                     </Button>
                                 </div>
 
@@ -229,7 +229,7 @@ function Login() {
                                 <Form onSubmit={guardar}>
                                     <Form.Group className="mb-3">
                                         <div style={{ position: 'relative' }}>
-                                            <FaEnvelope style={{
+                                            <Mail style={{
                                                 position: 'absolute',
                                                 left: '14px',
                                                 top: '50%',
@@ -269,7 +269,7 @@ function Login() {
 
                                     <Form.Group className="mb-3">
                                         <div style={{ position: 'relative' }}>
-                                            <FaLock style={{
+                                            <Lock style={{
                                                 position: 'absolute',
                                                 left: '14px',
                                                 top: '50%',
@@ -315,7 +315,7 @@ function Login() {
                                                 }}
                                                 onClick={() => setShowPassword(!showPassword)}
                                             >
-                                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                                {showPassword ? <EyeOff /> : <Eye />}
                                             </span>
                                         </div>
                                     </Form.Group>

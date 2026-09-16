@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaDoorOpen, FaKey, FaQuestionCircle, FaBell, FaBars } from "react-icons/fa";
+import { CircleHelp, CircleUserRound, LogIn, Bell, Menu, User, Key } from "lucide-react";
 import Logo from "/logo-domiflex.jpg";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
@@ -54,7 +54,7 @@ export default function NavbarCustom({ transparent }) {
               onClick={() => setDrawerOpen(true)}
               style={styles.menuBtn}
             >
-              <FaBars size={18} aria-hidden="true" />
+              <Menu size={18} aria-hidden="true" />
             </button>
           )}
           <Link to={token ? "/home" : "/"} style={styles.logoLink} aria-label="DomiFlex inicio">
@@ -64,7 +64,7 @@ export default function NavbarCustom({ transparent }) {
           {isHome && (
             <div style={styles.navLinks}>
               <a href="#como-funciona-seccion" style={styles.navLink}>
-                <FaQuestionCircle size={14} /> ¿Cómo funciona?
+                <CircleHelp size={14} /> ¿Cómo funciona?
               </a>
             </div>
           )}
@@ -74,16 +74,16 @@ export default function NavbarCustom({ transparent }) {
           {!token ? (
             <div style={styles.authButtons}>
               <Link to="/login" style={styles.iconBtn} title="Iniciar Sesión" aria-label="Iniciar sesión">
-                <FaDoorOpen size={20} aria-hidden="true" />
+                <LogIn size={20} aria-hidden="true" />
               </Link>
               <Link to="/register" style={styles.iconBtn} title="Registrarse" aria-label="Registrarse">
-                <FaKey size={18} aria-hidden="true" />
+                <Key size={18} aria-hidden="true" />
               </Link>
             </div>
           ) : (
             <div style={styles.userSection}>
               <Link to="/notificaciones" style={styles.bellBtn} aria-label="Notificaciones">
-                <FaBell size={18} aria-hidden="true" />
+                <Bell size={18} aria-hidden="true" />
               </Link>
               <Link to="/perfil" style={styles.userBtn}>
                 <Avatar

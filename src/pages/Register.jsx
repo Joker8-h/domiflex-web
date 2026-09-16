@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert, ProgressBar, Image, Modal } from "react-bootstrap";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaEye, FaEyeSlash, FaArrowRight, FaArrowLeft, FaCamera, FaVideo, FaCheckCircle } from "react-icons/fa";
+import { CircleCheck, ArrowRight, ArrowLeft, Mail, EyeOff, Camera, Video, Phone, Check, User, Lock, Eye } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
 import NavbarCustom from '../components/Navbar'
 import { API_URL } from '../config';
@@ -490,7 +490,7 @@ function Register() {
                                                 />
                                             </Form.Group>
                                             <button type="button" onClick={handleNextStep} disabled={loading} style={btnPrimary}>
-                                                {loading ? "Enviando..." : "Enviar Código"} <FaArrowRight style={{ marginLeft: '8px' }} size={14} />
+                                                {loading ? "Enviando..." : "Enviar Código"} <ArrowRight style={{ marginLeft: '8px' }} size={14} />
                                             </button>
                                         </div>
                                     )}
@@ -575,7 +575,7 @@ function Register() {
                                                 />
                                             </Form.Group>
                                             <button type="button" onClick={handleNextStep} style={btnPrimary}>
-                                                Siguiente <FaArrowRight style={{ marginLeft: '8px' }} size={14} />
+                                                Siguiente <ArrowRight style={{ marginLeft: '8px' }} size={14} />
                                             </button>
                                         </div>
                                     )}
@@ -596,7 +596,7 @@ function Register() {
                                                 }}>
                                                     {fotoPreview
                                                         ? <img src={fotoPreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                        : <FaCamera size={30} color={s.textMuted} />
+                                                        : <Camera size={30} color={s.textMuted} />
                                                     }
                                                 </div>
                                             </div>
@@ -620,7 +620,7 @@ function Register() {
                                                     fontFamily: "'Inter', sans-serif",
                                                 }}
                                             >
-                                                <FaVideo style={{ marginRight: '8px' }} /> Tomar Foto
+                                                <Video style={{ marginRight: '8px' }} /> Tomar Foto
                                             </button>
                                             <div style={{ display: 'flex', gap: sp.sm }}>
                                                 <button type="button" onClick={handlePrevStep} style={btnSecondary}>Atrás</button>
@@ -657,7 +657,7 @@ function Register() {
                                                             color: s.textMuted,
                                                         }}
                                                     >
-                                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                                        {showPassword ? <EyeOff /> : <Eye />}
                                                     </span>
                                                 </div>
                                             </Form.Group>
@@ -800,7 +800,7 @@ function Register() {
                 <Modal show={showTerminosModal} onHide={() => setShowTerminosModal(false)} size="lg" centered backdrop="static">
                     <Modal.Header closeButton style={{ borderBottom: `2px solid ${s.accent}`, backgroundColor: s.bgCard }}>
                         <Modal.Title style={{ color: s.textPrimary, fontWeight: theme.fontWeight.bold, fontSize: fs.lg }}>
-                            <FaCheckCircle style={{ color: s.accent, marginRight: '10px' }} />
+                            <CircleCheck style={{ color: s.accent, marginRight: '10px' }} />
                             Términos y Condiciones
                         </Modal.Title>
                     </Modal.Header>

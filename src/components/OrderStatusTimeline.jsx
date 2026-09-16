@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheckCircle, FaCircle } from "react-icons/fa";
+import { CircleCheck, Check } from "lucide-react";
 import theme from "../styles/theme";
 
 const states = [
@@ -23,7 +23,7 @@ export default function OrderStatusTimeline({ currentStatus }) {
           <div key={state.key} style={styles.step}>
             <div style={styles.iconContainer}>
               {isCompleted ? (
-                <FaCheckCircle size={20} color={theme.colors.accent} />
+                <CircleCheck size={20} color={theme.colors.accent} />
               ) : isCurrent ? (
                 <div style={styles.currentDot}>
                   <FaCircle size={12} color={theme.colors.accent} />

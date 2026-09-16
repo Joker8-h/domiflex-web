@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaPhone, FaComments, FaMapMarkerAlt } from "react-icons/fa";
+import { MapPin, ArrowLeft, MessageCircle, Phone } from "lucide-react";
 import theme from "../styles/theme";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
 import Avatar from "../components/common/Avatar";
@@ -93,7 +93,7 @@ export default function Tracking() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Tu pedido en camino</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -112,7 +112,7 @@ export default function Tracking() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Tu pedido en camino</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -141,7 +141,7 @@ export default function Tracking() {
     <div style={styles.page}>
       <div style={styles.header}>
         <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Tu pedido en camino</h1>
         <span style={styles.liveBadge} aria-live="polite">{live ? "En vivo" : "Actualizando"}</span>
@@ -149,7 +149,7 @@ export default function Tracking() {
 
       {/* Mapa placeholder */}
       <div style={styles.mapPlaceholder}>
-        <FaMapMarkerAlt size={48} color={theme.colors.accent} aria-hidden="true" />
+        <MapPin size={48} color={theme.colors.accent} aria-hidden="true" />
         <p style={styles.mapText}>Mapa de seguimiento</p>
       </div>
 
@@ -174,10 +174,10 @@ export default function Tracking() {
             </div>
             <div style={styles.driverActions}>
               <button type="button" aria-label={`Llamar a ${pedido.repartidor.nombre}`} style={styles.iconBtn}>
-                <FaPhone size={16} aria-hidden="true" />
+                <Phone size={16} aria-hidden="true" />
               </button>
               <button type="button" aria-label={`Enviar mensaje a ${pedido.repartidor.nombre}`} style={styles.iconBtn}>
-                <FaComments size={16} aria-hidden="true" />
+                <MessageCircle size={16} aria-hidden="true" />
               </button>
             </div>
           </div>

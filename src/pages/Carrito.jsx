@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaArrowLeft, FaLocationArrow } from "react-icons/fa";
+import { Navigation, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import theme from "../styles/theme";
 import { Button } from "../components/common";
@@ -112,7 +112,7 @@ export default function Carrito() {
     <div style={{ ...styles.page, paddingBottom: isMobile ? "120px" : "40px" }}>
       <div style={styles.header}>
         <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Tu carrito</h1>
         <div style={{ width: "44px" }} aria-hidden="true" />
@@ -175,7 +175,7 @@ export default function Carrito() {
                 disabled={locating}
                 style={styles.locBtn}
               >
-                <FaLocationArrow size={14} aria-hidden="true" />
+                <Navigation size={14} aria-hidden="true" />
                 {locating ? "Obteniendo ubicación…" : coords ? "Ubicación lista ✓ (toca para actualizar)" : "Usar mi ubicación actual"}
               </button>
             </section>

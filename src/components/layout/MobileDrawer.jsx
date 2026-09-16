@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaSearch, FaClipboardList, FaUser, FaBell, FaTimes } from "react-icons/fa";
+import { ClipboardList, Search, X, House, Bell, User } from "lucide-react";
 import theme from "../../styles/theme";
 
 const LINKS = [
-  { to: "/home", label: "Inicio", Icon: FaHome },
-  { to: "/restaurantes", label: "Explorar", Icon: FaSearch },
-  { to: "/mis-pedidos", label: "Mis pedidos", Icon: FaClipboardList },
-  { to: "/notificaciones", label: "Notificaciones", Icon: FaBell },
-  { to: "/perfil", label: "Perfil", Icon: FaUser },
+  { to: "/home", label: "Inicio", Icon: House },
+  { to: "/restaurantes", label: "Explorar", Icon: Search },
+  { to: "/mis-pedidos", label: "Mis pedidos", Icon: ClipboardList },
+  { to: "/notificaciones", label: "Notificaciones", Icon: Bell },
+  { to: "/perfil", label: "Perfil", Icon: User },
 ];
 
 // Drawer lateral móvil con focus-trap básico y cierre con ESC.
@@ -76,7 +76,7 @@ export default function MobileDrawer({ open, onClose }) {
               cursor: "pointer",
             }}
           >
-            <FaTimes size={16} aria-hidden="true" />
+            <X size={16} aria-hidden="true" />
           </button>
         </div>
         {LINKS.map(({ to, label, Icon }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { ArrowLeft } from "lucide-react";
 import theme from "../styles/theme";
 import SearchBar from "../components/SearchBar";
 import CategoryChips from "../components/CategoryChips";
@@ -57,7 +57,7 @@ export default function Restaurantes() {
           style={styles.backBtn}
           onClick={() => navigate(-1)}
         >
-          <FaArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Explorar</h1>
         <div style={{ width: "36px" }} aria-hidden="true" />

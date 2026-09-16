@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap"
 import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
-import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
+import { ArrowLeft, Mail } from "lucide-react";
 import NavbarCustom from '../components/Navbar';
 import { API_URL } from '../config';
 
@@ -83,7 +83,7 @@ function ForgotPassword() {
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-4">
                                         <div className="position-relative">
-                                            <FaEnvelope className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
+                                            <Mail className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
                                             <Form.Control
                                                 type="email" 
                                                 placeholder="Correo electrónico" 
@@ -121,7 +121,7 @@ function ForgotPassword() {
 
                                     <div className="text-center mt-3">
                                         <Link to="/login" className="text-decoration-none small fw-bold" style={{ color: '#62d8d9' }}>
-                                            <FaArrowLeft className="me-2" />
+                                            <ArrowLeft className="me-2" />
                                             Volver al inicio de sesión
                                         </Link>
                                     </div>

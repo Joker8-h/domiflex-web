@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaHome, FaSearch, FaClipboardList, FaUser } from "react-icons/fa";
+import { ClipboardList, Search, House, User } from "lucide-react";
 import theme from "../styles/theme";
 
 const tabs = [
-  { id: "inicio", label: "Inicio", icon: FaHome, path: "/home" },
-  { id: "buscar", label: "Buscar", icon: FaSearch, path: "/restaurantes" },
-  { id: "pedidos", label: "Pedidos", icon: FaClipboardList, path: "/mis-pedidos" },
-  { id: "perfil", label: "Perfil", icon: FaUser, path: "/perfil" },
+  { id: "inicio", label: "Inicio", icon: House, path: "/home" },
+  { id: "buscar", label: "Buscar", icon: Search, path: "/restaurantes" },
+  { id: "pedidos", label: "Pedidos", icon: ClipboardList, path: "/mis-pedidos" },
+  { id: "perfil", label: "Perfil", icon: User, path: "/perfil" },
 ];
 
 export default function BottomTabs() {

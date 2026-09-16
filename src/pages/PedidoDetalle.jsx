@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { ArrowLeft } from "lucide-react";
 import theme from "../styles/theme";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
 import { SkeletonCard } from "../components/ui/Skeleton";
@@ -58,7 +58,7 @@ export default function PedidoDetalle() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Pedido #{pedidoId}</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -77,7 +77,7 @@ export default function PedidoDetalle() {
       <div style={styles.page}>
         <div style={styles.header}>
           <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <FaArrowLeft size={18} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <h1 style={styles.title}>Pedido #{pedidoId}</h1>
           <div style={{ width: "44px" }} aria-hidden="true" />
@@ -97,7 +97,7 @@ export default function PedidoDetalle() {
     <div style={styles.page}>
       <div style={styles.header}>
         <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Pedido #{pedido.idPedido}</h1>
         <div style={{ width: "44px" }} aria-hidden="true" />

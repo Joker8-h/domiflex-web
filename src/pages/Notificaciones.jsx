@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { ArrowLeft } from "lucide-react";
 import theme from "../styles/theme";
 import NotificationItem from "../components/NotificationItem";
 import API_URL from "../config";
@@ -60,7 +60,7 @@ export default function Notificaciones() {
     <div style={styles.page}>
       <div style={styles.header}>
         <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+          <ArrowLeft size={18} />
         </button>
         <h1 style={styles.title}>Notificaciones</h1>
         <div style={{ width: "36px" }} />

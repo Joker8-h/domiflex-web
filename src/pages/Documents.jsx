@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert, Modal, Badge, Table } from "react-bootstrap";
-import { FaIdCard, FaFileImage, FaArrowLeft, FaCheckCircle, FaCamera, FaVideo, FaExclamationTriangle, FaSmile, FaFrown, FaCalendarAlt, FaUser } from "react-icons/fa";
+import { TriangleAlert, CircleCheck, Calendar, ArrowLeft, FileImage, Camera, IdCard, Video, Smile, Frown, Check, User } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
 import { API_URL } from "../config";
 import Navbar from '../components/Navbar';
@@ -344,7 +344,7 @@ function Documents() {
                   </div>
 
                   <h3 className="text-center mb-4" style={{ color: '#62d8d9', fontWeight: '600' }}>
-                    <FaIdCard className="me-2" />
+                    <IdCard className="me-2" />
                     Registro de Licencia de Conducir
                   </h3>
 
@@ -353,7 +353,7 @@ function Documents() {
 
                   {errorDocumentoBackend && (
                     <Alert variant="danger" className="py-2 small d-flex align-items-center">
-                      <FaExclamationTriangle className="me-2" />
+                      <TriangleAlert className="me-2" />
                       {errorDocumentoBackend}
                     </Alert>
                   )}
@@ -361,9 +361,9 @@ function Documents() {
                   <Form onSubmit={guardarDocumentacion}>
                     <Form.Group className="mb-4">
                       <Form.Label className="d-flex align-items-center fw-bold small">
-                        <FaFileImage className="me-2" />
+                        <FileImage className="me-2" />
                         Fotografía de la Licencia de Conducir <span className="text-danger">*</span>
-                        {frontalBase64 && <FaCheckCircle className="text-success ms-2" size={18} />}
+                        {frontalBase64 && <CircleCheck className="text-success ms-2" size={18} />}
                         {frontalBase64 && documentoValido === true && (
                           <Badge bg="success" className="ms-2 small">Válida</Badge>
                         )}
@@ -381,7 +381,7 @@ function Documents() {
                         className="custom-tomar-foto-btn"
                         disabled={cameraActive || verificandoDocumento || loading}
                       >
-                        <FaVideo className="me-2" />
+                        <Video className="me-2" />
                         {frontalBase64 ? 'Tomar otra foto' : 'Tomar foto de la licencia'}
                       </Button>
 
@@ -413,14 +413,14 @@ function Documents() {
 
                     {!verificandoDocumento && documentoValido === true && (
                       <Alert variant="success" className="py-2 small d-flex align-items-center">
-                        <FaSmile className="me-2" />
+                        <Smile className="me-2" />
                         {mensajeDocumento}
                       </Alert>
                     )}
 
                     {!verificandoDocumento && documentoValido === false && (
                       <Alert variant="warning" className="py-2 small d-flex align-items-center">
-                        <FaFrown className="me-2" />
+                        <Frown className="me-2" />
                         {mensajeDocumento}
                       </Alert>
                     )}
@@ -428,7 +428,7 @@ function Documents() {
                     {datosExtraidos && (
                       <Card className="mt-4 border-0 shadow-sm">
                         <Card.Header className="bg-success text-white py-2" style={{ borderRadius: '12px 12px 0 0' }}>
-                          <FaCheckCircle className="me-2" />
+                          <CircleCheck className="me-2" />
                           Datos extraídos de la licencia
                         </Card.Header>
                         <Card.Body className="p-3">
@@ -436,19 +436,19 @@ function Documents() {
                             <tbody>
                               {datosExtraidos.nombre && (
                                 <tr>
-                                  <td className="fw-bold" style={{ width: '40%' }}><FaUser className="me-2 text-success" />Nombre:</td>
+                                  <td className="fw-bold" style={{ width: '40%' }}><User className="me-2 text-success" />Nombre:</td>
                                   <td>{datosExtraidos.nombre}</td>
                                 </tr>
                               )}
                               {datosExtraidos.identificacion && (
                                 <tr>
-                                  <td className="fw-bold"><FaIdCard className="me-2 text-success" />Identificación:</td>
+                                  <td className="fw-bold"><IdCard className="me-2 text-success" />Identificación:</td>
                                   <td>{datosExtraidos.identificacion}</td>
                                 </tr>
                               )}
                               {datosExtraidos.fechaExpedicion && (
                                 <tr>
-                                  <td className="fw-bold"><FaCalendarAlt className="me-2 text-success" />Fecha Expedición:</td>
+                                  <td className="fw-bold"><Calendar className="me-2 text-success" />Fecha Expedición:</td>
                                   <td>{formatearFecha(datosExtraidos.fechaExpedicion)}</td>
                                 </tr>
                               )}
@@ -466,7 +466,7 @@ function Documents() {
 
                     <div className="mt-3 p-3 bg-light rounded-4 small" style={{ backgroundColor: '#f8fafb' }}>
                       <div className="fw-bold mb-2">
-                        <FaExclamationTriangle className="me-1 text-warning" />
+                        <TriangleAlert className="me-1 text-warning" />
                         Recomendaciones para la foto
                       </div>
                       <ul className="mb-0 ps-3" style={{ color: '#666' }}>
@@ -499,7 +499,7 @@ function Documents() {
                         className="px-4"
                         style={{ borderRadius: '12px' }}
                       >
-                        <FaArrowLeft />
+                        <ArrowLeft />
                       </Button>
                     </div>
                   </Form>
@@ -551,7 +551,7 @@ function Documents() {
               disabled={!cameraActive}
               style={{ background: '#4acfbd', border: 'none', borderRadius: '12px' }}
             >
-              <FaCamera className="me-2" /> Tomar Foto
+              <Camera className="me-2" /> Tomar Foto
             </Button>
           </Modal.Footer>
         </Modal>

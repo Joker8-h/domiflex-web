@@ -1,5 +1,5 @@
 import React from "react";
-import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
+import { Minus, Trash, Plus } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function CartItem({ item, onUpdateQuantity, onRemove }) {
@@ -15,21 +15,21 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
           style={styles.removeBtn}
           onClick={() => onRemove(item.id)}
         >
-          <FaTrash size={12} />
+          <Trash size={12} />
         </button>
         <div style={styles.quantityControl}>
           <button
             style={styles.qtyBtn}
             onClick={() => onUpdateQuantity(item.id, item.cantidad - 1)}
           >
-            <FaMinus size={10} />
+            <Minus size={10} />
           </button>
           <span style={styles.qtyText}>{item.cantidad}</span>
           <button
             style={styles.qtyBtn}
             onClick={() => onUpdateQuantity(item.id, item.cantidad + 1)}
           >
-            <FaPlus size={10} />
+            <Plus size={10} />
           </button>
         </div>
       </div>

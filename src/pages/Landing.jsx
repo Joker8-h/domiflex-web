@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-import { FaRocket, FaShieldAlt, FaClock, FaCreditCard, FaStore, FaMotorcycle } from "react-icons/fa";
+import { Bike, CreditCard, ShieldCheck, Rocket, Store, Clock } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function Landing() {
   const features = [
-    { icon: FaRocket, title: "Rápido", desc: "Tu pedido en minutos" },
-    { icon: FaShieldAlt, title: "Seguro", desc: "Repartidores verificados" },
-    { icon: FaClock, title: "Confiable", desc: "Seguimiento en tiempo real" },
-    { icon: FaCreditCard, title: "Flexible", desc: "Múltiples métodos de pago" },
+    { icon: Rocket, title: "Rápido", desc: "Tu pedido en minutos" },
+    { icon: ShieldCheck, title: "Seguro", desc: "Repartidores verificados" },
+    { icon: Clock, title: "Confiable", desc: "Seguimiento en tiempo real" },
+    { icon: CreditCard, title: "Flexible", desc: "Múltiples métodos de pago" },
   ];
 
   const categories = [
@@ -34,7 +34,7 @@ export default function Landing() {
           </p>
           <div style={styles.heroButtons}>
             <Link to="/register" style={styles.btnPrimary}>
-              <FaRocket size={18} /> Comenzar
+              <Rocket size={18} /> Comenzar
             </Link>
             <Link to="/login" style={styles.btnSecondary}>
               Iniciar sesión
@@ -76,19 +76,19 @@ export default function Landing() {
         <div style={styles.stepsGrid}>
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>1</div>
-            <FaStore size={32} color={theme.colors.accent} />
+            <Store size={32} color={theme.colors.accent} />
             <h4 style={styles.stepTitle}>Elige tu negocio</h4>
             <p style={styles.stepDesc}>Restaurantes, farmacias, supermercados y más</p>
           </div>
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>2</div>
-            <FaCreditCard size={32} color={theme.colors.accent} />
+            <CreditCard size={32} color={theme.colors.accent} />
             <h4 style={styles.stepTitle}>Haz tu pedido</h4>
             <p style={styles.stepDesc}>Selecciona productos y paga en efectivo</p>
           </div>
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>3</div>
-            <FaMotorcycle size={32} color={theme.colors.accent} />
+            <Bike size={32} color={theme.colors.accent} />
             <h4 style={styles.stepTitle}>Recibe en casa</h4>
             <p style={styles.stepDesc}>Sigue tu pedido en tiempo real</p>
           </div>

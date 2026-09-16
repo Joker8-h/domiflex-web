@@ -1,5 +1,5 @@
 import React from "react";
-import { FaChevronRight } from "react-icons/fa";
+import {  } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function ProfileMenuItem({ icon: Icon, label, onClick, danger = false }) {

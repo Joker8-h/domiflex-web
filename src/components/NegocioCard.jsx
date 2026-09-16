@@ -1,5 +1,5 @@
 import React from "react";
-import { FaStar, FaClock } from "react-icons/fa";
+import { Clock, Star } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function NegocioCard({ negocio, onClick }) {
@@ -15,7 +15,7 @@ export default function NegocioCard({ negocio, onClick }) {
         )}
         {negocio.tiempoEstimadoMin && (
           <div style={styles.timeBadge}>
-            <FaClock size={10} /> {negocio.tiempoEstimadoMin} min
+            <Clock size={10} /> {negocio.tiempoEstimadoMin} min
           </div>
         )}
       </div>
@@ -23,7 +23,7 @@ export default function NegocioCard({ negocio, onClick }) {
         <h3 style={styles.name}>{negocio.nombre}</h3>
         <div style={styles.meta}>
           <span style={styles.rating}>
-            <FaStar size={12} color={theme.colors.warning} /> {Number(negocio.calificacion || 0).toFixed(1)}
+            <Star size={12} color={theme.colors.warning} /> {Number(negocio.calificacion || 0).toFixed(1)}
           </span>
           {negocio.costoEnvio > 0 && (
             <span style={styles.deliveryFee}>

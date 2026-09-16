@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaClipboardList, FaMapMarkerAlt, FaCreditCard, FaQuestionCircle, FaCog, FaSignOutAlt } from "react-icons/fa";
+import { CircleHelp, ClipboardList, MapPin, CreditCard, LogOut, ArrowLeft, Settings } from "lucide-react";
 import theme from "../styles/theme";
 import Avatar from "../components/common/Avatar";
 import ProfileMenuItem from "../components/ProfileMenuItem";
@@ -19,7 +19,7 @@ export default function Perfil() {
     <div style={styles.page}>
       <div style={styles.header}>
         <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+          <ArrowLeft size={18} />
         </button>
         <h1 style={styles.title}>Mi perfil</h1>
         <div style={{ width: "36px" }} />
@@ -54,12 +54,12 @@ export default function Perfil() {
 
         {/* Menú */}
         <div style={styles.menuCard}>
-          <ProfileMenuItem icon={FaClipboardList} label="Mis pedidos" onClick={() => navigate("/mis-pedidos")} />
-          <ProfileMenuItem icon={FaMapMarkerAlt} label="Direcciones" onClick={() => {}} />
-          <ProfileMenuItem icon={FaCreditCard} label="Métodos de pago" onClick={() => {}} />
-          <ProfileMenuItem icon={FaQuestionCircle} label="Ayuda y soporte" onClick={() => {}} />
-          <ProfileMenuItem icon={FaCog} label="Configuración" onClick={() => {}} />
-          <ProfileMenuItem icon={FaSignOutAlt} label="Cerrar sesión" onClick={handleLogout} danger />
+          <ProfileMenuItem icon={ClipboardList} label="Mis pedidos" onClick={() => navigate("/mis-pedidos")} />
+          <ProfileMenuItem icon={MapPin} label="Direcciones" onClick={() => {}} />
+          <ProfileMenuItem icon={CreditCard} label="Métodos de pago" onClick={() => {}} />
+          <ProfileMenuItem icon={CircleHelp} label="Ayuda y soporte" onClick={() => {}} />
+          <ProfileMenuItem icon={Settings} label="Configuración" onClick={() => {}} />
+          <ProfileMenuItem icon={LogOut} label="Cerrar sesión" onClick={handleLogout} danger />
         </div>
       </div>
     </div>

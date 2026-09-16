@@ -35,6 +35,19 @@ div[data-rht-toaster] {
   background-color: transparent !important;
 }
 
+/* Keyframes globales (los spinners con animation "spin" estaban rotos) */
+@keyframes df-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
