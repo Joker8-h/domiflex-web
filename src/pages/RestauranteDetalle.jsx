@@ -6,10 +6,12 @@ import { api } from "../api/client";
 import { SkeletonCard } from "../components/ui/Skeleton";
 import ErrorState from "../components/ui/ErrorState";
 import EmptyState from "../components/ui/EmptyState";
+import { useIsMobile } from "../hooks/useMediaQuery";
 
 export default function RestauranteDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [negocio, setNegocio] = useState(null);
   const [productos, setProductos] = useState([]);
   const [selectedCategoria, setSelectedCategoria] = useState(null);
@@ -258,7 +260,7 @@ export default function RestauranteDetalle() {
         <button
           type="button"
           aria-label={`Ver carrito, ${cartCount} productos, total $${cartTotal.toLocaleString()}`}
-          style={styles.floatingCart}
+          style={{ ...styles.floatingCart, bottom: isMobile ? "96px" : "24px" }}
           onClick={() => navigate("/carrito", { state: { cart, negocio } })}
         >
           <span style={styles.cartCount} aria-hidden="true">{cartCount}</span>
