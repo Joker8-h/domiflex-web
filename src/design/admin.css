@@ -114,6 +114,23 @@
   color: #9aa4b2 !important;
 }
 
+/* Filas y textos heredados claros */
+.admin-shell h1,
+.admin-shell .display-5 {
+  color: #ffffff !important;
+}
+
+.admin-shell tbody tr {
+  background-color: transparent !important;
+}
+
+.admin-shell td,
+.admin-shell th,
+.admin-shell td div,
+.admin-shell td small {
+  color: #e6edf3 !important;
+}
+
 .admin-shell .page-item.active .page-link {
   background-color: #00e676 !important;
   border-color: #00e676 !important;

@@ -576,7 +576,7 @@ function AdminUsuarios() {
                                         <Button
                                             variant="primary"
                                             type="submit"
-                                            style={{ backgroundColor: '#62d8d9', border: 'none', color: '#ffffff' }}
+                                            style={{ backgroundColor: '#00E676', border: 'none', color: '#000000', fontWeight: '600' }}
                                         >
                                             Buscar
                                         </Button>
@@ -586,7 +586,7 @@ function AdminUsuarios() {
                         </Card>
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
-                            <StatsBadge bgColor="transparent" color="#113d69">
+                            <StatsBadge bgColor="transparent" color="#9AA4B2">
                                 Total: {usuarios.length}
                             </StatsBadge>
                             {busqueda && (
@@ -594,13 +594,13 @@ function AdminUsuarios() {
                                     Resultados: {usuariosFiltrados.length}
                                 </StatsBadge>
                             )}
-                            <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                            <StatsBadge bgColor="#00E676" color="#000000">
                                 Activos: {usuarios.filter(u => u.estado === 'ACTIVO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#cccbd2af" color="#113d69">
+                            <StatsBadge bgColor="#1C2333" color="#9AA4B2">
                                 Inactivos: {usuarios.filter(u => u.estado === 'INACTIVO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#113d69" color="#ffffff">
+                            <StatsBadge bgColor="#FFD740" color="#000000">
                                 Suspendidos: {usuarios.filter(u => u.estado === 'SUSPENDIDO').length}
                             </StatsBadge>
                         </div>
@@ -682,11 +682,11 @@ function AdminUsuarios() {
                                                                             height: '40px',
                                                                             borderRadius: '50%',
                                                                             overflow: 'hidden',
-                                                                            backgroundColor: '#e9ecef',
+                                                                            backgroundColor: '#1C2333',
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            border: '2px solid #62d8d9',
+                                                                            border: '2px solid #00E676',
                                                                             flexShrink: 0
                                                                         }}>
                                                                             {usuario.fotoPerfil ? (
@@ -701,14 +701,14 @@ function AdminUsuarios() {
                                                                                     onError={(e) => {
                                                                                         e.target.onerror = null;
                                                                                         e.target.style.display = 'none';
-                                                                                        e.target.parentElement.innerHTML = '<span style="color: #113d69; font-weight: 600;">' +
+                                                                                        e.target.parentElement.innerHTML = '<span style="color: #ffffff; font-weight: 600;">' +
                                                                                             usuario.nombre?.charAt(0).toUpperCase() +
                                                                                             '</span>';
                                                                                     }}
                                                                                 />
                                                                             ) : (
                                                                                 <span style={{
-                                                                                    color: '#113d69',
+                                                                                    color: '#ffffff',
                                                                                     fontWeight: '600',
                                                                                     fontSize: '1rem'
                                                                                 }}>
