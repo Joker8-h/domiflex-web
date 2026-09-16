@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaDoorOpen, FaKey, FaQuestionCircle, FaBell } from "react-icons/fa";
+import { FaUserCircle, FaDoorOpen, FaKey, FaQuestionCircle, FaBell, FaBars } from "react-icons/fa";
 import Logo from "/logo-domiflex.jpg";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
 import theme from "../styles/theme";
 import Avatar from "./common/Avatar";
+import MobileDrawer from "./layout/MobileDrawer";
+import { useIsMobile } from "../hooks/useMediaQuery";
 
 export default function NavbarCustom({ transparent }) {
   const { token, usuario, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [fotoPerfil, setFotoPerfil] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const cargarFoto = async () => {
@@ -39,10 +43,21 @@ export default function NavbarCustom({ transparent }) {
   const isHome = location.pathname === "/";
 
   return (
-    <nav style={styles.navbar}>
+    <nav style={styles.navbar} aria-label="Barra superior">
       <div style={styles.container}>
         <div style={styles.left}>
-          <Link to={token ? "/home" : "/"} style={styles.logoLink}>
+          {token && isMobile && (
+            <button
+              type="button"
+              aria-label="Abrir menú"
+              aria-expanded={drawerOpen}
+              onClick={() => setDrawerOpen(true)}
+              style={styles.menuBtn}
+            >
+              <FaBars size={18} aria-hidden="true" />
+            </button>
+          )}
+          <Link to={token ? "/home" : "/"} style={styles.logoLink} aria-label="DomiFlex inicio">
             <img src={Logo} alt="DomiFlex" style={styles.logo} />
           </Link>
 
@@ -58,17 +73,17 @@ export default function NavbarCustom({ transparent }) {
         <div style={styles.right}>
           {!token ? (
             <div style={styles.authButtons}>
-              <Link to="/login" style={styles.iconBtn} title="Iniciar Sesión">
-                <FaDoorOpen size={20} />
+              <Link to="/login" style={styles.iconBtn} title="Iniciar Sesión" aria-label="Iniciar sesión">
+                <FaDoorOpen size={20} aria-hidden="true" />
               </Link>
-              <Link to="/register" style={styles.iconBtn} title="Registrarse">
-                <FaKey size={18} />
+              <Link to="/register" style={styles.iconBtn} title="Registrarse" aria-label="Registrarse">
+                <FaKey size={18} aria-hidden="true" />
               </Link>
             </div>
           ) : (
             <div style={styles.userSection}>
-              <Link to="/notificaciones" style={styles.bellBtn}>
-                <FaBell size={18} />
+              <Link to="/notificaciones" style={styles.bellBtn} aria-label="Notificaciones">
+                <FaBell size={18} aria-hidden="true" />
               </Link>
               <Link to="/perfil" style={styles.userBtn}>
                 <Avatar
@@ -82,6 +97,7 @@ export default function NavbarCustom({ transparent }) {
           )}
         </div>
       </div>
+      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </nav>
   );
 }
@@ -107,7 +123,19 @@ const styles = {
   left: {
     display: "flex",
     alignItems: "center",
-    gap: "24px",
+    gap: "12px",
+  },
+  menuBtn: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "50%",
+    border: `1px solid ${theme.colors.border}`,
+    backgroundColor: theme.colors.bgCard,
+    color: theme.colors.textPrimary,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
   },
   logoLink: {
     display: "flex",

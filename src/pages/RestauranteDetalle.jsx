@@ -1,42 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaStar, FaClock, FaMapMarkerAlt, FaPhone, FaPlus } from "react-icons/fa";
 import theme from "../styles/theme";
-import { Button } from "../components/common";
-import API_URL from "../config";
+import { api } from "../api/client";
+import { SkeletonCard } from "../components/ui/Skeleton";
+import ErrorState from "../components/ui/ErrorState";
+import EmptyState from "../components/ui/EmptyState";
 
 export default function RestauranteDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [negocio, setNegocio] = useState(null);
   const [productos, setProductos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
   const [selectedCategoria, setSelectedCategoria] = useState(null);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const fetchNegocio = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [negData, prodData] = await Promise.all([
+          api.get(`/negocios/${id}`, { signal: controller.signal }),
+          api.get(`/negocios/${id}/productos`, { signal: controller.signal }),
+        ]);
+        if (controller.signal.aborted) return;
+        setNegocio(negData);
+        setProductos(Array.isArray(prodData) ? prodData : []);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          console.error("Error:", err);
+          setError(err.message || "No se pudo cargar el negocio.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
     fetchNegocio();
-  }, [id]);
-
-  const fetchNegocio = async () => {
-    try {
-      const [negRes, prodRes] = await Promise.all([
-        fetch(`${API_URL}/negocios/${id}`),
-        fetch(`${API_URL}/negocios/${id}/productos`),
-      ]);
-      const negData = await negRes.json();
-      const prodData = await prodRes.json();
-      setNegocio(negData);
-      setProductos(prodData);
-      const cats = [...new Set(prodData.map((p) => p.categoria))];
-      setCategorias(cats);
-    } catch (err) {
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => controller.abort();
+  }, [id, retryKey]);
 
   const addToCart = (producto) => {
     setCart((prev) => {
@@ -52,25 +58,77 @@ export default function RestauranteDetalle() {
     });
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-  const cartCount = cart.reduce((sum, item) => sum + item.cantidad, 0);
+  const categorias = useMemo(
+    () => [...new Set(productos.map((p) => p.categoria).filter(Boolean))],
+    [productos]
+  );
+  const cartTotal = useMemo(
+    () => cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0),
+    [cart]
+  );
+  const cartCount = useMemo(
+    () => cart.reduce((sum, item) => sum + item.cantidad, 0),
+    [cart]
+  );
 
-  const filteredProductos = selectedCategoria
-    ? productos.filter((p) => p.categoria === selectedCategoria)
-    : productos;
+  const filteredProductos = useMemo(
+    () => (selectedCategoria ? productos.filter((p) => p.categoria === selectedCategoria) : productos),
+    [productos, selectedCategoria]
+  );
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.spinner} />
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div style={{ width: "44px" }} />
+          <h1 style={styles.title}>Cargando…</h1>
+          <div style={{ width: "44px" }} />
+        </div>
+        <div style={styles.productos} aria-busy="true" aria-label="Cargando menú">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Negocio</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <ErrorState
+          title="No pudimos cargar el negocio"
+          description={error}
+          onRetry={() => setRetryKey((k) => k + 1)}
+        />
       </div>
     );
   }
 
   if (!negocio) {
     return (
-      <div style={styles.loadingPage}>
-        <p style={{ color: theme.colors.textSecondary }}>Negocio no encontrado</p>
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Negocio</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <EmptyState
+          icon="🏪"
+          title="Negocio no encontrado"
+          description="El negocio que buscas no existe o ya no está disponible."
+          actionLabel="Explorar negocios"
+          onAction={() => navigate("/restaurantes")}
+        />
       </div>
     );
   }
@@ -79,19 +137,19 @@ export default function RestauranteDetalle() {
     <div style={styles.page}>
       {/* Header */}
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+        <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+          <FaArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>{negocio.nombre}</h1>
-        <div style={{ width: "36px" }} />
+        <div style={{ width: "44px" }} aria-hidden="true" />
       </div>
 
       {/* Banner */}
       <div style={styles.banner}>
         {negocio.banner ? (
-          <img src={negocio.banner} alt="" style={styles.bannerImg} />
+          <img src={negocio.banner} alt={`Foto de ${negocio.nombre}`} style={styles.bannerImg} loading="lazy" />
         ) : (
-          <div style={styles.bannerPlaceholder}>
+          <div style={styles.bannerPlaceholder} aria-hidden="true">
             <span style={{ fontSize: "48px" }}>🏪</span>
           </div>
         )}
@@ -102,33 +160,35 @@ export default function RestauranteDetalle() {
         <h2 style={styles.name}>{negocio.nombre}</h2>
         <div style={styles.meta}>
           <span style={styles.rating}>
-            <FaStar size={14} color={theme.colors.warning} /> {Number(negocio.calificacion || 0).toFixed(1)}
+            <FaStar size={14} color={theme.colors.warning} aria-hidden="true" /> {Number(negocio.calificacion || 0).toFixed(1)}
           </span>
           <span style={styles.metaItem}>
-            <FaClock size={12} /> {negocio.tiempoEstimadoMin} min
+            <FaClock size={12} aria-hidden="true" /> {negocio.tiempoEstimadoMin} min
           </span>
           <span style={styles.metaItem}>
-            Envío ${negocio.costoEnvio?.toLocaleString()}
+            Envío ${Number(negocio.costoEnvio || 0).toLocaleString()}
           </span>
         </div>
         {negocio.descripcion && (
           <p style={styles.description}>{negocio.descripcion}</p>
         )}
         <div style={styles.addressRow}>
-          <FaMapMarkerAlt size={14} color={theme.colors.textMuted} />
+          <FaMapMarkerAlt size={14} color={theme.colors.textMuted} aria-hidden="true" />
           <span style={styles.address}>{negocio.direccion}</span>
         </div>
         {negocio.telefono && (
           <div style={styles.addressRow}>
-            <FaPhone size={14} color={theme.colors.textMuted} />
+            <FaPhone size={14} color={theme.colors.textMuted} aria-hidden="true" />
             <span style={styles.address}>{negocio.telefono}</span>
           </div>
         )}
       </div>
 
       {/* Categorías del menú */}
-      <div style={styles.menuCategories}>
+      <div style={styles.menuCategories} role="group" aria-label="Filtrar por categoría">
         <button
+          type="button"
+          aria-pressed={!selectedCategoria}
           style={{
             ...styles.catBtn,
             backgroundColor: !selectedCategoria ? theme.colors.accent : theme.colors.bgCard,
@@ -140,7 +200,9 @@ export default function RestauranteDetalle() {
         </button>
         {categorias.map((cat) => (
           <button
+            type="button"
             key={cat}
+            aria-pressed={selectedCategoria === cat}
             style={{
               ...styles.catBtn,
               backgroundColor: selectedCategoria === cat ? theme.colors.accent : theme.colors.bgCard,
@@ -155,36 +217,54 @@ export default function RestauranteDetalle() {
 
       {/* Productos */}
       <div style={styles.productos}>
-        {filteredProductos.map((producto) => (
-          <div key={producto.id} style={styles.productoCard}>
-            <div style={styles.productoInfo}>
-              <h4 style={styles.productoName}>{producto.nombre}</h4>
-              {producto.descripcion && (
-                <p style={styles.productoDesc}>{producto.descripcion}</p>
-              )}
-              <span style={styles.productoPrice}>
-                ${producto.precio?.toLocaleString()}
-              </span>
+        {filteredProductos.length === 0 ? (
+          <EmptyState
+            icon="🍽️"
+            title="Sin productos aquí"
+            description="Prueba con otra categoría del menú."
+          />
+        ) : (
+          filteredProductos.map((producto) => (
+            <div key={producto.id} style={styles.productoCard}>
+              <div style={styles.productoInfo}>
+                <h4 style={styles.productoName}>{producto.nombre}</h4>
+                {producto.descripcion && (
+                  <p style={styles.productoDesc}>{producto.descripcion}</p>
+                )}
+                <span style={styles.productoPrice}>
+                  ${Number(producto.precio || 0).toLocaleString()}
+                </span>
+              </div>
+              <div style={styles.productoRight}>
+                {producto.imagen && (
+                  <img src={producto.imagen} alt={producto.nombre} style={styles.productoImg} loading="lazy" />
+                )}
+                <button
+                  type="button"
+                  aria-label={`Agregar ${producto.nombre} al carrito`}
+                  style={styles.addBtn}
+                  onClick={() => addToCart(producto)}
+                >
+                  <FaPlus size={14} aria-hidden="true" />
+                </button>
+              </div>
             </div>
-            <div style={styles.productoRight}>
-              {producto.imagen && (
-                <img src={producto.imagen} alt={producto.nombre} style={styles.productoImg} />
-              )}
-              <button style={styles.addBtn} onClick={() => addToCart(producto)}>
-                <FaPlus size={14} />
-              </button>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Carrito flotante */}
       {cartCount > 0 && (
-        <div style={styles.floatingCart} onClick={() => navigate("/carrito", { state: { cart, negocio } })}>
-          <span style={styles.cartCount}>{cartCount}</span>
+        <button
+          type="button"
+          aria-label={`Ver carrito, ${cartCount} productos, total $${cartTotal.toLocaleString()}`}
+          style={styles.floatingCart}
+          onClick={() => navigate("/carrito", { state: { cart, negocio } })}
+        >
+          <span style={styles.cartCount} aria-hidden="true">{cartCount}</span>
           <span style={styles.cartText}>Ver carrito</span>
           <span style={styles.cartTotal}>${cartTotal.toLocaleString()}</span>
-        </div>
+        </button>
       )}
     </div>
   );
@@ -195,21 +275,6 @@ const styles = {
     minHeight: "100vh",
     backgroundColor: theme.colors.bgPrimary,
     paddingBottom: "100px",
-  },
-  loadingPage: {
-    minHeight: "100vh",
-    backgroundColor: theme.colors.bgPrimary,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spinner: {
-    width: "40px",
-    height: "40px",
-    border: `3px solid ${theme.colors.border}`,
-    borderTopColor: theme.colors.accent,
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
   },
   header: {
     display: "flex",
@@ -223,8 +288,8 @@ const styles = {
     zIndex: theme.zIndex.sticky,
   },
   backBtn: {
-    width: "36px",
-    height: "36px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: `1px solid ${theme.colors.border}`,
     backgroundColor: theme.colors.bgCard,
@@ -310,6 +375,7 @@ const styles = {
   },
   catBtn: {
     padding: "8px 16px",
+    minHeight: "44px",
     borderRadius: theme.borderRadius.xl,
     border: `1px solid ${theme.colors.border}`,
     fontSize: theme.fontSize.sm,
@@ -356,6 +422,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
+    justifyContent: "space-between",
     gap: "8px",
   },
   productoImg: {
@@ -365,8 +432,8 @@ const styles = {
     objectFit: "cover",
   },
   addBtn: {
-    width: "32px",
-    height: "32px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: "none",
     backgroundColor: theme.colors.accent,
@@ -382,8 +449,11 @@ const styles = {
     bottom: "24px",
     left: "16px",
     right: "16px",
+    maxWidth: "560px",
+    margin: "0 auto",
     backgroundColor: theme.colors.accent,
     color: "#000",
+    border: "none",
     borderRadius: theme.borderRadius.xl,
     padding: "16px 24px",
     display: "flex",
@@ -393,9 +463,10 @@ const styles = {
     boxShadow: theme.shadows.button,
     zIndex: theme.zIndex.fixed,
     fontWeight: theme.fontWeight.bold,
+    fontFamily: "'Inter', sans-serif",
   },
   cartCount: {
-    width: "28px",
+    minWidth: "28px",
     height: "28px",
     borderRadius: "50%",
     backgroundColor: "#000",
@@ -405,6 +476,7 @@ const styles = {
     justifyContent: "center",
     fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.bold,
+    padding: "0 6px",
   },
   cartText: {
     flex: 1,

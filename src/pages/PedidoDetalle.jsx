@@ -3,44 +3,92 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import theme from "../styles/theme";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
-import API_URL from "../config";
+import { SkeletonCard } from "../components/ui/Skeleton";
+import ErrorState from "../components/ui/ErrorState";
+import EmptyState from "../components/ui/EmptyState";
+import { api } from "../api/client";
 
 export default function PedidoDetalle() {
   const { pedidoId } = useParams();
   const navigate = useNavigate();
   const [pedido, setPedido] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const fetchPedido = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await api.get(`/pedidos/${pedidoId}`, { signal: controller.signal });
+        if (!controller.signal.aborted) setPedido(data);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          console.error("Error:", err);
+          setError(err.message || "No se pudo cargar el pedido.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
     fetchPedido();
-  }, [pedidoId]);
-
-  const fetchPedido = async () => {
-    try {
-      const token = localStorage.getItem("domiflex_token");
-      const res = await fetch(`${API_URL}/pedidos/${pedidoId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) setPedido(await res.json());
-    } catch (err) {
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => controller.abort();
+  }, [pedidoId, retryKey]);
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.spinner} />
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div style={{ width: "44px" }} />
+          <h1 style={styles.title}>Pedido #{pedidoId}</h1>
+          <div style={{ width: "44px" }} />
+        </div>
+        <div style={styles.content} aria-busy="true" aria-label="Cargando pedido">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Pedido #{pedidoId}</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <ErrorState
+          title="No pudimos cargar el pedido"
+          description={error}
+          onRetry={() => setRetryKey((k) => k + 1)}
+        />
       </div>
     );
   }
 
   if (!pedido) {
     return (
-      <div style={styles.loadingPage}>
-        <p style={{ color: theme.colors.textSecondary }}>Pedido no encontrado</p>
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Pedido #{pedidoId}</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <EmptyState
+          icon="📦"
+          title="Pedido no encontrado"
+          description="Verifica el número de pedido o vuelve a tus pedidos."
+          actionLabel="Ver mis pedidos"
+          onAction={() => navigate("/mis-pedidos")}
+        />
       </div>
     );
   }
@@ -48,11 +96,11 @@ export default function PedidoDetalle() {
   return (
     <div style={styles.page}>
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+        <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+          <FaArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Pedido #{pedido.idPedido}</h1>
-        <div style={{ width: "36px" }} />
+        <div style={{ width: "44px" }} aria-hidden="true" />
       </div>
 
       <div style={styles.content}>
@@ -70,7 +118,7 @@ export default function PedidoDetalle() {
         <div style={styles.card}>
           <h3 style={styles.cardTitle}>Items</h3>
           {pedido.items?.map((item, i) => (
-            <div key={i} style={styles.itemRow}>
+            <div key={item.id || i} style={styles.itemRow}>
               <span style={styles.itemName}>{item.cantidad}x {item.menuItem?.nombre}</span>
               <span style={styles.itemPrice}>${(item.precio * item.cantidad).toLocaleString()}</span>
             </div>
@@ -122,21 +170,6 @@ const styles = {
     minHeight: "100vh",
     backgroundColor: theme.colors.bgPrimary,
   },
-  loadingPage: {
-    minHeight: "100vh",
-    backgroundColor: theme.colors.bgPrimary,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spinner: {
-    width: "40px",
-    height: "40px",
-    border: `3px solid ${theme.colors.border}`,
-    borderTopColor: theme.colors.accent,
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  },
   header: {
     display: "flex",
     alignItems: "center",
@@ -149,8 +182,8 @@ const styles = {
     zIndex: theme.zIndex.sticky,
   },
   backBtn: {
-    width: "36px",
-    height: "36px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: `1px solid ${theme.colors.border}`,
     backgroundColor: theme.colors.bgCard,
@@ -166,9 +199,13 @@ const styles = {
   },
   content: {
     padding: "16px",
+    paddingBottom: "100px",
     display: "flex",
     flexDirection: "column",
     gap: "16px",
+    maxWidth: "640px",
+    margin: "0 auto",
+    width: "100%",
   },
   statusCard: {
     backgroundColor: theme.colors.bgCard,

@@ -1,52 +1,129 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaPhone, FaComments, FaMapMarkerAlt } from "react-icons/fa";
 import theme from "../styles/theme";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
 import Avatar from "../components/common/Avatar";
-import API_URL from "../config";
+import { SkeletonCard } from "../components/ui/Skeleton";
+import ErrorState from "../components/ui/ErrorState";
+import EmptyState from "../components/ui/EmptyState";
+import { api } from "../api/client";
+import { useSocket } from "./context/SocketContext";
+
+const POLL_MS = 15000;
 
 export default function Tracking() {
   const { pedidoId } = useParams();
   const navigate = useNavigate();
   const [pedido, setPedido] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
+  const [live, setLive] = useState(false);
+  const socketApi = useSocket();
 
-  useEffect(() => {
-    fetchPedido();
-    const interval = setInterval(fetchPedido, 15000);
-    return () => clearInterval(interval);
+  const fetchPedido = useCallback(async (signal) => {
+    try {
+      const data = await api.get(`/pedidos/${pedidoId}`, { signal });
+      if (signal?.aborted) return;
+      setPedido(data);
+      setError(null);
+    } catch (err) {
+      if (!signal?.aborted) {
+        console.error("Error:", err);
+        setError(err.message || "No se pudo cargar el pedido.");
+      }
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, [pedidoId]);
 
-  const fetchPedido = async () => {
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchPedido(controller.signal);
+    const interval = setInterval(() => fetchPedido(controller.signal), POLL_MS);
+
+    // Tiempo real por socket cuando está disponible; el polling queda de respaldo.
+    let cleanupSocket = null;
     try {
-      const token = localStorage.getItem("domiflex_token");
-      const res = await fetch(`${API_URL}/pedidos/${pedidoId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setPedido(data);
+      const { socket, joinPedido, leavePedido } = socketApi || {};
+      if (socket && joinPedido) {
+        joinPedido(pedidoId);
+        setLive(true);
+        const onUpdate = () => fetchPedido(controller.signal);
+        socket.on("pedido_actualizado", onUpdate);
+        socket.on("pedido_estado", onUpdate);
+        socket.on("location_updated", onUpdate);
+        cleanupSocket = () => {
+          socket.off("pedido_actualizado", onUpdate);
+          socket.off("pedido_estado", onUpdate);
+          socket.off("location_updated", onUpdate);
+          if (leavePedido) leavePedido(pedidoId);
+        };
       }
     } catch (err) {
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
+      console.error("Socket no disponible, usando polling:", err.message);
     }
-  };
+
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+      if (cleanupSocket) cleanupSocket();
+    };
+  }, [pedidoId, retryKey, fetchPedido, socketApi]);
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.spinner} />
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div style={{ width: "44px" }} />
+          <h1 style={styles.title}>Tu pedido en camino</h1>
+          <div style={{ width: "44px" }} />
+        </div>
+        <div style={styles.content} aria-busy="true" aria-label="Cargando pedido">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !pedido) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Tu pedido en camino</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <ErrorState
+          title="No pudimos cargar el pedido"
+          description={error}
+          onRetry={() => { setLoading(true); setRetryKey((k) => k + 1); }}
+        />
       </div>
     );
   }
 
   if (!pedido) {
     return (
-      <div style={styles.loadingPage}>
-        <p style={{ color: theme.colors.textSecondary }}>Pedido no encontrado</p>
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <h1 style={styles.title}>Tu pedido en camino</h1>
+          <div style={{ width: "44px" }} aria-hidden="true" />
+        </div>
+        <EmptyState
+          icon="📦"
+          title="Pedido no encontrado"
+          description="Verifica el número de pedido o vuelve a tus pedidos."
+          actionLabel="Ver mis pedidos"
+          onAction={() => navigate("/mis-pedidos")}
+        />
       </div>
     );
   }
@@ -63,16 +140,16 @@ export default function Tracking() {
   return (
     <div style={styles.page}>
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+        <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
+          <FaArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Tu pedido en camino</h1>
-        <span style={styles.liveBadge}>En vivo</span>
+        <span style={styles.liveBadge} aria-live="polite">{live ? "En vivo" : "Actualizando"}</span>
       </div>
 
       {/* Mapa placeholder */}
       <div style={styles.mapPlaceholder}>
-        <FaMapMarkerAlt size={48} color={theme.colors.accent} />
+        <FaMapMarkerAlt size={48} color={theme.colors.accent} aria-hidden="true" />
         <p style={styles.mapText}>Mapa de seguimiento</p>
       </div>
 
@@ -96,11 +173,11 @@ export default function Tracking() {
               <span style={styles.driverLabel}>Tu domiciliario</span>
             </div>
             <div style={styles.driverActions}>
-              <button style={styles.iconBtn}>
-                <FaPhone size={16} />
+              <button type="button" aria-label={`Llamar a ${pedido.repartidor.nombre}`} style={styles.iconBtn}>
+                <FaPhone size={16} aria-hidden="true" />
               </button>
-              <button style={styles.iconBtn}>
-                <FaComments size={16} />
+              <button type="button" aria-label={`Enviar mensaje a ${pedido.repartidor.nombre}`} style={styles.iconBtn}>
+                <FaComments size={16} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -113,7 +190,7 @@ export default function Tracking() {
             <p style={styles.detailText}>{pedido.negocio.nombre}</p>
           )}
           {pedido.items?.map((item, i) => (
-            <p key={i} style={styles.detailItem}>
+            <p key={item.id || i} style={styles.detailItem}>
               {item.cantidad}x {item.menuItem?.nombre} — ${(item.precio * item.cantidad).toLocaleString()}
             </p>
           ))}
@@ -128,7 +205,7 @@ export default function Tracking() {
           </div>
         </div>
 
-        <button style={styles.detailsBtn} onClick={() => navigate(`/pedido/${pedidoId}`)}>
+        <button type="button" style={styles.detailsBtn} onClick={() => navigate(`/pedido/${pedidoId}`)}>
           Ver detalles completos
         </button>
       </div>
@@ -140,21 +217,6 @@ const styles = {
   page: {
     minHeight: "100vh",
     backgroundColor: theme.colors.bgPrimary,
-  },
-  loadingPage: {
-    minHeight: "100vh",
-    backgroundColor: theme.colors.bgPrimary,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spinner: {
-    width: "40px",
-    height: "40px",
-    border: `3px solid ${theme.colors.border}`,
-    borderTopColor: theme.colors.accent,
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
   },
   header: {
     display: "flex",
@@ -168,8 +230,8 @@ const styles = {
     zIndex: theme.zIndex.sticky,
   },
   backBtn: {
-    width: "36px",
-    height: "36px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: `1px solid ${theme.colors.border}`,
     backgroundColor: theme.colors.bgCard,
@@ -210,9 +272,13 @@ const styles = {
   },
   content: {
     padding: "16px",
+    paddingBottom: "100px",
     display: "flex",
     flexDirection: "column",
     gap: "16px",
+    maxWidth: "640px",
+    margin: "0 auto",
+    width: "100%",
   },
   statusCard: {
     backgroundColor: theme.colors.bgCard,
@@ -251,8 +317,8 @@ const styles = {
     gap: "8px",
   },
   iconBtn: {
-    width: "40px",
-    height: "40px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: `1px solid ${theme.colors.border}`,
     backgroundColor: theme.colors.bgCard,
@@ -305,6 +371,7 @@ const styles = {
   detailsBtn: {
     width: "100%",
     padding: "14px",
+    minHeight: "48px",
     backgroundColor: "transparent",
     color: theme.colors.accent,
     border: `1px solid ${theme.colors.accent}`,
