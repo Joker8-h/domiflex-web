@@ -7,39 +7,7 @@ import NavbarCustom from '../components/Navbar'
 import { API_URL } from '../config';
 import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
-import FondoPantalla from './Imagenes/AutoresContacto.png';
-
-const customStyles = `
-  .custom-tomar-foto-btn {
-    border-radius: 12px !important;
-    border-color: #62d8d9 !important;
-    color: #62d8d9 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    width: 100% !important;
-    padding: 1rem 0 !important;
-    margin-bottom: 1rem !important;
-  }
-  
-  .custom-tomar-foto-btn:hover {
-    background-color: #62d8d9 !important;
-    border-color: #62d8d9 !important;
-    color: white !important;
-  }
-  
-  .custom-tomar-foto-btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-  }
-
-  .password-valid {
-    color: #28a745 !important;
-  }
-  
-  .password-invalid {
-    color: #dc3545 !important;
-  }
-`;
+import theme from '../styles/theme';
 
 const termsText = `CONTRATO MARCO DE LICENCIA DE USO DE SOFTWARE, INTERMEDIACIÓN
 TECNOLÓGICA Y ESTATUTO DE TÉRMINOS Y CONDICIONES GLOBALES DE LA
@@ -372,260 +340,506 @@ function Register() {
 
     const handlePrevStep = () => setStep(step - 1);
 
+    const s = theme.colors;
+    const sp = theme.spacing;
+    const br = theme.borderRadius;
+    const fs = theme.fontSize;
+
     const inputStyle = {
-        borderRadius: '12px',
-        backgroundColor: '#f8fafb',
-        border: '1px solid #e1e8ed',
-        padding: '10px 15px',
-        fontSize: '0.95rem'
+        borderRadius: br.sm,
+        backgroundColor: s.bgInput,
+        border: `1px solid ${s.border}`,
+        padding: `${sp.sm} ${sp.md}`,
+        fontSize: fs.md,
+        color: s.textPrimary,
+        width: '100%',
+        outline: 'none',
+        transition: theme.transitions.fast,
+        fontFamily: "'Inter', sans-serif",
+    };
+
+    const btnPrimary = {
+        width: '100%',
+        padding: '12px',
+        background: s.accent,
+        border: 'none',
+        borderRadius: br.md,
+        fontWeight: theme.fontWeight.bold,
+        color: '#000',
+        fontSize: fs.md,
+        cursor: 'pointer',
+        transition: theme.transitions.fast,
+        fontFamily: "'Inter', sans-serif",
+    };
+
+    const btnSecondary = {
+        width: '100%',
+        padding: '12px',
+        background: 'transparent',
+        border: `2px solid ${s.border}`,
+        borderRadius: br.md,
+        fontWeight: theme.fontWeight.semibold,
+        color: s.textSecondary,
+        fontSize: fs.md,
+        cursor: 'pointer',
+        transition: theme.transitions.fast,
+        fontFamily: "'Inter', sans-serif",
+    };
+
+    const labelStyle = {
+        fontSize: fs.sm,
+        fontWeight: theme.fontWeight.semibold,
+        color: s.textSecondary,
+        marginBottom: sp.xs,
+        display: 'block',
     };
 
     return (
         <>
-            <style>{customStyles}</style>
             <div style={{
-                backgroundImage: `url(${FondoPantalla})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundColor: s.bgPrimary,
                 minHeight: '100vh',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                fontFamily: "'Inter', sans-serif",
             }}>
-                <Toaster position="top-right" />
+                <Toaster
+                    position="top-right"
+                    toastOptions={{
+                        style: {
+                            background: s.bgSecondary,
+                            color: s.textPrimary,
+                            border: `1px solid ${s.border}`,
+                            borderRadius: br.sm,
+                        },
+                        success: { iconTheme: { primary: s.accent, secondary: '#000' } },
+                        error: { iconTheme: { primary: s.danger, secondary: '#fff' } },
+                    }}
+                />
                 <NavbarCustom />
 
                 <Container className="d-flex flex-column justify-content-center flex-grow-1 py-4">
                     <Row className="justify-content-center align-items-center g-0">
                         <Col xs={12} md={10} lg={5} xl={4} className="p-3">
-                            <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
-                                <Card.Body className="p-4 p-md-5">
-                                    <div className="text-center mb-4">
-                                        <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
-                                        <h5 className="fw-bold mt-3 mb-1">Crea tu cuenta</h5>
-                                        <ProgressBar now={(step / 6) * 100} variant="info" className="mt-3" style={{ height: '5px', borderRadius: '10px', backgroundColor: '#e9ecef' }} />
-                                        <small className="text-muted d-block mt-2">Paso {step} de 6</small>
+                            <div style={{
+                                backgroundColor: s.bgCard,
+                                borderRadius: br.lg,
+                                border: `1px solid ${s.border}`,
+                                boxShadow: theme.shadows.card,
+                                padding: '32px',
+                            }}>
+                                <div style={{ textAlign: 'center', marginBottom: sp.lg }}>
+                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
+                                    <h5 style={{
+                                        fontWeight: theme.fontWeight.bold,
+                                        marginTop: sp.md,
+                                        marginBottom: sp.xs,
+                                        color: s.textPrimary,
+                                        fontSize: fs.lg,
+                                    }}>Crea tu cuenta</h5>
+                                    <div style={{
+                                        height: '5px',
+                                        borderRadius: br.lg,
+                                        backgroundColor: s.border,
+                                        marginTop: sp.md,
+                                        overflow: 'hidden',
+                                    }}>
+                                        <div style={{
+                                            width: `${(step / 6) * 100}%`,
+                                            height: '100%',
+                                            background: `linear-gradient(90deg, ${s.accent}, ${s.accentLight})`,
+                                            borderRadius: br.lg,
+                                            transition: 'width 0.4s ease',
+                                        }} />
                                     </div>
+                                    <small style={{ color: s.textMuted, display: 'block', marginTop: sp.sm, fontSize: fs.xs }}>
+                                        Paso {step} de 6
+                                    </small>
+                                </div>
 
-                                    {error && <Alert variant="danger" className="py-2 small">{error}</Alert>}
+                                {error && (
+                                    <div style={{
+                                        backgroundColor: 'rgba(255, 82, 82, 0.1)',
+                                        border: `1px solid ${s.danger}`,
+                                        color: s.danger,
+                                        borderRadius: br.sm,
+                                        padding: `${sp.sm} ${sp.md}`,
+                                        marginBottom: sp.md,
+                                        fontSize: fs.sm,
+                                    }}>
+                                        {error}
+                                    </div>
+                                )}
 
-                                    <Form onSubmit={guardar}>
-                                        {step === 1 && (
-                                            <div className="animate__animated animate__fadeIn">
-                                                <p className="small mb-3 text-center">Ingresa tu correo para recibir un código de verificación.</p>
-                                                <Form.Group className="mb-4">
-                                                    <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo Electrónico" required style={inputStyle} />
-                                                </Form.Group>
-                                                <Button type="button" onClick={handleNextStep} disabled={loading} className="w-100 py-2 border-0" style={{ background: '#62d8d9', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}>
-                                                    {loading ? "Enviando..." : "Enviar Código"} <FaArrowRight className="ms-2" size={14} />
-                                                </Button>
-                                            </div>
-                                        )}
-
-                                        {step === 2 && (
-                                            <div className="animate__animated animate__fadeIn text-center">
-                                                <p className="small mb-4">Ingresa el código enviado a <strong>{email}</strong></p>
-                                                <Form.Group className="mb-4">
-                                                    <Form.Control
-                                                        type="text"
-                                                        maxLength="6"
-                                                        value={otp}
-                                                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                                                        placeholder="000000"
-                                                        style={{ ...inputStyle, textAlign: 'center', fontSize: '1.5rem', letterSpacing: '8px' }}
-                                                    />
-                                                </Form.Group>
-                                                <Button type="button" onClick={handleNextStep} disabled={loading || otp.length !== 6} className="w-100 py-2 border-0 mb-3" style={{ background: '#62d8d9', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}>
-                                                    {loading ? "Verificando..." : "Verificar Email"}
-                                                </Button>
-                                                <div className="d-flex justify-content-between px-2">
-                                                    <span onClick={handlePrevStep} style={{ cursor: 'pointer', fontSize: '0.85rem' }} className="text-muted">Cambiar Correo</span>
-                                                    <span onClick={handleResendOtp} style={{ color: '#62d8d9', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>Reenviar Código</span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {step === 3 && (
-                                            <div className="animate__animated animate__fadeIn">
-                                                <Form.Group className="mb-3">
-                                                    <Form.Control type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre Completo" required style={inputStyle} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Control type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="Teléfono" required style={inputStyle} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className="fw-bold small" style={{ color: '#113d69' }}>Tipo de cuenta DomiFlex</Form.Label>
-                                                    <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={inputStyle}>
-                                                        <option value="CLIENTE">CLIENTE — pide domicilios</option>
-                                                        <option value="REPARTIDOR">REPARTIDOR — entrega pedidos</option>
-                                                        <option value="COMERCIO">COMERCIO — vende con domicilios</option>
-                                                    </Form.Select>
-                                                </Form.Group>
-
-                                                <hr className="my-4" />
-                                                <h6 className="fw-bold mb-3" style={{ color: '#113d69' }}>Contacto de Emergencia</h6>
-
-                                                <Form.Group className="mb-3">
-                                                    <Form.Control type="text" value={nombreEmergencia} onChange={(e) => setNombreEmergencia(e.target.value)} placeholder="Nombre del Contacto de Emergencia" required style={inputStyle} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-4">
-                                                    <Form.Control type="tel" value={numeroEmergencia} onChange={(e) => setNumeroEmergencia(e.target.value)} placeholder="Número de Emergencia" required style={inputStyle} />
-                                                </Form.Group>
-                                                <Button type="button" onClick={handleNextStep} className="w-100 py-2 border-0" style={{ background: '#62d8d9', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}>
-                                                    Siguiente <FaArrowRight className="ms-2" size={14} />
-                                                </Button>
-                                            </div>
-                                        )}
-
-                                        {step === 4 && (
-                                            <div className="text-center animate__animated animate__fadeIn">
-                                                <div className="d-flex justify-content-center mb-4">
-                                                    <div style={{ width: '120px', height: '120px', borderRadius: '50%', border: '3px solid #62d8d9', overflow: 'hidden', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                        {fotoPreview ? <Image src={fotoPreview} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <FaCamera size={30} color="#ccc" />}
-                                                    </div>
-                                                </div>
-                                                <Button
-                                                    variant="outline-success"
-                                                    onClick={iniciarCamara}
-                                                    className="custom-tomar-foto-btn"
-                                                    disabled={cameraActive}
-                                                >
-                                                    <FaVideo className="me-2" /> Tomar Foto
-                                                </Button>
-                                                <div className="d-flex gap-2">
-                                                    <Button type="button" variant="light" onClick={handlePrevStep} className="w-50 py-2" style={{ borderRadius: '12px' }}>Atrás</Button>
-                                                    <Button type="button" onClick={handleNextStep} disabled={!fotoBase64} className="w-50 py-2 border-0" style={{ background: '#62d8d9', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}>Siguiente</Button>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {step === 5 && (
-                                            <div className="animate__animated animate__fadeIn">
-                                                <Form.Group className="mb-3">
-                                                    <div className="position-relative">
-                                                        <Form.Control 
-                                                            type={showPassword ? "text" : "password"} 
-                                                            value={password}
-                                                            onChange={(e) => { 
-                                                                setPassword(e.target.value); 
-                                                                validatePassword(e.target.value);
-                                                            }}
-                                                            placeholder="Contraseña" 
-                                                            required 
-                                                            style={inputStyle} 
-                                                        />
-                                                        <span className="position-absolute end-0 top-50 translate-middle-y me-3" style={{ cursor: 'pointer' }} onClick={() => setShowPassword(!showPassword)}>
-                                                            {showPassword ? <FaEyeSlash color="#8899a6" /> : <FaEye color="#8899a6" />}
-                                                        </span>
-                                                    </div>
-                                                </Form.Group>
-                                                
-                                                <div className="mb-4 p-3 bg-light rounded-3" style={{ fontSize: '0.85rem' }}>
-                                                    <p className="mb-2 fw-bold">La contraseña debe contener:</p>
-                                                    <ul className="list-unstyled mb-0">
-                                                        <li className={passwordErrors.length ? "password-valid" : "password-invalid"}>
-                                                            {passwordErrors.length ? "✓" : "✗"} Mínimo 8 caracteres
-                                                        </li>
-                                                        <li className={passwordErrors.uppercase ? "password-valid" : "password-invalid"}>
-                                                            {passwordErrors.uppercase ? "✓" : "✗"} Al menos una letra mayúscula
-                                                        </li>
-                                                        <li className={passwordErrors.lowercase ? "password-valid" : "password-invalid"}>
-                                                            {passwordErrors.lowercase ? "✓" : "✗"} Al menos una letra minúscula
-                                                        </li>
-                                                        <li className={passwordErrors.number ? "password-valid" : "password-invalid"}>
-                                                            {passwordErrors.number ? "✓" : "✗"} Al menos un número
-                                                        </li>
-                                                        <li className={passwordErrors.special ? "password-valid" : "password-invalid"}>
-                                                            {passwordErrors.special ? "✓" : "✗"} Al menos un carácter especial (!@#$%^&*(),.?":{}|&lt;&gt;)
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <div className="d-flex gap-2">
-                                                    <Button type="button" variant="light" onClick={handlePrevStep} className="w-50 py-2" style={{ borderRadius: '12px' }}>Atrás</Button>
-                                                    <Button 
-                                                        type="button" 
-                                                        onClick={handleNextStep} 
-                                                        disabled={!isPasswordValid() || !password} 
-                                                        className="w-50 py-2 border-0" 
-                                                        style={{ background: '#62d8d9', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}
-                                                    >
-                                                        Siguiente
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {step === 6 && (
-                                            <div className="animate__animated animate__fadeIn">
-                                                <div className="bg-light p-3 rounded-4 mb-3" style={{ fontSize: '0.85rem' }}>
-                                                    <strong>{nombre}</strong><br />
-                                                    {email}<br />
-                                                    <span className="text-muted small mt-2 d-block">Emergencia: {nombreEmergencia} ({numeroEmergencia})</span>
-                                                </div>
-                                                <Form.Check 
-                                                    type="checkbox" 
-                                                    label={<span style={{ fontSize: '0.8rem' }}>Acepto <span 
-                                                        onClick={(e) => { e.stopPropagation(); setShowTerminosModal(true); }} 
-                                                        style={{ color: '#62d8d9', fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }}
-                                                    >términos y condiciones</span></span>} 
-                                                    checked={terminosAceptados} 
-                                                    onChange={(e) => setTerminosAceptados(e.target.checked)} 
-                                                    className="mb-4" 
+                                <Form onSubmit={guardar}>
+                                    {step === 1 && (
+                                        <div>
+                                            <p style={{ color: s.textSecondary, fontSize: fs.sm, textAlign: 'center', marginBottom: sp.lg }}>
+                                                Ingresa tu correo para recibir un código de verificación.
+                                            </p>
+                                            <Form.Group style={{ marginBottom: sp.lg }}>
+                                                <Form.Control
+                                                    type="email"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    placeholder="Correo Electrónico"
+                                                    required
+                                                    style={inputStyle}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
                                                 />
-                                                <div className="d-flex gap-2">
-                                                    <Button type="button" variant="light" onClick={handlePrevStep} className="w-50 py-2" style={{ borderRadius: '12px' }}>Atrás</Button>
-                                                    <Button type="submit" disabled={!terminosAceptados || loading} className="w-50 py-2 border-0" style={{ background: '#113d69', borderRadius: '12px', fontWeight: 'bold', color: 'white' }}>
-                                                        {loading ? "..." : "Finalizar"}
-                                                    </Button>
+                                            </Form.Group>
+                                            <button type="button" onClick={handleNextStep} disabled={loading} style={btnPrimary}>
+                                                {loading ? "Enviando..." : "Enviar Código"} <FaArrowRight style={{ marginLeft: '8px' }} size={14} />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {step === 2 && (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <p style={{ color: s.textSecondary, fontSize: fs.sm, marginBottom: sp.lg }}>
+                                                Ingresa el código enviado a <strong style={{ color: s.textPrimary }}>{email}</strong>
+                                            </p>
+                                            <Form.Group style={{ marginBottom: sp.lg }}>
+                                                <Form.Control
+                                                    type="text"
+                                                    maxLength="6"
+                                                    value={otp}
+                                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                                                    placeholder="000000"
+                                                    style={{
+                                                        ...inputStyle,
+                                                        textAlign: 'center',
+                                                        fontSize: '1.5rem',
+                                                        letterSpacing: '8px',
+                                                    }}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                />
+                                            </Form.Group>
+                                            <button type="button" onClick={handleNextStep} disabled={loading || otp.length !== 6} style={{ ...btnPrimary, marginBottom: sp.md }}>
+                                                {loading ? "Verificando..." : "Verificar Email"}
+                                            </button>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', padding: `0 ${sp.sm}` }}>
+                                                <span onClick={handlePrevStep} style={{ cursor: 'pointer', fontSize: fs.xs, color: s.textMuted }}>
+                                                    Cambiar Correo
+                                                </span>
+                                                <span onClick={handleResendOtp} style={{ color: s.accent, cursor: 'pointer', fontWeight: theme.fontWeight.bold, fontSize: fs.xs }}>
+                                                    Reenviar Código
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 3 && (
+                                        <div>
+                                            <Form.Group style={{ marginBottom: sp.md }}>
+                                                <Form.Control type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre Completo" required style={inputStyle}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group style={{ marginBottom: sp.md }}>
+                                                <Form.Control type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="Teléfono" required style={inputStyle}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group style={{ marginBottom: sp.md }}>
+                                                <label style={labelStyle}>Tipo de cuenta DomiFlex</label>
+                                                <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
+                                                    <option value="CLIENTE">CLIENTE — pide domicilios</option>
+                                                    <option value="REPARTIDOR">REPARTIDOR — entrega pedidos</option>
+                                                    <option value="COMERCIO">COMERCIO — vende con domicilios</option>
+                                                </Form.Select>
+                                            </Form.Group>
+
+                                            <hr style={{ borderColor: s.border, margin: `${sp.lg} 0` }} />
+                                            <h6 style={{
+                                                fontWeight: theme.fontWeight.bold,
+                                                marginBottom: sp.md,
+                                                color: s.accent,
+                                                fontSize: fs.md,
+                                            }}>Contacto de Emergencia</h6>
+
+                                            <Form.Group style={{ marginBottom: sp.md }}>
+                                                <Form.Control type="text" value={nombreEmergencia} onChange={(e) => setNombreEmergencia(e.target.value)} placeholder="Nombre del Contacto de Emergencia" required style={inputStyle}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group style={{ marginBottom: sp.lg }}>
+                                                <Form.Control type="tel" value={numeroEmergencia} onChange={(e) => setNumeroEmergencia(e.target.value)} placeholder="Número de Emergencia" required style={inputStyle}
+                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                />
+                                            </Form.Group>
+                                            <button type="button" onClick={handleNextStep} style={btnPrimary}>
+                                                Siguiente <FaArrowRight style={{ marginLeft: '8px' }} size={14} />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {step === 4 && (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: sp.lg }}>
+                                                <div style={{
+                                                    width: '120px',
+                                                    height: '120px',
+                                                    borderRadius: '50%',
+                                                    border: `3px solid ${s.accent}`,
+                                                    overflow: 'hidden',
+                                                    backgroundColor: s.bgInput,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                    {fotoPreview
+                                                        ? <img src={fotoPreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        : <FaCamera size={30} color={s.textMuted} />
+                                                    }
                                                 </div>
                                             </div>
-                                        )}
-                                    </Form>
-                                    <p className="text-center mt-4 mb-0 small text-muted">¿Ya tienes cuenta? <Link to="/login" className="fw-bold text-decoration-none" style={{ color: '#62d8d9' }}>Inicia Sesión</Link></p>
-                                </Card.Body>
-                            </Card>
+                                            <button
+                                                type="button"
+                                                onClick={iniciarCamara}
+                                                disabled={cameraActive}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '16px',
+                                                    border: `2px solid ${s.accent}`,
+                                                    background: 'transparent',
+                                                    color: s.accent,
+                                                    borderRadius: br.md,
+                                                    fontWeight: theme.fontWeight.medium,
+                                                    fontSize: fs.md,
+                                                    cursor: cameraActive ? 'not-allowed' : 'pointer',
+                                                    opacity: cameraActive ? 0.6 : 1,
+                                                    marginBottom: sp.md,
+                                                    transition: theme.transitions.fast,
+                                                    fontFamily: "'Inter', sans-serif",
+                                                }}
+                                            >
+                                                <FaVideo style={{ marginRight: '8px' }} /> Tomar Foto
+                                            </button>
+                                            <div style={{ display: 'flex', gap: sp.sm }}>
+                                                <button type="button" onClick={handlePrevStep} style={btnSecondary}>Atrás</button>
+                                                <button type="button" onClick={handleNextStep} disabled={!fotoBase64} style={{ ...btnPrimary, opacity: !fotoBase64 ? 0.6 : 1, cursor: !fotoBase64 ? 'not-allowed' : 'pointer' }}>Siguiente</button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 5 && (
+                                        <div>
+                                            <Form.Group style={{ marginBottom: sp.md }}>
+                                                <div style={{ position: 'relative' }}>
+                                                    <Form.Control
+                                                        type={showPassword ? "text" : "password"}
+                                                        value={password}
+                                                        onChange={(e) => {
+                                                            setPassword(e.target.value);
+                                                            validatePassword(e.target.value);
+                                                        }}
+                                                        placeholder="Contraseña"
+                                                        required
+                                                        style={{ ...inputStyle, paddingRight: '45px' }}
+                                                        onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
+                                                        onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
+                                                    />
+                                                    <span
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            right: '15px',
+                                                            top: '50%',
+                                                            transform: 'translateY(-50%)',
+                                                            cursor: 'pointer',
+                                                            color: s.textMuted,
+                                                        }}
+                                                    >
+                                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                                    </span>
+                                                </div>
+                                            </Form.Group>
+
+                                            <div style={{
+                                                backgroundColor: s.bgInput,
+                                                border: `1px solid ${s.border}`,
+                                                borderRadius: br.sm,
+                                                padding: sp.md,
+                                                marginBottom: sp.lg,
+                                                fontSize: fs.xs,
+                                            }}>
+                                                <p style={{ marginBottom: sp.sm, fontWeight: theme.fontWeight.bold, color: s.textPrimary }}>
+                                                    La contraseña debe contener:
+                                                </p>
+                                                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                                    <li style={{ color: passwordErrors.length ? s.accent : s.danger, marginBottom: '4px' }}>
+                                                        {passwordErrors.length ? "✓" : "✗"} Mínimo 8 caracteres
+                                                    </li>
+                                                    <li style={{ color: passwordErrors.uppercase ? s.accent : s.danger, marginBottom: '4px' }}>
+                                                        {passwordErrors.uppercase ? "✓" : "✗"} Al menos una letra mayúscula
+                                                    </li>
+                                                    <li style={{ color: passwordErrors.lowercase ? s.accent : s.danger, marginBottom: '4px' }}>
+                                                        {passwordErrors.lowercase ? "✓" : "✗"} Al menos una letra minúscula
+                                                    </li>
+                                                    <li style={{ color: passwordErrors.number ? s.accent : s.danger, marginBottom: '4px' }}>
+                                                        {passwordErrors.number ? "✓" : "✗"} Al menos un número
+                                                    </li>
+                                                    <li style={{ color: passwordErrors.special ? s.accent : s.danger }}>
+                                                        {passwordErrors.special ? "✓" : "✗"} Al menos un carácter especial (!@#$%^&*(),.?":{}|&lt;&gt;)
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div style={{ display: 'flex', gap: sp.sm }}>
+                                                <button type="button" onClick={handlePrevStep} style={btnSecondary}>Atrás</button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleNextStep}
+                                                    disabled={!isPasswordValid() || !password}
+                                                    style={{ ...btnPrimary, opacity: (!isPasswordValid() || !password) ? 0.6 : 1, cursor: (!isPasswordValid() || !password) ? 'not-allowed' : 'pointer' }}
+                                                >
+                                                    Siguiente
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 6 && (
+                                        <div>
+                                            <div style={{
+                                                backgroundColor: s.bgInput,
+                                                border: `1px solid ${s.border}`,
+                                                borderRadius: br.sm,
+                                                padding: sp.md,
+                                                marginBottom: sp.lg,
+                                                fontSize: fs.sm,
+                                            }}>
+                                                <strong style={{ color: s.textPrimary }}>{nombre}</strong><br />
+                                                <span style={{ color: s.textSecondary }}>{email}</span><br />
+                                                <span style={{ color: s.textMuted, fontSize: fs.xs, marginTop: sp.xs, display: 'block' }}>
+                                                    Emergencia: {nombreEmergencia} ({numeroEmergencia})
+                                                </span>
+                                            </div>
+                                            <Form.Check
+                                                type="checkbox"
+                                                label={
+                                                    <span style={{ fontSize: fs.xs, color: s.textSecondary }}>
+                                                        Acepto{' '}
+                                                        <span
+                                                            onClick={(e) => { e.stopPropagation(); setShowTerminosModal(true); }}
+                                                            style={{ color: s.accent, fontWeight: theme.fontWeight.bold, textDecoration: 'underline', cursor: 'pointer' }}
+                                                        >
+                                                            términos y condiciones
+                                                        </span>
+                                                    </span>
+                                                }
+                                                checked={terminosAceptados}
+                                                onChange={(e) => setTerminosAceptados(e.target.checked)}
+                                                style={{ marginBottom: sp.lg, color: s.textSecondary }}
+                                            />
+                                            <div style={{ display: 'flex', gap: sp.sm }}>
+                                                <button type="button" onClick={handlePrevStep} style={btnSecondary}>Atrás</button>
+                                                <button type="submit" disabled={!terminosAceptados || loading} style={{
+                                                    ...btnPrimary,
+                                                    background: !terminosAceptados || loading ? s.textMuted : s.accent,
+                                                    opacity: !terminosAceptados || loading ? 0.6 : 1,
+                                                    cursor: !terminosAceptados || loading ? 'not-allowed' : 'pointer',
+                                                }}>
+                                                    {loading ? "..." : "Finalizar"}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </Form>
+                                <p style={{ textAlign: 'center', marginTop: sp.lg, marginBottom: 0, fontSize: fs.sm, color: s.textMuted }}>
+                                    ¿Ya tienes cuenta?{' '}
+                                    <Link to="/login" style={{ fontWeight: theme.fontWeight.bold, textDecoration: 'none', color: s.accent }}>
+                                        Inicia Sesión
+                                    </Link>
+                                </p>
+                            </div>
                         </Col>
 
                         <Col md={6} lg={6} className="d-none d-md-flex justify-content-center p-5">
-                            <img src={EscenaHomeBase} alt="Ilustración" style={{ width: '100%', maxWidth: '500px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }} />
+                            <img src={EscenaHomeBase} alt="Ilustración" style={{ width: '100%', maxWidth: '500px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.4))' }} />
                         </Col>
                     </Row>
                 </Container>
 
-                <Modal show={showCamera} onHide={detenerCamara} centered size="md">
-                    <Modal.Body className="p-0 text-center bg-black">
+                <Modal show={showCamera} onHide={detenerCamara} centered size="md" backdrop="static">
+                    <Modal.Body style={{ padding: 0, textAlign: 'center', backgroundColor: '#000' }}>
                         <video ref={videoRef} autoPlay playsInline style={{ width: '100%' }} />
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
-                        <div className="p-3 bg-white d-flex justify-content-center gap-3">
-                            <Button variant="secondary" size="sm" onClick={detenerCamara}>Cancelar</Button>
-                            <Button variant="success" size="sm" onClick={tomarFoto} disabled={!cameraActive} style={{ background: '#62d8d9', border: 'none' }}>Capturar</Button>
+                        <div style={{
+                            padding: sp.md,
+                            backgroundColor: s.bgCard,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: sp.sm,
+                            borderTop: `1px solid ${s.border}`,
+                        }}>
+                            <button onClick={detenerCamara} style={{
+                                ...btnSecondary,
+                                width: 'auto',
+                                padding: `${sp.sm} ${sp.md}`,
+                                fontSize: fs.sm,
+                            }}>Cancelar</button>
+                            <button onClick={tomarFoto} disabled={!cameraActive} style={{
+                                ...btnPrimary,
+                                width: 'auto',
+                                padding: `${sp.sm} ${sp.md}`,
+                                fontSize: fs.sm,
+                                opacity: cameraActive ? 1 : 0.6,
+                            }}>Capturar</button>
                         </div>
                     </Modal.Body>
                 </Modal>
 
-                <Modal show={showTerminosModal} onHide={() => setShowTerminosModal(false)} size="lg" centered>
-                    <Modal.Header closeButton style={{ borderBottom: `2px solid #62d8d9` }}>
-                        <Modal.Title style={{ color: '#113d69', fontWeight: 'bold' }}>
-                            <FaCheckCircle style={{ color: '#62d8d9', marginRight: '10px' }} />
+                <Modal show={showTerminosModal} onHide={() => setShowTerminosModal(false)} size="lg" centered backdrop="static">
+                    <Modal.Header closeButton style={{ borderBottom: `2px solid ${s.accent}`, backgroundColor: s.bgCard }}>
+                        <Modal.Title style={{ color: s.textPrimary, fontWeight: theme.fontWeight.bold, fontSize: fs.lg }}>
+                            <FaCheckCircle style={{ color: s.accent, marginRight: '10px' }} />
                             Términos y Condiciones
                         </Modal.Title>
                     </Modal.Header>
-                    <Modal.Body style={{ maxHeight: '60vh', overflowY: 'auto', padding: '1.5rem', backgroundColor: '#f9f9f9' }}>
-                        <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', fontSize: '0.9rem', whiteSpace: 'pre-wrap', lineHeight: '1.6', color: '#333' }}>
+                    <Modal.Body style={{
+                        maxHeight: '60vh',
+                        overflowY: 'auto',
+                        padding: '1.5rem',
+                        backgroundColor: s.bgPrimary,
+                        color: s.textSecondary,
+                    }}>
+                        <div style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: fs.sm,
+                            whiteSpace: 'pre-wrap',
+                            lineHeight: '1.6',
+                        }}>
                             {termsText}
                         </div>
                     </Modal.Body>
-                    <Modal.Footer style={{ borderTop: '1px solid #e9ecef' }}>
-                        <Button variant="secondary" onClick={() => setShowTerminosModal(false)} style={{ borderRadius: '8px' }}>
+                    <Modal.Footer style={{ borderTop: `1px solid ${s.border}`, backgroundColor: s.bgCard }}>
+                        <button onClick={() => setShowTerminosModal(false)} style={{
+                            ...btnSecondary,
+                            width: 'auto',
+                            padding: `${sp.sm} ${sp.md}`,
+                            fontSize: fs.sm,
+                        }}>
                             Cerrar
-                        </Button>
-                        <Button 
-                            variant="primary" 
-                            onClick={() => { setTerminosAceptados(true); setShowTerminosModal(false); toast.success('Términos aceptados'); }} 
-                            style={{ background: '#62d8d9', border: 'none', borderRadius: '8px' }}
+                        </button>
+                        <button
+                            onClick={() => { setTerminosAceptados(true); setShowTerminosModal(false); toast.success('Términos aceptados'); }}
+                            style={{
+                                ...btnPrimary,
+                                width: 'auto',
+                                padding: `${sp.sm} ${sp.md}`,
+                                fontSize: fs.sm,
+                            }}
                         >
                             Aceptar Términos
-                        </Button>
+                        </button>
                     </Modal.Footer>
                 </Modal>
             </div>

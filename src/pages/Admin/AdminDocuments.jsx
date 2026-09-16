@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
+import theme from "../../styles/theme";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Image, Modal, Form, InputGroup } from "react-bootstrap";
 import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
-        APROBADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        PENDIENTE: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        RECHAZADO: { backgroundColor: '#113d69', color: '#ffffff' }
+        APROBADO: { backgroundColor: theme.colors.accent, color: '#000000' },
+        PENDIENTE: { backgroundColor: theme.colors.border, color: theme.colors.textSecondary },
+        RECHAZADO: { backgroundColor: theme.colors.danger, color: theme.colors.textPrimary }
     };
 
-    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado] || { backgroundColor: theme.colors.border, color: theme.colors.textSecondary };
 
     return (
         <span style={{
@@ -34,18 +35,18 @@ const TipoDocumentoBadge = ({ tipo }) => {
     if (!tipo) return null;
 
     const tipoLower = tipo.toLowerCase();
-    let estilo = { backgroundColor: '#e9ecef', color: '#113d69' };
+    let estilo = { backgroundColor: theme.colors.border, color: theme.colors.textSecondary };
 
     if (tipoLower.includes('cedula') || tipoLower.includes('identidad')) {
-        estilo = { backgroundColor: '#62d8d9', color: '#ffffff' };
+        estilo = { backgroundColor: theme.colors.accent, color: '#000000' };
     } else if (tipoLower.includes('licencia') || tipoLower.includes('conducir')) {
-        estilo = { backgroundColor: '#113d69', color: '#ffffff' };
+        estilo = { backgroundColor: theme.colors.bgCardHover, color: theme.colors.textPrimary };
     } else if (tipoLower.includes('pasaporte')) {
-        estilo = { backgroundColor: '#6c757d', color: '#ffffff' };
+        estilo = { backgroundColor: '#30363D', color: theme.colors.textPrimary };
     } else if (tipoLower.includes('tarjeta') || tipoLower.includes('circulacion')) {
-        estilo = { backgroundColor: '#495057', color: '#ffffff' };
+        estilo = { backgroundColor: '#21262D', color: theme.colors.textPrimary };
     } else if (tipoLower.includes('seguro')) {
-        estilo = { backgroundColor: '#62d8d9', color: '#ffffff' };
+        estilo = { backgroundColor: theme.colors.accent, color: '#000000' };
     }
 
     return (
@@ -66,9 +67,9 @@ const StatsBadge = ({ children, color, bgColor, isWhite = false }) => {
     if (isWhite) {
         return (
             <span style={{
-                backgroundColor: '#ffffff',
-                color: '#62d8d9',
-                border: '1px solid #62d8d9',
+                backgroundColor: theme.colors.bgCard,
+                color: theme.colors.accent,
+                border: `1px solid ${theme.colors.accent}`,
                 padding: '0.5rem 1rem',
                 borderRadius: '1rem',
                 fontSize: '0.9rem',
@@ -109,20 +110,20 @@ const AccionButton = ({ estado, onAprobarRechazar }) => {
                 fontWeight: '500',
                 borderRadius: '50px',
                 padding: '0.4rem 0.8rem',
-                border: `2px solid ${esAprobado ? '#62d8d9' : '#62d8d9'}`,
-                backgroundColor: esAprobado ? 'transparent' : '#62d8d9',
-                color: esAprobado ? '#62d8d9' : '#ffffff',
+                border: `2px solid ${theme.colors.accent}`,
+                backgroundColor: esAprobado ? 'transparent' : theme.colors.accent,
+                color: esAprobado ? theme.colors.accent : '#000000',
             }}
             onMouseEnter={(e) => {
                 if (esAprobado) {
-                    e.target.style.backgroundColor = '#62d8d9';
-                    e.target.style.color = 'white';
+                    e.target.style.backgroundColor = theme.colors.accent;
+                    e.target.style.color = '#000000';
                 }
             }}
             onMouseLeave={(e) => {
                 if (esAprobado) {
                     e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#62d8d9';
+                    e.target.style.color = theme.colors.accent;
                 }
             }}
         >
@@ -142,17 +143,17 @@ const VerImagenButton = ({ onClick }) => {
                 borderRadius: '50px',
                 padding: '0.15rem 0.15rem',
                 fontSize: '0.7rem',
-                border: '2px solid #62d8d9',
+                border: `2px solid ${theme.colors.accent}`,
                 backgroundColor: 'transparent',
-                color: '#62d8d9',
+                color: theme.colors.accent,
             }}
             onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#62d8d9';
-                e.target.style.color = 'white';
+                e.target.style.backgroundColor = theme.colors.accent;
+                e.target.style.color = '#000000';
             }}
             onMouseLeave={(e) => {
                 e.target.style.backgroundColor = 'transparent';
-                e.target.style.color = '#62d8d9';
+                e.target.style.color = theme.colors.accent;
             }}
         >
             Ver Imagen
@@ -185,9 +186,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                 disabled={paginaActual === 1}
                 style={{
                     ...buttonStyle,
-                    backgroundColor: paginaActual === 1 ? '#e9ecef' : 'white',
-                    color: paginaActual === 1 ? '#6c757d' : '#62d8d9',
-                    border: `1px solid ${paginaActual === 1 ? '#dee2e6' : '#62d8d9'}`,
+                    backgroundColor: paginaActual === 1 ? theme.colors.border : theme.colors.bgCard,
+                    color: paginaActual === 1 ? theme.colors.textMuted : theme.colors.accent,
+                    border: `1px solid ${paginaActual === 1 ? theme.colors.borderLight : theme.colors.accent}`,
                     margin: '0 2px',
                     borderRadius: '50px 0 0 50px',
                     cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
@@ -207,9 +208,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                     onClick={() => cambiarPagina(1)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: 'white',
-                        color: '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: theme.colors.bgCard,
+                        color: theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -220,7 +221,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                 </button>
             );
             if (inicio > 2) {
-                botones.push(<span key="ellipsis1" style={{ margin: '0 5px', color: '#113d69' }}>...</span>);
+                botones.push(<span key="ellipsis1" style={{ margin: '0 5px', color: theme.colors.textSecondary }}>...</span>);
             }
         }
 
@@ -231,9 +232,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                     onClick={() => cambiarPagina(i)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: i === paginaActual ? '#62d8d9' : 'white',
-                        color: i === paginaActual ? 'white' : '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: i === paginaActual ? theme.colors.accent : theme.colors.bgCard,
+                        color: i === paginaActual ? '#000000' : theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -247,7 +248,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
 
         if (fin < totalPaginas) {
             if (fin < totalPaginas - 1) {
-                botones.push(<span key="ellipsis2" style={{ margin: '0 5px', color: '#113d69' }}>...</span>);
+                botones.push(<span key="ellipsis2" style={{ margin: '0 5px', color: theme.colors.textSecondary }}>...</span>);
             }
             botones.push(
                 <button
@@ -255,9 +256,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                     onClick={() => cambiarPagina(totalPaginas)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: 'white',
-                        color: '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: theme.colors.bgCard,
+                        color: theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -276,9 +277,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
                 disabled={paginaActual === totalPaginas}
                 style={{
                     ...buttonStyle,
-                    backgroundColor: paginaActual === totalPaginas ? '#e9ecef' : 'white',
-                    color: paginaActual === totalPaginas ? '#6c757d' : '#62d8d9',
-                    border: `1px solid ${paginaActual === totalPaginas ? '#dee2e6' : '#62d8d9'}`,
+                    backgroundColor: paginaActual === totalPaginas ? theme.colors.border : theme.colors.bgCard,
+                    color: paginaActual === totalPaginas ? theme.colors.textMuted : theme.colors.accent,
+                    border: `1px solid ${paginaActual === totalPaginas ? theme.colors.borderLight : theme.colors.accent}`,
                     margin: '0 2px',
                     borderRadius: '0 50px 50px 0',
                     cursor: paginaActual === totalPaginas ? 'not-allowed' : 'pointer',
@@ -296,7 +297,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, documentosFiltr
 
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 px-4 pb-4" style={{ gap: '1rem' }}>
-            <div className="text-muted text-center text-md-start" style={{ color: '#113d69', fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
+            <div className="text-center text-md-start" style={{ color: theme.colors.textSecondary, fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
                 Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, documentosFiltrados.length)} de {documentosFiltrados.length} documentos
                 {busqueda && ` (filtrados de ${documentosTotales} totales)`}
             </div>
@@ -510,29 +511,29 @@ function AdminDocumentos() {
                     <Col>
                         <Card className="border-0 shadow" style={{
                             borderRadius: '16px',
-                            borderLeft: '6px solid #62d8d9',
+                            borderLeft: `6px solid ${theme.colors.accent}`,
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-4">
                                 <h1 className="display-5 fw-bold mb-0" style={{
-                                    color: '#113d69',
+                                    color: theme.colors.textPrimary,
                                     letterSpacing: '-0.02em'
                                 }}>
                                     Gestión de Documentos
                                 </h1>
-                                <p className="mb-0 small" style={{ color: '#113d69' }}>
-                                    <span style={{ color: '#62d8d9' }}>●</span> Revisa y administra los documentos subidos por los usuarios
+                                <p className="mb-0 small" style={{ color: theme.colors.textSecondary }}>
+                                    <span style={{ color: theme.colors.accent }}>●</span> Revisa y administra los documentos subidos por los usuarios
                                 </p>
                             </Card.Body>
                         </Card>
 
-                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px' }}>
+                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px', backgroundColor: theme.colors.bgCard }}>
                             <Card.Body className="p-3">
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
-                                        <InputGroup.Text className="bg-white border-end-0">
-                                            <BsSearch style={{ color: '#113d69' }} />
+                                        <InputGroup.Text style={{ backgroundColor: theme.colors.bgInput, border: `1px solid ${theme.colors.border}`, borderRight: 'none' }}>
+                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -543,17 +544,30 @@ function AdminDocumentos() {
                                                 setPaginaActual(1);
                                             }}
                                             className="border-start-0"
-                                            style={{ color: '#113d69' }}
+                                            style={{
+                                                color: theme.colors.textPrimary,
+                                                backgroundColor: theme.colors.bgInput,
+                                                border: `1px solid ${theme.colors.border}`,
+                                                borderLeft: 'none'
+                                            }}
                                         />
                                         {busqueda && (
-                                            <Button variant="outline-secondary" className="border-start-0 border-end-0 bg-white" onClick={limpiarBusqueda}>
-                                                <BsXCircle style={{ color: '#113d69' }} />
+                                            <Button
+                                                className="border-start-0 border-end-0"
+                                                onClick={limpiarBusqueda}
+                                                style={{
+                                                    backgroundColor: theme.colors.bgInput,
+                                                    border: `1px solid ${theme.colors.border}`,
+                                                    color: theme.colors.textSecondary
+                                                }}
+                                            >
+                                                <BsXCircle />
                                             </Button>
                                         )}
                                         <Button
                                             variant="primary"
                                             type="submit"
-                                            style={{ backgroundColor: '#62d8d9', border: 'none', color: '#ffffff' }}
+                                            style={{ backgroundColor: theme.colors.accent, border: 'none', color: '#000000' }}
                                         >
                                             Buscar
                                         </Button>
@@ -563,16 +577,16 @@ function AdminDocumentos() {
                         </Card>
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
-                            <StatsBadge bgColor="transparent" color="#113d69">
+                            <StatsBadge bgColor="transparent" color={theme.colors.textSecondary}>
                                 Total: {documentos.length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                            <StatsBadge bgColor={theme.colors.accent} color="#000000">
                                 Aprobados: {documentos.filter(d => d.estado === 'APROBADO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#cccbd2af" color="#113d69">
+                            <StatsBadge bgColor={theme.colors.border} color={theme.colors.textSecondary}>
                                 Pendientes: {documentos.filter(d => d.estado === 'PENDIENTE').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#113d69" color="#ffffff">
+                            <StatsBadge bgColor={theme.colors.danger} color={theme.colors.textPrimary}>
                                 Rechazados: {documentos.filter(d => d.estado === 'RECHAZADO').length}
                             </StatsBadge>
                         </div>
@@ -582,8 +596,8 @@ function AdminDocumentos() {
                 {error && (
                     <Row className="mb-3">
                         <Col>
-                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: '#cccbd2af', color: '#113d69' }}>
-                                <strong style={{ color: '#113d69' }}>Error:</strong> <span style={{ color: '#113d69' }}>{error}</span>
+                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: theme.colors.dangerDark, color: theme.colors.textPrimary }}>
+                                <strong>Error:</strong> {error}
                             </Alert>
                         </Col>
                     </Row>
@@ -594,47 +608,48 @@ function AdminDocumentos() {
                         <Card className="shadow border-0" style={{
                             borderRadius: '16px',
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-0">
                                 {loading ? (
                                     <div className="text-center py-5">
-                                        <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando documentos...</p>
+                                        <Spinner animation="border" style={{ color: theme.colors.accent }} />
+                                        <p className="mt-3" style={{ color: theme.colors.textSecondary }}>Cargando documentos...</p>
                                     </div>
                                 ) : (
                                     <div className="table-responsive">
                                         <Table hover className="align-middle mb-0">
                                             <thead style={{
-                                                backgroundColor: 'rgba(248, 249, 250, 0.9)',
-                                                borderBottom: '2px solid #62d8d9'
+                                                backgroundColor: theme.colors.bgCardHover,
+                                                borderBottom: `2px solid ${theme.colors.accent}`
                                             }}>
                                                 <tr>
-                                                    <th className="py-3 px-4" style={{ color: '#113d69' }}>ID</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>Usuario</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>Tipo Documento</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>N° Documento / Imagen</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>Estado</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>Fecha Subida</th>
-                                                    <th className="py-3" style={{ color: '#113d69' }}>Acciones</th>
+                                                    <th className="py-3 px-4" style={{ color: theme.colors.textSecondary }}>ID</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>Usuario</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>Tipo Documento</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>N° Documento / Imagen</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>Estado</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>Fecha Subida</th>
+                                                    <th className="py-3" style={{ color: theme.colors.textSecondary }}>Acciones</th>
                                                 </tr>
                                             </thead>
-                                            <tbody style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
+                                            <tbody>
                                                 {documentosFiltrados.length === 0 ? (
                                                     <tr>
-                                                        <td colSpan="7" className="text-center py-4" style={{ color: '#113d69' }}>
+                                                        <td colSpan="7" className="text-center py-4" style={{ color: theme.colors.textSecondary }}>
                                                             {busqueda ? "No se encontraron documentos con esos criterios" : "No hay documentos registrados"}
                                                         </td>
                                                     </tr>
                                                 ) : (
                                                     documentosPaginados.map((documento, index) => (
                                                         <tr key={documento.idDocumentacion} style={{
-                                                            backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0.9)' : 'rgba(250, 250, 250, 0.9)'
+                                                            backgroundColor: index % 2 === 0 ? theme.colors.bgCard : theme.colors.bgCardHover,
+                                                            borderBottom: `1px solid ${theme.colors.border}`
                                                         }}>
                                                             <td className="fw-semibold px-4">
                                                                 <span style={{
-                                                                    backgroundColor: '#62d8d9',
-                                                                    color: '#ffffff',
+                                                                    backgroundColor: theme.colors.accent,
+                                                                    color: '#000000',
                                                                     padding: '0.4rem 0.8rem',
                                                                     borderRadius: '8px',
                                                                     display: 'inline-block',
@@ -646,21 +661,21 @@ function AdminDocumentos() {
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <div className="fw-medium" style={{ color: '#113d69' }}>
+                                                                <div className="fw-medium" style={{ color: theme.colors.textPrimary }}>
                                                                     {obtenerNombreUsuario(documento.idUsuario)}
                                                                 </div>
-                                                                <small className="text-muted">
+                                                                <small style={{ color: theme.colors.textMuted }}>
                                                                     ID: {documento.idUsuario}
                                                                 </small>
                                                             </td>
                                                             <td>
-                                                                <div className="fw-medium mb-1" style={{ color: '#113d69' }}>
+                                                                <div className="fw-medium mb-1" style={{ color: theme.colors.textPrimary }}>
                                                                     {documento.tipoDocumento || documento.tipo || 'No especificado'}
                                                                 </div>
                                                                 <TipoDocumentoBadge tipo={documento.tipoDocumento || documento.tipo} />
                                                             </td>
                                                             <td>
-                                                                <div className="mb-2" style={{ color: '#113d69' }}>
+                                                                <div className="mb-2" style={{ color: theme.colors.textPrimary }}>
                                                                     <span className="fw-medium">N°:</span> {documento.numeroDocumento || documento.numero || "-"}
                                                                 </div>
                                                                 <VerImagenButton onClick={() => handleVerImagen(documento)} />
@@ -669,7 +684,7 @@ function AdminDocumentos() {
                                                                 <EstadoBadge estado={documento.estado} />
                                                             </td>
                                                             <td>
-                                                                <div style={{ color: '#113d69', fontSize: '0.9rem' }}>
+                                                                <div style={{ color: theme.colors.textSecondary, fontSize: '0.9rem' }}>
                                                                     {formatearFecha(documento.fechaSubida || documento.creadoEn)}
                                                                 </div>
                                                             </td>
@@ -712,25 +727,25 @@ function AdminDocumentos() {
                 size="lg"
                 centered
                 style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                    backgroundColor: theme.colors.overlay
                 }}
             >
                 <Modal.Header
                     closeButton
                     style={{
-                        borderBottom: '2px solid #62d8d9',
-                        backgroundColor: 'rgba(255, 255, 255, 0.98)'
+                        borderBottom: `2px solid ${theme.colors.accent}`,
+                        backgroundColor: theme.colors.bgCard
                     }}
                 >
-                    <Modal.Title style={{ color: '#113d69' }}>
+                    <Modal.Title style={{ color: theme.colors.textPrimary }}>
                         {selectedDocumento && (
                             <>
-                                <span style={{ color: '#62d8d9' }}>📄</span> Documento de {obtenerNombreUsuario(selectedDocumento.idUsuario)}
+                                <span style={{ color: theme.colors.accent }}>Documento</span> de {obtenerNombreUsuario(selectedDocumento.idUsuario)}
                             </>
                         )}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="text-center p-0" style={{ backgroundColor: '#1a1a1a' }}>
+                <Modal.Body className="text-center p-0" style={{ backgroundColor: theme.colors.bgPrimary }}>
                     {selectedImage ? (
                         <Image
                             src={getImageUrl(selectedDocumento)}
@@ -747,22 +762,23 @@ function AdminDocumentos() {
                             }}
                         />
                     ) : (
-                        <div className="p-5 text-center" style={{ color: '#ffffff' }}>
+                        <div className="p-5 text-center" style={{ color: theme.colors.textSecondary }}>
                             No hay imagen disponible
                         </div>
                     )}
                 </Modal.Body>
-                <Modal.Footer style={{ backgroundColor: 'rgba(255, 255, 255, 0.98)' }}>
+                <Modal.Footer style={{ backgroundColor: theme.colors.bgCard }}>
                     <Button
                         variant="secondary"
                         onClick={handleCloseModal}
                         style={{
-                            backgroundColor: '#6c757d',
+                            backgroundColor: theme.colors.border,
                             border: 'none',
                             transition: 'all 0.2s',
                             fontWeight: '500',
                             padding: '0.5rem 1.5rem',
-                            borderRadius: '50px'
+                            borderRadius: '50px',
+                            color: theme.colors.textPrimary
                         }}
                     >
                         Cerrar

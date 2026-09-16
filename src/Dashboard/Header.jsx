@@ -7,6 +7,7 @@ import Logo from "../pages/Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png";
 import Notificaciones from "../components/Notificaciones";
 import { useSocket } from "../pages/context/SocketContext";
 import { BsBellFill } from "react-icons/bs";
+import theme from "../styles/theme";
 
 function Header() {
   const navigate = useNavigate();
@@ -111,12 +112,10 @@ function Header() {
 
   return (
     <header className="py-3" style={{
-      backgroundColor: '#ffffff',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+      backgroundColor: theme.colors.bgPrimary,
+      borderBottom: `1px solid ${theme.colors.border}`
     }}>
-      <div className="container-fluid px-4" style={{
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-      }}>
+      <div className="container-fluid px-4">
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center">
             <div className="text-center mb-2">
@@ -137,10 +136,10 @@ function Header() {
               <div
                 className="d-flex align-items-center justify-content-center p-2 rounded-circle"
                 style={{
-                  backgroundColor: '#fffbeb',
-                  color: '#f59e0b',
+                  backgroundColor: `${theme.colors.warning}20`,
+                  color: theme.colors.warning,
                   cursor: 'pointer',
-                  border: '1px solid #fef3c7',
+                  border: `1px solid ${theme.colors.warning}40`,
                   animation: 'pulse 2s infinite'
                 }}
                 onClick={() => navigate('/admin/solicitudes-vehiculos')}
@@ -174,20 +173,21 @@ function Header() {
                 id="dropdown-user"
               >
                 <div className="text-end me-3 d-none d-md-block">
-                  <p className="mb-0 text-black fw-medium">{getFullName()}</p>
-                  <small className="text-black opacity-75">{getUserEmail()}</small>
+                  <p className="mb-0 fw-medium" style={{ color: theme.colors.textPrimary }}>{getFullName()}</p>
+                  <small style={{ color: theme.colors.textSecondary }}>{getUserEmail()}</small>
                 </div>
 
                 <div
-                  className="rounded-circle d-flex align-items-center bg-white justify-content-center"
+                  className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{
                     width: '45px',
                     height: '45px',
-                    border: '1px solid black',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                    border: `1px solid ${theme.colors.border}`,
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                    backgroundColor: theme.colors.bgCard
                   }}
                 >
-                  <span className="text-black fw-bold">{getInitial()}</span>
+                  <span style={{ color: theme.colors.accent, fontWeight: 'bold' }}>{getInitial()}</span>
                 </div>
               </Dropdown.Toggle>
 
@@ -195,19 +195,21 @@ function Header() {
                 className="mt-2"
                 style={{
                   minWidth: '200px',
-                  boxShadow: '0 5px 20px rgba(0,0,0,0.2)',
-                  border: 'none',
-                  borderRadius: '10px'
+                  boxShadow: '0 5px 20px rgba(0,0,0,0.3)',
+                  border: `1px solid ${theme.colors.border}`,
+                  borderRadius: '10px',
+                  backgroundColor: theme.colors.bgCard
                 }}
               >
-                <Dropdown.Header className="text-center border-bottom pb-2">
-                  <strong>{getFullName()}</strong><br />
-                  <small className="text-muted">{getUserEmail()}</small>
+                <Dropdown.Header className="text-center border-bottom pb-2" style={{ borderColor: theme.colors.border }}>
+                  <strong style={{ color: theme.colors.textPrimary }}>{getFullName()}</strong><br />
+                  <small style={{ color: theme.colors.textSecondary }}>{getUserEmail()}</small>
                 </Dropdown.Header>
 
                 <Dropdown.Item
                   onClick={handleLogout}
-                  className="py-2 text-danger d-flex justify-content-center"
+                  className="py-2 d-flex justify-content-center"
+                  style={{ color: theme.colors.danger }}
                 >
                   <i className="bi bi-box-arrow-right me-2"></i>
                   Cerrar sesión

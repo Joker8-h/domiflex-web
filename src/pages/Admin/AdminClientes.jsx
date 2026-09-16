@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from '../../config';
+import theme from '../../styles/theme';
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Form, InputGroup } from "react-bootstrap";
 import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
-        ACTIVO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        INACTIVO: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        SUSPENDIDO: { backgroundColor: '#113d69', color: '#ffffff' }
+        ACTIVO: { backgroundColor: theme.colors.accent, color: '#000' },
+        INACTIVO: { backgroundColor: theme.colors.border, color: theme.colors.textSecondary },
+        SUSPENDIDO: { backgroundColor: theme.colors.bgPrimary, color: theme.colors.textPrimary }
     };
 
-    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado] || { backgroundColor: theme.colors.border, color: theme.colors.textSecondary };
 
     return (
         <span style={{
@@ -34,9 +35,9 @@ const StatsBadge = ({ children, color, bgColor, isWhite = false }) => {
     if (isWhite) {
         return (
             <span style={{
-                backgroundColor: '#ffffff',
-                color: '#62d8d9',
-                border: '1px solid #62d8d9',
+                backgroundColor: theme.colors.bgCard,
+                color: theme.colors.accent,
+                border: `1px solid ${theme.colors.accent}`,
                 padding: '0.5rem 1rem',
                 borderRadius: '1rem',
                 fontSize: '0.9rem',
@@ -81,22 +82,22 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
         if (tipoBoton === 'principal') {
             if (estado === 'ACTIVO') {
                 return {
-                    backgroundColor: '#62d8d9',
-                    color: '#ffffff',
-                    borderColor: '#62d8d9'
+                    backgroundColor: theme.colors.accent,
+                    color: '#000',
+                    borderColor: theme.colors.accent
                 };
             } else {
                 return {
                     backgroundColor: 'transparent',
-                    color: '#62d8d9',
-                    borderColor: '#62d8d9'
+                    color: theme.colors.accent,
+                    borderColor: theme.colors.accent
                 };
             }
         } else if (tipoBoton === 'suspender') {
             return {
-                backgroundColor: '#113d69',
-                color: '#ffffff',
-                borderColor: '#113d69'
+                backgroundColor: theme.colors.bgPrimary,
+                color: theme.colors.textPrimary,
+                borderColor: theme.colors.border
             };
         }
     };
@@ -115,7 +116,7 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                         fontWeight: '500',
                         borderRadius: '50px 0 0 50px',
                         padding: '0.4rem 0.8rem',
-                        border: `2px solid ${estado === 'ACTIVO' ? '#62d8d9' : '#62d8d9'}`,
+                        border: `2px solid ${theme.colors.accent}`,
                         ...getButtonStyle('principal')
                     }}
                 >
@@ -129,11 +130,11 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                         fontWeight: '500',
                         borderRadius: '0 50px 50px 0',
                         padding: '0.4rem 0.6rem',
-                        border: `2px solid ${estado === 'ACTIVO' ? '#62d8d9' : '#62d8d9'}`,
+                        border: `2px solid ${theme.colors.accent}`,
                         borderLeft: 'none',
                         ...getButtonStyle('principal'),
-                        backgroundColor: estado === 'ACTIVO' ? '#62d8d9' : 'transparent',
-                        color: estado === 'ACTIVO' ? '#ffffff' : '#62d8d9'
+                        backgroundColor: estado === 'ACTIVO' ? theme.colors.accent : 'transparent',
+                        color: estado === 'ACTIVO' ? '#000' : theme.colors.accent
                     }}
                 >
                     <BsChevronDown style={{
@@ -150,10 +151,10 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                     right: 0,
                     marginTop: '0.5rem',
                     minWidth: '120px',
-                    backgroundColor: 'white',
+                    backgroundColor: theme.colors.bgCard,
                     borderRadius: '16px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                    border: '1px solid rgba(0,0,0,0.05)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    border: `1px solid ${theme.colors.border}`,
                     zIndex: 1000,
                     overflow: 'hidden'
                 }}>
@@ -171,11 +172,11 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                             border: 'none',
                             borderRadius: 0,
                             backgroundColor: 'transparent',
-                            color: '#113d69',
+                            color: theme.colors.textPrimary,
                             textAlign: 'left'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#f8f9fa';
+                            e.target.style.backgroundColor = theme.colors.bgCardHover;
                         }}
                         onMouseLeave={(e) => {
                             e.target.style.backgroundColor = 'transparent';
@@ -214,9 +215,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                 disabled={paginaActual === 1}
                 style={{
                     ...buttonStyle,
-                    backgroundColor: paginaActual === 1 ? '#e9ecef' : 'white',
-                    color: paginaActual === 1 ? '#6c757d' : '#62d8d9',
-                    border: `1px solid ${paginaActual === 1 ? '#dee2e6' : '#62d8d9'}`,
+                    backgroundColor: paginaActual === 1 ? theme.colors.bgCardHover : theme.colors.bgCard,
+                    color: paginaActual === 1 ? theme.colors.textMuted : theme.colors.accent,
+                    border: `1px solid ${paginaActual === 1 ? theme.colors.border : theme.colors.accent}`,
                     margin: '0 2px',
                     borderRadius: '50px 0 0 50px',
                     cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
@@ -236,9 +237,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                     onClick={() => cambiarPagina(1)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: 'white',
-                        color: '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: theme.colors.bgCard,
+                        color: theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -249,7 +250,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                 </button>
             );
             if (inicio > 2) {
-                botones.push(<span key="ellipsis1" style={{ margin: '0 5px', color: '#113d69' }}>...</span>);
+                botones.push(<span key="ellipsis1" style={{ margin: '0 5px', color: theme.colors.textMuted }}>...</span>);
             }
         }
 
@@ -260,9 +261,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                     onClick={() => cambiarPagina(i)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: i === paginaActual ? '#62d8d9' : 'white',
-                        color: i === paginaActual ? 'white' : '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: i === paginaActual ? theme.colors.accent : theme.colors.bgCard,
+                        color: i === paginaActual ? '#000' : theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -276,7 +277,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
 
         if (fin < totalPaginas) {
             if (fin < totalPaginas - 1) {
-                botones.push(<span key="ellipsis2" style={{ margin: '0 5px', color: '#113d69' }}>...</span>);
+                botones.push(<span key="ellipsis2" style={{ margin: '0 5px', color: theme.colors.textMuted }}>...</span>);
             }
             botones.push(
                 <button
@@ -284,9 +285,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                     onClick={() => cambiarPagina(totalPaginas)}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: 'white',
-                        color: '#62d8d9',
-                        border: '1px solid #62d8d9',
+                        backgroundColor: theme.colors.bgCard,
+                        color: theme.colors.accent,
+                        border: `1px solid ${theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px',
                         cursor: 'pointer',
@@ -305,9 +306,9 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
                 disabled={paginaActual === totalPaginas}
                 style={{
                     ...buttonStyle,
-                    backgroundColor: paginaActual === totalPaginas ? '#e9ecef' : 'white',
-                    color: paginaActual === totalPaginas ? '#6c757d' : '#62d8d9',
-                    border: `1px solid ${paginaActual === totalPaginas ? '#dee2e6' : '#62d8d9'}`,
+                    backgroundColor: paginaActual === totalPaginas ? theme.colors.bgCardHover : theme.colors.bgCard,
+                    color: paginaActual === totalPaginas ? theme.colors.textMuted : theme.colors.accent,
+                    border: `1px solid ${paginaActual === totalPaginas ? theme.colors.border : theme.colors.accent}`,
                     margin: '0 2px',
                     borderRadius: '0 50px 50px 0',
                     cursor: paginaActual === totalPaginas ? 'not-allowed' : 'pointer',
@@ -325,7 +326,7 @@ const Paginacion = ({ totalPaginas, paginaActual, cambiarPagina, clientesFiltrad
 
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 px-4 pb-4" style={{ gap: '1rem' }}>
-            <div className="text-muted text-center text-md-start" style={{ color: '#113d69', fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
+            <div className="text-muted text-center text-md-start" style={{ color: theme.colors.textSecondary, fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
                 Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, clientesFiltrados.length)} de {clientesFiltrados.length} clientes
                 {busqueda && ` (filtrados de ${clientesTotales} totales)`}
             </div>
@@ -471,29 +472,29 @@ function AdminClientes() {
                     <Col>
                         <Card className="border-0 shadow" style={{
                             borderRadius: '16px',
-                            borderLeft: '6px solid #62d8d9',
+                            borderLeft: `6px solid ${theme.colors.accent}`,
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-4">
                                 <h1 className="display-5 fw-bold mb-0" style={{
-                                    color: '#113d69',
+                                    color: theme.colors.textPrimary,
                                     letterSpacing: '-0.02em'
                                 }}>
                                     Lista de Clientes
                                 </h1>
-                                <p className="mb-0 small" style={{ color: '#113d69' }}>
-                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los clientes registrados en la plataforma
+                                <p className="mb-0 small" style={{ color: theme.colors.textSecondary }}>
+                                    <span style={{ color: theme.colors.accent }}>●</span> Administra los clientes registrados en la plataforma
                                 </p>
                             </Card.Body>
                         </Card>
 
-                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px' }}>
+                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px', backgroundColor: theme.colors.bgCard }}>
                             <Card.Body className="p-3">
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
-                                        <InputGroup.Text className="bg-white border-end-0">
-                                            <BsSearch style={{ color: '#113d69' }} />
+                                        <InputGroup.Text style={{ backgroundColor: theme.colors.bgCard, borderColor: theme.colors.border }}>
+                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -504,17 +505,17 @@ function AdminClientes() {
                                                 setPaginaActual(1);
                                             }}
                                             className="border-start-0"
-                                            style={{ color: '#113d69' }}
+                                            style={{ backgroundColor: theme.colors.bgPrimary, color: theme.colors.textPrimary, borderColor: theme.colors.border }}
                                         />
                                         {busqueda && (
-                                            <Button variant="outline-secondary" className="border-start-0 border-end-0 bg-white" onClick={limpiarBusqueda}>
-                                                <BsXCircle style={{ color: '#113d69' }} />
+                                            <Button variant="outline-secondary" className="border-start-0 border-end-0" style={{ backgroundColor: theme.colors.bgCard, borderColor: theme.colors.border }} onClick={limpiarBusqueda}>
+                                                <BsXCircle style={{ color: theme.colors.textSecondary }} />
                                             </Button>
                                         )}
                                         <Button
                                             variant="primary"
                                             type="submit"
-                                            style={{ backgroundColor: '#62d8d9', border: 'none', color: '#ffffff' }}
+                                            style={{ backgroundColor: theme.colors.accent, border: 'none', color: '#000' }}
                                         >
                                             Buscar
                                         </Button>
@@ -524,7 +525,7 @@ function AdminClientes() {
                         </Card>
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
-                            <StatsBadge bgColor="transparent" color="#113d69">
+                            <StatsBadge bgColor="transparent" color={theme.colors.textPrimary}>
                                 Total: {clientes.length}
                             </StatsBadge>
                             {busqueda && (
@@ -532,13 +533,13 @@ function AdminClientes() {
                                     Resultados: {clientesFiltrados.length}
                                 </StatsBadge>
                             )}
-                            <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                            <StatsBadge bgColor={theme.colors.accent} color="#000">
                                 Activos: {clientes.filter(v => v.estado === 'ACTIVO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#cccbd2af" color="#113d69">
+                            <StatsBadge bgColor={theme.colors.border} color={theme.colors.textSecondary}>
                                 Inactivos: {clientes.filter(v => v.estado === 'INACTIVO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#113d69" color="#ffffff">
+                            <StatsBadge bgColor={theme.colors.bgPrimary} color={theme.colors.textPrimary}>
                                 Suspendidos: {clientes.filter(v => v.estado === 'SUSPENDIDO').length}
                             </StatsBadge>
                         </div>
@@ -548,8 +549,8 @@ function AdminClientes() {
                 {error && (
                     <Row className="mb-3">
                         <Col>
-                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: '#cccbd2af', color: '#113d69' }}>
-                                <strong style={{ color: '#113d69' }}>Error:</strong> <span style={{ color: '#113d69' }}>{error}</span>
+                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: '#2D1111', color: theme.colors.danger, border: `1px solid ${theme.colors.danger}` }}>
+                                <strong style={{ color: theme.colors.danger }}>Error:</strong> <span style={{ color: theme.colors.textPrimary }}>{error}</span>
                             </Alert>
                         </Col>
                     </Row>
@@ -560,48 +561,48 @@ function AdminClientes() {
                         <Card className="shadow border-0" style={{
                             borderRadius: '16px',
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-0">
                                 {loading ? (
                                     <div className="text-center py-5">
-                                        <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando clientes...</p>
+                                        <Spinner animation="border" style={{ color: theme.colors.accent }} />
+                                        <p className="mt-3" style={{ color: theme.colors.textSecondary }}>Cargando clientes...</p>
                                     </div>
                                 ) : (
                                     <>
                                         <div className="table-responsive">
                                             <Table hover className="align-middle mb-0">
                                                 <thead style={{
-                                                    backgroundColor: 'rgba(248, 249, 250, 0.9)',
-                                                    borderBottom: '2px solid #62d8d9'
+                                                    backgroundColor: theme.colors.bgPrimary,
+                                                    borderBottom: `2px solid ${theme.colors.accent}`
                                                 }}>
                                                     <tr>
-                                                        <th className="py-3 px-4" style={{ color: '#113d69' }}>ID</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Nombre</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Email</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Teléfono</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Estado</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Registro</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Acciones</th>
+                                                        <th className="py-3 px-4" style={{ color: theme.colors.textSecondary }}>ID</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Nombre</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Email</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Teléfono</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Estado</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Registro</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Acciones</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
+                                                <tbody style={{ backgroundColor: theme.colors.bgCard }}>
                                                     {clientesFiltrados.length === 0 ? (
                                                         <tr>
-                                                            <td colSpan="7" className="text-center py-4" style={{ color: '#113d69' }}>
+                                                            <td colSpan="7" className="text-center py-4" style={{ color: theme.colors.textSecondary }}>
                                                                 {busqueda ? "No se encontraron clientes con esos criterios" : "No hay clientes registrados"}
                                                             </td>
                                                         </tr>
                                                     ) : (
                                                         clientesPaginados.map((cliente, index) => (
                                                             <tr key={cliente.idUsuarios} style={{
-                                                                backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0.9)' : 'rgba(250, 250, 250, 0.9)'
+                                                                backgroundColor: index % 2 === 0 ? theme.colors.bgCard : theme.colors.bgPrimary
                                                             }}>
                                                                 <td className="fw-semibold px-4">
                                                                     <span style={{
-                                                                        backgroundColor: '#62d8d9',
-                                                                        color: '#fafafa',
+                                                                        backgroundColor: theme.colors.accent,
+                                                                        color: '#000',
                                                                         padding: '0.4rem 0.8rem',
                                                                         borderRadius: '8px',
                                                                         display: 'inline-block',
@@ -619,11 +620,11 @@ function AdminClientes() {
                                                                             height: '40px',
                                                                             borderRadius: '50%',
                                                                             overflow: 'hidden',
-                                                                            backgroundColor: '#e9ecef',
+                                                                            backgroundColor: theme.colors.bgPrimary,
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            border: '2px solid #62d8d9',
+                                                                            border: `2px solid ${theme.colors.accent}`,
                                                                             flexShrink: 0
                                                                         }}>
                                                                             {cliente.fotoPerfil ? (
@@ -638,14 +639,14 @@ function AdminClientes() {
                                                                                     onError={(e) => {
                                                                                         e.target.onerror = null;
                                                                                         e.target.style.display = 'none';
-                                                                                        e.target.parentElement.innerHTML = '<span style="color: #113d69; font-weight: 600;">' +
+                                                                                        e.target.parentElement.innerHTML = '<span style="color: #000; font-weight: 600;">' +
                                                                                             cliente.nombre?.charAt(0).toUpperCase() +
                                                                                             '</span>';
                                                                                     }}
                                                                                 />
                                                                             ) : (
                                                                                 <span style={{
-                                                                                    color: '#113d69',
+                                                                                    color: '#000',
                                                                                     fontWeight: '600',
                                                                                     fontSize: '1rem'
                                                                                 }}>
@@ -654,20 +655,20 @@ function AdminClientes() {
                                                                             )}
                                                                         </div>
                                                                         <div>
-                                                                            <div className="fw-medium" style={{ color: '#113d69' }}>{cliente.nombre}</div>
-                                                                            <small className="text-muted">ID: {cliente.idUsuarios}</small>
+                                                                            <div className="fw-medium" style={{ color: theme.colors.textPrimary }}>{cliente.nombre}</div>
+                                                                            <small style={{ color: theme.colors.textMuted }}>ID: {cliente.idUsuarios}</small>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td style={{ color: '#113d69' }}>{cliente.email}</td>
-                                                                <td style={{ color: '#113d69' }}>
-                                                                    {cliente.telefono || <span className="text-muted fst-italic">No especificado</span>}
+                                                                <td style={{ color: theme.colors.textPrimary }}>{cliente.email}</td>
+                                                                <td style={{ color: theme.colors.textPrimary }}>
+                                                                    {cliente.telefono || <span className="fst-italic" style={{ color: theme.colors.textMuted }}>No especificado</span>}
                                                                 </td>
                                                                 <td>
                                                                     <EstadoBadge estado={cliente.estado} />
                                                                 </td>
                                                                 <td>
-                                                                    <div style={{ color: '#113d69' }}>{formatearFecha(cliente.creadoEn)}</div>
+                                                                    <div style={{ color: theme.colors.textSecondary }}>{formatearFecha(cliente.creadoEn)}</div>
                                                                 </td>
                                                                 <td>
                                                                     <div style={{ minWidth: '140px' }}>

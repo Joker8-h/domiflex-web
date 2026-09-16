@@ -9,30 +9,7 @@ import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaQrcode, FaCamera } from "react
 import NavbarCustom from '../components/Navbar';
 import QRScanner from '../components/QRScanner';
 import { API_URL } from '../config';
-
-const customStyles = `
-  .custom-tomar-foto-btn {
-    border-radius: 12px !important;
-    border-color: #62d8d9 !important;
-    color: #62d8d9 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    width: 100% !important;
-    padding: 1rem 0 !important;
-    margin-bottom: 1rem !important;
-  }
-  
-  .custom-tomar-foto-btn:hover {
-    background-color: #62d8d9 !important;
-    border-color: #62d8d9 !important;
-    color: white !important;
-  }
-  
-  .custom-tomar-foto-btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-  }
-`;
+import theme from '../styles/theme';
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -57,10 +34,9 @@ function Login() {
     const ROLES = { ADMIN: "ADMIN", REPARTIDOR: "REPARTIDOR", CLIENTE: "CLIENTE", COMERCIO: "COMERCIO" };
 
     useEffect(() => {
-        // Obtenemos tanto el ID como el nombre del rol (normalizado)
         const rolId = Number(usuario?.idRol || usuario?.rol?.idRol || usuario?.rol?.id || NaN);
-        const rolNombre = (typeof usuario?.rol === 'string' 
-            ? usuario.rol 
+        const rolNombre = (typeof usuario?.rol === 'string'
+            ? usuario.rol
             : (usuario?.rol?.nombre || "")
         ).toUpperCase();
 
@@ -147,15 +123,11 @@ function Login() {
 
     return (
         <div style={{
-            backgroundImage: `url(${FondoPantalla})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundColor: theme.colors.bgPrimary,
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column'
         }}>
-            <style>{customStyles}</style>
-            
             <NavbarCustom />
 
             <Container className="d-flex flex-column justify-content-center flex-grow-1 py-4">
@@ -165,12 +137,22 @@ function Login() {
                         <img
                             src={EscenaHomeBase}
                             alt="DomiFlex Home"
-                            style={{ width: '100%', maxWidth: '550px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }}
+                            style={{
+                                width: '100%',
+                                maxWidth: '550px',
+                                height: 'auto',
+                                filter: 'drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.4))'
+                            }}
                         />
                     </Col>
 
                     <Col xs={12} md={5} lg={5} xl={4}>
-                        <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+                        <Card style={{
+                            backgroundColor: theme.colors.bgCard,
+                            borderRadius: theme.borderRadius.lg,
+                            border: `1px solid ${theme.colors.border}`,
+                            boxShadow: theme.shadows.card
+                        }}>
                             <Card.Body className="p-4 p-md-5">
 
                                 <div className="text-center mb-4">
@@ -178,79 +160,222 @@ function Login() {
                                 </div>
 
                                 <div className="d-flex gap-2 mb-4">
-                                    <Button 
-                                        onClick={() => setShowQRScanner(true)} 
-                                        variant="outline-primary" 
-                                        className="w-100 fw-bold custom-tomar-foto-btn"
+                                    <Button
+                                        onClick={() => setShowQRScanner(true)}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: 'transparent',
+                                            color: theme.colors.textSecondary,
+                                            border: `1px solid ${theme.colors.border}`,
+                                            borderRadius: theme.borderRadius.md,
+                                            padding: '0.75rem 0',
+                                            fontWeight: theme.fontWeight.semibold,
+                                            fontSize: theme.fontSize.sm,
+                                            transition: theme.transitions.normal,
+                                            cursor: 'pointer'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderColor = theme.colors.accent;
+                                            e.target.style.color = theme.colors.accent;
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderColor = theme.colors.border;
+                                            e.target.style.color = theme.colors.textSecondary;
+                                        }}
                                     >
                                         <FaQrcode className="me-1" /> QR
                                     </Button>
-                                    <Button 
-                                        onClick={abrirFacialModal} 
-                                        variant="outline-success" 
-                                        className="w-100 fw-bold custom-tomar-foto-btn"
+                                    <Button
+                                        onClick={abrirFacialModal}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: 'transparent',
+                                            color: theme.colors.textSecondary,
+                                            border: `1px solid ${theme.colors.border}`,
+                                            borderRadius: theme.borderRadius.md,
+                                            padding: '0.75rem 0',
+                                            fontWeight: theme.fontWeight.semibold,
+                                            fontSize: theme.fontSize.sm,
+                                            transition: theme.transitions.normal,
+                                            cursor: 'pointer'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderColor = theme.colors.accent;
+                                            e.target.style.color = theme.colors.accent;
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderColor = theme.colors.border;
+                                            e.target.style.color = theme.colors.textSecondary;
+                                        }}
                                     >
                                         <FaCamera className="me-1" /> Facial
                                     </Button>
                                 </div>
 
-                                {error && <Alert variant="danger" className="py-2 small">{error}</Alert>}
+                                {error && (
+                                    <div style={{
+                                        backgroundColor: 'rgba(255, 82, 82, 0.1)',
+                                        color: theme.colors.danger,
+                                        border: `1px solid ${theme.colors.danger}`,
+                                        borderRadius: theme.borderRadius.sm,
+                                        padding: '0.75rem 1rem',
+                                        fontSize: theme.fontSize.sm,
+                                        marginBottom: '1rem'
+                                    }}>
+                                        {error}
+                                    </div>
+                                )}
 
                                 <Form onSubmit={guardar}>
                                     <Form.Group className="mb-3">
-                                        <div className="position-relative">
-                                            <FaEnvelope className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
-                                            <Form.Control
-                                                type="email" placeholder="Correo electrónico" value={email}
-                                                onChange={(e) => setEmail(e.target.value)} required
-                                                style={{ borderRadius: '12px', paddingLeft: '45px', backgroundColor: '#f8fafb', border: '1px solid #eee' }}
+                                        <div style={{ position: 'relative' }}>
+                                            <FaEnvelope style={{
+                                                position: 'absolute',
+                                                left: '14px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: theme.colors.textMuted,
+                                                zIndex: 1
+                                            }} />
+                                            <input
+                                                type="email"
+                                                placeholder="Correo electrónico"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                required
+                                                style={{
+                                                    backgroundColor: theme.colors.bgInput,
+                                                    color: theme.colors.textPrimary,
+                                                    border: `1px solid ${theme.colors.border}`,
+                                                    borderRadius: theme.borderRadius.sm,
+                                                    padding: '0.75rem 0.75rem 0.75rem 42px',
+                                                    fontSize: theme.fontSize.md,
+                                                    width: '100%',
+                                                    outline: 'none',
+                                                    transition: theme.transitions.fast,
+                                                    fontFamily: "'Inter', sans-serif"
+                                                }}
+                                                onFocus={(e) => {
+                                                    e.target.style.borderColor = theme.colors.accent;
+                                                    e.target.style.boxShadow = theme.shadows.input;
+                                                }}
+                                                onBlur={(e) => {
+                                                    e.target.style.borderColor = theme.colors.border;
+                                                    e.target.style.boxShadow = 'none';
+                                                }}
                                             />
                                         </div>
                                     </Form.Group>
 
                                     <Form.Group className="mb-3">
-                                        <div className="position-relative">
-                                            <FaLock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
-                                            <Form.Control
+                                        <div style={{ position: 'relative' }}>
+                                            <FaLock style={{
+                                                position: 'absolute',
+                                                left: '14px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: theme.colors.textMuted,
+                                                zIndex: 1
+                                            }} />
+                                            <input
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="Contraseña" value={password}
-                                                onChange={(e) => setPassword(e.target.value)} required
-                                                style={{ borderRadius: '12px', paddingLeft: '45px', backgroundColor: '#f8fafb', border: '1px solid #eee' }}
+                                                placeholder="Contraseña"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                required
+                                                style={{
+                                                    backgroundColor: theme.colors.bgInput,
+                                                    color: theme.colors.textPrimary,
+                                                    border: `1px solid ${theme.colors.border}`,
+                                                    borderRadius: theme.borderRadius.sm,
+                                                    padding: '0.75rem 2.5rem 0.75rem 42px',
+                                                    fontSize: theme.fontSize.md,
+                                                    width: '100%',
+                                                    outline: 'none',
+                                                    transition: theme.transitions.fast,
+                                                    fontFamily: "'Inter', sans-serif"
+                                                }}
+                                                onFocus={(e) => {
+                                                    e.target.style.borderColor = theme.colors.accent;
+                                                    e.target.style.boxShadow = theme.shadows.input;
+                                                }}
+                                                onBlur={(e) => {
+                                                    e.target.style.borderColor = theme.colors.border;
+                                                    e.target.style.boxShadow = 'none';
+                                                }}
                                             />
-                                            <span className="position-absolute end-0 top-50 translate-middle-y me-3" style={{ cursor: 'pointer' }} onClick={() => setShowPassword(!showPassword)}>
-                                                {showPassword ? <FaEyeSlash color="#8899a6" /> : <FaEye color="#8899a6" />}
+                                            <span
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '14px',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    cursor: 'pointer',
+                                                    color: theme.colors.textMuted
+                                                }}
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                {showPassword ? <FaEyeSlash /> : <FaEye />}
                                             </span>
                                         </div>
                                     </Form.Group>
 
-                                    <div className="d-flex justify-content-between mb-4 small">
-                                        <Form.Check type="checkbox" label="Recordarme" className="text-muted" />
-                                        <Link to="/forgot-password" title="Recuperar contraseña" style={{ color: '#62d8d9', textDecoration: 'none', fontWeight: '500' }}>
+                                    <div className="d-flex justify-content-between mb-4" style={{ fontSize: theme.fontSize.sm }}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Recordarme"
+                                            style={{ color: theme.colors.textSecondary }}
+                                        />
+                                        <Link
+                                            to="/forgot-password"
+                                            title="Recuperar contraseña"
+                                            style={{
+                                                color: theme.colors.accent,
+                                                textDecoration: 'none',
+                                                fontWeight: theme.fontWeight.medium
+                                            }}
+                                        >
                                             ¿Olvidaste tu contraseña?
                                         </Link>
                                     </div>
 
-
-                                    <Button 
-                                        type="submit" 
-                                        className="w-100 py-3 border-0" 
-                                        style={{ 
-                                            background: loading ? '#6c757d' : '#62d8d9',
-                                            borderRadius: '12px', 
-                                            fontWeight: 'bold', 
-                                            fontSize: '1rem',
-                                            transition: 'all 0.3s ease',
-                                            opacity: loading ? 0.6 : 1,
-                                            cursor: loading ? 'not-allowed' : 'pointer'
-                                        }} 
+                                    <button
+                                        type="submit"
                                         disabled={loading}
+                                        style={{
+                                            backgroundColor: loading ? theme.colors.textMuted : theme.colors.accent,
+                                            color: '#000',
+                                            border: 'none',
+                                            borderRadius: theme.borderRadius.xl,
+                                            padding: '0.875rem 0',
+                                            width: '100%',
+                                            fontWeight: theme.fontWeight.bold,
+                                            fontSize: theme.fontSize.md,
+                                            transition: theme.transitions.fast,
+                                            cursor: loading ? 'not-allowed' : 'pointer',
+                                            opacity: loading ? 0.7 : 1,
+                                            fontFamily: "'Inter', sans-serif"
+                                        }}
                                     >
                                         {loading ? 'Iniciando...' : 'Iniciar Sesión'}
-                                    </Button>
+                                    </button>
                                 </Form>
 
-                                <p className="text-center mt-4 mb-0 small text-muted">
-                                    ¿No tienes una cuenta? <Link to="/register" className="fw-bold text-decoration-none" style={{ color: '#62d8d9' }}>Regístrate</Link>
+                                <p className="text-center mt-4 mb-0" style={{
+                                    fontSize: theme.fontSize.sm,
+                                    color: theme.colors.textSecondary
+                                }}>
+                                    ¿No tienes una cuenta?{' '}
+                                    <Link
+                                        to="/register"
+                                        style={{
+                                            color: theme.colors.accent,
+                                            textDecoration: 'none',
+                                            fontWeight: theme.fontWeight.bold
+                                        }}
+                                    >
+                                        Regístrate
+                                    </Link>
                                 </p>
                             </Card.Body>
                         </Card>
@@ -258,34 +383,88 @@ function Login() {
                 </Row>
             </Container>
 
-            <Modal show={showFacialModal} onHide={cerrarFacialModal} centered size="lg">
-                <Modal.Header closeButton className="border-0">
-                    <Modal.Title className="fw-bold">Login Facial</Modal.Title>
+            <Modal
+                show={showFacialModal}
+                onHide={cerrarFacialModal}
+                centered
+                size="lg"
+                contentClassName="dark-modal"
+            >
+                <style>{`
+                    .dark-modal {
+                        background-color: ${theme.colors.bgCard} !important;
+                        border: 1px solid ${theme.colors.border} !important;
+                        border-radius: ${theme.borderRadius.lg} !important;
+                    }
+                    .dark-modal .modal-header {
+                        border-bottom: 1px solid ${theme.colors.border} !important;
+                    }
+                    .dark-modal .modal-title {
+                        color: ${theme.colors.textPrimary} !important;
+                    }
+                    .dark-modal .btn-close {
+                        filter: invert(1) !important;
+                    }
+                `}</style>
+                <Modal.Header closeButton style={{ borderBottom: `1px solid ${theme.colors.border}` }}>
+                    <Modal.Title style={{
+                        fontWeight: theme.fontWeight.bold,
+                        color: theme.colors.textPrimary
+                    }}>
+                        Login Facial
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="text-center">
-                    <div style={{ position: 'relative', backgroundColor: '#000', height: '400px', borderRadius: '15px', overflow: 'hidden' }}>
+                    <div style={{
+                        position: 'relative',
+                        backgroundColor: '#000',
+                        height: '400px',
+                        borderRadius: theme.borderRadius.lg,
+                        overflow: 'hidden'
+                    }}>
                         <video ref={videoRef} autoPlay playsInline style={{ width: '100%' }} />
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
                     </div>
-                    {!fotoPreview ? 
-                        <Button 
-                            variant="success" 
-                            onClick={tomarFoto} 
-                            className="mt-3 w-100 py-2 fw-bold" 
-                            style={{ background: '#62d8d9', border: 'none', borderRadius: '12px' }}
+                    {!fotoPreview ?
+                        <button
+                            onClick={tomarFoto}
+                            style={{
+                                marginTop: '1rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                backgroundColor: theme.colors.accent,
+                                color: '#000',
+                                border: 'none',
+                                borderRadius: theme.borderRadius.md,
+                                fontWeight: theme.fontWeight.bold,
+                                fontSize: theme.fontSize.md,
+                                cursor: 'pointer',
+                                transition: theme.transitions.fast
+                            }}
                         >
                             Capturar
-                        </Button> 
-                        : 
-                        <Button 
-                            variant="primary" 
-                            onClick={enviarLoginFacial} 
-                            className="mt-3 w-100 py-2 fw-bold" 
-                            disabled={verificando} 
-                            style={{ background: '#62d8d9', border: 'none', borderRadius: '12px' }}
+                        </button>
+                        :
+                        <button
+                            onClick={enviarLoginFacial}
+                            disabled={verificando}
+                            style={{
+                                marginTop: '1rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                backgroundColor: verificando ? theme.colors.textMuted : theme.colors.accent,
+                                color: '#000',
+                                border: 'none',
+                                borderRadius: theme.borderRadius.md,
+                                fontWeight: theme.fontWeight.bold,
+                                fontSize: theme.fontSize.md,
+                                cursor: verificando ? 'not-allowed' : 'pointer',
+                                transition: theme.transitions.fast,
+                                opacity: verificando ? 0.7 : 1
+                            }}
                         >
                             {verificando ? 'Verificando...' : 'Confirmar e Iniciar'}
-                        </Button>
+                        </button>
                     }
                 </Modal.Body>
             </Modal>

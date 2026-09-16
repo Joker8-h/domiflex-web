@@ -8,9 +8,8 @@ import { useAuth } from "../pages/context/AuthContext";
 import { useSocket } from "../pages/context/SocketContext";
 import { API_URL } from "../config";
 import Logo from "../pages/Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png";
-import fondo from "../pages/Imagenes/AutoresContacto.png";
+import theme from "../styles/theme";
 
-// Helper para sessionStorage
 const STORAGE_KEY = "admin_badge_counts";
 const loadBadges = () => {
   try {
@@ -28,7 +27,6 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
   const { usuario, token, logout } = useAuth();
   const { socket } = useSocket();
 
-  // Badge counters per section
   const [badges, setBadges] = useState(() => {
     const saved = loadBadges();
     return {
@@ -41,12 +39,10 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
     };
   });
 
-  // Persist badges to sessionStorage
   useEffect(() => {
     saveBadges(badges);
   }, [badges]);
 
-  // Fetch initial solicitudes pendientes count
   const fetchPendingCount = useCallback(async () => {
     if (usuario?.rol === 'ADMIN' && token) {
       try {
@@ -67,11 +63,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
     fetchPendingCount();
   }, [fetchPendingCount]);
 
-  // Socket event listeners
   useEffect(() => {
     if (socket && (usuario?.rol === 'ADMIN' || usuario?.rol?.nombre === 'ADMIN' || usuario?.idRol === 1)) {
-
-      // Nuevo usuario registrado
       const handleNewUser = (data) => {
         console.log("[SIDEBAR] new_user_registration:", data);
         const rol = (data.rol || '').toUpperCase();
@@ -86,19 +79,16 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
         });
       };
 
-      // Nuevo documento subido
       const handleNewDocument = (data) => {
         console.log("[SIDEBAR] new_document_uploaded:", data);
         setBadges(prev => ({ ...prev, documentos: prev.documentos + 1 }));
       };
 
-      // Nueva solicitud de cambio de vehículo
       const handleNewRequest = () => {
         console.log("[SIDEBAR] new_vehicle_change_request");
         setBadges(prev => ({ ...prev, solicitudes: prev.solicitudes + 1 }));
       };
 
-      // Solicitud procesada → refetch count
       const handleRequestProcessed = () => {
         console.log("[SIDEBAR] vehicle_change_processed");
         fetchPendingCount();
@@ -118,7 +108,6 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
     }
   }, [socket, usuario, fetchPendingCount]);
 
-  // Clear badge when navigating to a section
   const handleNavigation = (path, badgeKey) => {
     navigate(path);
     if (badgeKey) {
@@ -142,7 +131,6 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
 
   const isActive = (path) => location.pathname === path;
 
-  // Clear badge automatically when user is already on that page
   useEffect(() => {
     const currentItem = menuItems.find(item => item.path === location.pathname);
     if (currentItem?.badgeKey && badges[currentItem.badgeKey] > 0) {
@@ -162,15 +150,15 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
             alignItems: 'center', justifyContent: 'center'
           }}
         >
-          <BsChevronRight className="text-secondary" size={15} />
+          <BsChevronRight size={15} style={{ color: theme.colors.textSecondary }} />
         </button>
       )}
 
       {openSidebarToggle && (
         <div
-          className="d-md-none position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
+          className="d-md-none position-fixed top-0 start-0 w-100 h-100"
           onClick={OpenSidebar}
-          style={{ zIndex: 999 }}
+          style={{ zIndex: 999, backgroundColor: theme.colors.overlay }}
         />
       )}
 
@@ -179,53 +167,50 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           ${openSidebarToggle ? 'd-block' : ''} col-md-3 col-lg-2 p-0`}
         style={{
           zIndex: 1000,
-          backgroundImage: `url(${fondo})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          backgroundBlendMode: 'overlay',
           width: '280px',
           transition: 'transform 0.3s ease-in-out',
-          transform: openSidebarToggle ? 'translateX(0)' : 'translateX(-100%)'
+          transform: openSidebarToggle ? 'translateX(0)' : 'translateX(-100%)',
+          backgroundColor: theme.colors.bgCard,
+          borderRight: `1px solid ${theme.colors.border}`
         }}
       >
         <div className="sidebar-header d-flex justify-content-between align-items-center container-fluid px-3" style={{
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-          minHeight: '91px'
+          borderBottom: `1px solid ${theme.colors.border}`,
+          minHeight: '91px',
+          backgroundColor: theme.colors.bgPrimary
         }}>
           <img src={Logo} alt="Logo DomiFlex" style={{ width: '100px', height: 'auto' }} />
-          <button className="btn btn-link text-muted p-0" onClick={OpenSidebar}>
+          <button className="btn btn-link p-0" onClick={OpenSidebar} style={{ color: theme.colors.textSecondary }}>
             <BsChevronLeft size={15} />
           </button>
         </div>
 
-
         <ul className="nav flex-column p-3 mt-3">
           {menuItems.map((item, index) => {
             const badgeCount = item.badgeKey ? (badges[item.badgeKey] || 0) : 0;
+            const active = isActive(item.path);
             return (
               <li className="nav-item mb-2" key={index}>
                 <button
                   className="nav-link d-flex align-items-center p-2 rounded-3 border-0 w-100 text-start position-relative"
                   onClick={() => handleNavigation(item.path, item.badgeKey)}
                   style={{
-                    background: isActive(item.path) ? 'rgba(84, 199, 184, 0.1)' : 'transparent',
-                    color: isActive(item.path) ? '#56bca7' : '#666',
+                    background: active ? `${theme.colors.accent}15` : 'transparent',
+                    color: active ? theme.colors.accent : theme.colors.textSecondary,
                     fontSize: '0.9rem',
-                    borderLeft: isActive(item.path) ? '4px solid #56bca7' : '4px solid transparent'
+                    borderLeft: active ? `4px solid ${theme.colors.accent}` : '4px solid transparent'
                   }}
                 >
                   <span className="me-3" style={{ fontSize: '1.2rem' }}>
                     {item.icon}
                   </span>
-                  <span className={isActive(item.path) ? 'fw-bold' : ''}>{item.label}</span>
+                  <span className={active ? 'fw-bold' : ''}>{item.label}</span>
                   {badgeCount > 0 && (
                     <span
                       className="position-absolute end-0 me-3 badge rounded-pill"
                       style={{
                         fontSize: '0.65rem',
-                        backgroundColor: '#ff4757',
+                        backgroundColor: theme.colors.danger,
                         color: 'white',
                         minWidth: '20px',
                         padding: '3px 6px',
@@ -247,8 +232,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
             className="btn w-100 d-flex align-items-center justify-content-center p-2"
             style={{
               backgroundColor: 'transparent',
-              color: '#999',
-              border: '1px solid #ddd',
+              color: theme.colors.textSecondary,
+              border: `1px solid ${theme.colors.border}`,
               borderRadius: '6px',
               fontSize: '0.8rem'
             }}

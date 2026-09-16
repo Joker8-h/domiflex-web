@@ -1,48 +1,108 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import './App.css'
-import Login from "./pages/Login"
-import HomeBase from "./pages/HomeBase";
-import Register from "./pages/Register";
-import AdminRepartidores from "./pages/Admin/AdminRepartidores";
-import AdminUsuarios from "./pages/Admin/AdminUsuarios";
-import AdminVehiculos from "./pages/Admin/AdminVehiculos";
+import "./App.css";
+import "./styles/darkOverride.css";
 import { AuthProvider, useAuth } from "./pages/context/AuthContext";
 import { SocketProvider } from "./pages/context/SocketContext";
 import { Toaster } from "react-hot-toast";
-import AdminClientes from "./pages/Admin/AdminClientes";
-import Profile from "./pages/User/Profile";
-import UserHome from "./pages/User/UserHome";
-import DriverHome from "./pages/Driver/DriverHome";
-import DriverProfile from "./pages/Driver/DriverProfile";
-import Home from "./Dashboard/Home";
-import Header from "./Dashboard/Header";
-import Sidebar from "./Dashboard/Sidebar";
-import DashboardLayout from "./Dashboard/DashboardLayout"
-import Documents from "./pages/Documents";
-import AdminDocumentos from "./pages/Admin/AdminDocuments";
-import VehicleRegistration from "./pages/Driver/VehicleRegistration";
-import AdminVehicleRequests from "./pages/Admin/AdminVehicleRequests";
-import AdminReportesPago from "./pages/Admin/AdminReportesPago";
+
+// Public pages
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+
+// Client pages
+import HomeBase from "./pages/HomeBase";
+import Restaurantes from "./pages/Restaurantes";
+import RestauranteDetalle from "./pages/RestauranteDetalle";
+import Carrito from "./pages/Carrito";
+import Tracking from "./pages/Tracking";
+import PedidoDetalle from "./pages/PedidoDetalle";
+import NotificacionesPage from "./pages/Notificaciones";
+import Perfil from "./pages/Perfil";
+import UserHome from "./pages/User/UserHome";
+import Profile from "./pages/User/Profile";
+import Documents from "./pages/Documents";
+
+// Driver pages
+import DriverHome from "./pages/Driver/DriverHome";
+import DriverProfile from "./pages/Driver/DriverProfile";
+import VehicleRegistration from "./pages/Driver/VehicleRegistration";
+
+// Admin pages
+import DashboardLayout from "./Dashboard/DashboardLayout";
+import Home from "./Dashboard/Home";
+import AdminRepartidores from "./pages/Admin/AdminRepartidores";
+import AdminClientes from "./pages/Admin/AdminClientes";
+import AdminUsuarios from "./pages/Admin/AdminUsuarios";
+import AdminVehiculos from "./pages/Admin/AdminVehiculos";
+import AdminDocumentos from "./pages/Admin/AdminDocuments";
+import AdminVehicleRequests from "./pages/Admin/AdminVehicleRequests";
+import AdminReportesPago from "./pages/Admin/AdminReportesPago";
+
+// Components
+import BottomTabs from "./components/BottomTabs";
+import NavbarCustom from "./components/Navbar";
 
 const ROLES = { ADMIN: "ADMIN", REPARTIDOR: "REPARTIDOR", CLIENTE: "CLIENTE", COMERCIO: "COMERCIO" };
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
-
-  const OpenSidebar = () => {
-    setOpenSidebarToggle(!openSidebarToggle);
-  }
+  const OpenSidebar = () => setOpenSidebarToggle(!openSidebarToggle);
 
   return (
     <AuthProvider>
       <SocketProvider>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              background: "#161B22",
+              color: "#FFFFFF",
+              border: "1px solid #21262D",
+            },
+          }}
+        />
         <BrowserRouter>
           <Routes>
+            {/* Public */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+            {/* Home */}
+            <Route path="/home" element={<ProtectedRoute><HomeBase /></ProtectedRoute>} />
+
+            {/* Client - Negocios */}
+            <Route path="/restaurantes" element={<ProtectedRoute><Restaurantes /></ProtectedRoute>} />
+            <Route path="/negocio/:id" element={<ProtectedRoute><RestauranteDetalle /></ProtectedRoute>} />
+            <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} />
+            <Route path="/tracking/:pedidoId" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
+            <Route path="/pedido/:pedidoId" element={<ProtectedRoute><PedidoDetalle /></ProtectedRoute>} />
+            <Route path="/mis-pedidos" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
+            <Route path="/notificaciones" element={<ProtectedRoute><NotificacionesPage /></ProtectedRoute>} />
+            <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/documentacion" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
+
+            {/* Client - Legacy redirects */}
+            <Route path="/cliente-home" element={<Navigate to="/home" replace />} />
+
+            {/* Driver */}
+            <Route path="/repartidor-home" element={
+              <ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><DriverHome /></ProtectedRoute>
+            } />
+            <Route path="/repartidor-profile" element={
+              <ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><DriverProfile /></ProtectedRoute>
+            } />
+            <Route path="/vehicle-registration" element={
+              <ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><VehicleRegistration /></ProtectedRoute>
+            } />
+
+            {/* Admin Dashboard */}
             <Route path="/dashboard/home" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -50,22 +110,6 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-
-            <Route path="/" element={<HomeBase />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-
-            <Route path="/documentacion" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-
-            <Route path="/cliente-home" element={<ProtectedRoute allowedRoles={[ROLES.CLIENTE, ROLES.COMERCIO]}><UserHome /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute allowedRoles={[ROLES.CLIENTE, ROLES.COMERCIO, ROLES.REPARTIDOR]}><Profile /></ProtectedRoute>} />
-            <Route path="/repartidor-home" element={<ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><DriverHome /></ProtectedRoute>} />
-            <Route path="/repartidor-profile" element={<ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><DriverProfile /></ProtectedRoute>} />
-            <Route path="/vehicle-registration" element={<ProtectedRoute allowedRoles={[ROLES.REPARTIDOR]}><VehicleRegistration /></ProtectedRoute>} />
-            <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-
             <Route path="/admin/repartidores" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -73,23 +117,6 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-
-            <Route path="/admin/usuarios" element={
-              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
-                  <AdminUsuarios />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-
-            <Route path="/admin/vehiculos" element={
-              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
-                  <AdminVehiculos />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-
             <Route path="/admin/clientes" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -97,7 +124,20 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-
+            <Route path="/admin/usuarios" element={
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
+                  <AdminUsuarios />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/vehiculos" element={
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
+                  <AdminVehiculos />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/admin/documentos" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -105,7 +145,6 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-
             <Route path="/admin/solicitudes-vehiculos" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -113,7 +152,6 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-
             <Route path="/admin/reportes-pago" element={
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
@@ -122,6 +160,7 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* Legacy redirects */}
             <Route path="/perfil" element={<Navigate to="/profile" replace />} />
             <Route path="/qr-activation" element={<Navigate to="/login" replace />} />
             <Route path="/user-home" element={<Navigate to="/cliente-home" replace />} />
@@ -144,44 +183,21 @@ function ProtectedRoute({ children, allowedRoles }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Si no hay roles específicos, solo requiere estar logueado
-  if (!allowedRoles) {
-    return children;
-  }
+  if (!allowedRoles) return children;
 
-  // Extraer información del rol de forma más robusta
-  // 1. Intentar obtener el ID del rol (buscando en varias ubicaciones posibles)
-  const rolId = Number(usuario?.idRol || usuario?.rol?.idRol || usuario?.rol?.id || (typeof usuario?.rol === 'number' ? usuario.rol : NaN));
-  
-  // 2. Intentar obtener el nombre del rol (normalizado a mayúsculas)
-  const rolNombre = (typeof usuario?.rol === 'string' 
-    ? usuario.rol 
-    : (usuario?.rol?.nombre || "")
-  ).toUpperCase();
+  const rolId = Number(usuario?.idRol || usuario?.rol?.idRol || usuario?.rol?.id || (typeof usuario?.rol === "number" ? usuario.rol : NaN));
+  const rolNombre = (typeof usuario?.rol === "string" ? usuario.rol : usuario?.rol?.nombre || "").toUpperCase();
 
-  // Verificar si el usuario tiene permiso (por ID o por Nombre)
-  const hasPermission = allowedRoles.some(role => {
-    if (typeof role === 'number') return rolId === role;
-    if (typeof role === 'string') return rolNombre === role.toUpperCase();
+  const hasPermission = allowedRoles.some((role) => {
+    if (typeof role === "number") return rolId === role;
+    if (typeof role === "string") return rolNombre === role.toUpperCase();
     return false;
   });
 
   if (!hasPermission) {
-    console.warn(`[ProtectedRoute] Acceso denegado a ${location.pathname}. Rol detectado: ${rolNombre} (ID: ${rolId})`);
-    
-    // Redirigir según el rol detectado para evitar quedar atrapado en una ruta prohibida
-    if (rolNombre === 'ADMIN' || rolId === 1) {
-      return <Navigate to="/dashboard/home" replace />;
-    }
-    
-    if (rolNombre === 'REPARTIDOR' || rolId === 2) {
-      return <Navigate to="/repartidor-home" replace />;
-    }
-    
-    if (rolNombre === 'CLIENTE' || rolNombre === 'COMERCIO' || rolId === 3 || rolId === 4) {
-      return <Navigate to="/cliente-home" replace />;
-    }
-    
+    if (rolNombre === "ADMIN" || rolId === 1) return <Navigate to="/dashboard/home" replace />;
+    if (rolNombre === "REPARTIDOR" || rolId === 2) return <Navigate to="/repartidor-home" replace />;
+    if (rolNombre === "CLIENTE" || rolNombre === "COMERCIO" || rolId === 3 || rolId === 4) return <Navigate to="/home" replace />;
     return <Navigate to="/login" replace />;
   }
 

@@ -9,6 +9,7 @@ import SustainabilitySection from '../components/SustainabilitySection';
 import WaveDivider from '../components/WaveDivider';
 import FaqSection from '../components/FaqSection';
 import AppDownloadBanner from '../components/AppDownloadBanner';
+import theme from '../styles/theme';
 
 // --- IMPORTACIÓN DE IMÁGENES ---
 import imagencontacto from '../pages/Imagenes/AutoresContacto.png';
@@ -23,6 +24,12 @@ import Janier from './Autores/Janier.PNG';
 import JuanCeron from './Autores/JuanCeron.PNG';
 import JuanOcampo from './Autores/JuanOcampo.PNG';
 import Kevin from './Autores/Kevin.PNG';
+
+const accent = theme.colors.accent;
+const bgPrimary = theme.colors.bgPrimary;
+const bgCard = theme.colors.bgCard;
+const textPrimary = theme.colors.textPrimary;
+const textSecondary = theme.colors.textSecondary;
 
 function HomeBase() {
   // =======================
@@ -87,8 +94,6 @@ function HomeBase() {
     { id: 6, nombre: "Kevin Jaramillo", rol: "Product Owner", img: Kevin },
   ];
 
-  const verdeMenta = '#56bca7';
-
   // TARJETAS PARA CLIENTES (4) — DomiFlex domicilios
   const slidesUsuario = [
     { id: 1, titulo: "Regístrate Como Cliente", desc: "¡Crea tu cuenta desde nuestra app!" },
@@ -125,14 +130,12 @@ function HomeBase() {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundImage: `url(${imagencontacto})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      backgroundColor: bgPrimary,
       display: 'flex',
       flexDirection: 'column',
       overflowX: 'hidden',
-      position: 'relative'
+      position: 'relative',
+      color: textPrimary
     }}>
       {/* Resplandor que sigue al mouse (solo en el hero) */}
       {scrollPos < 600 && (
@@ -142,7 +145,7 @@ function HomeBase() {
           left: mousePos.x - 150,
           width: '300px',
           height: '300px',
-          background: 'rgba(86, 188, 167, 0.15)',
+          background: `radial-gradient(circle, ${accent}33 0%, transparent 70%)`,
           borderRadius: '50%',
           filter: 'blur(80px)',
           pointerEvents: 'none',
@@ -160,14 +163,31 @@ function HomeBase() {
           }
           .team-card:hover .team-info {
             transform: translateY(-10px);
-            background: rgba(86, 188, 167, 0.9) !important;
+            background: rgba(0, 230, 118, 0.2) !important;
           }
+          .form-control, .form-select {
+            background-color: ${theme.colors.bgInput} !important;
+            color: ${textPrimary} !important;
+            border: 1px solid ${theme.colors.border} !important;
+          }
+          .form-control::placeholder { color: ${textSecondary} !important; }
+          .form-control:focus, .form-select:focus {
+            border-color: ${accent} !important;
+            box-shadow: 0 0 0 2px ${accent}33 !important;
+          }
+          .modal-content {
+            background-color: ${bgCard} !important;
+            color: ${textPrimary} !important;
+            border: 1px solid ${theme.colors.border} !important;
+          }
+          .modal-header { border-bottom: 1px solid ${theme.colors.border} !important; }
+          .btn-close { filter: invert(1); }
         `}
       </style>
 
       {/* Burbujas de fondo decorativas */}
-      <div style={{ position: 'fixed', top: '10%', left: '5%', width: '150px', height: '150px', background: 'rgba(86, 188, 167, 0.1)', borderRadius: '50%', filter: 'blur(40px)', animation: 'floatBubble 8s infinite ease-in-out', zIndex: 0 }}></div>
-      <div style={{ position: 'fixed', bottom: '15%', right: '8%', width: '200px', height: '200px', background: 'rgba(17, 61, 105, 0.05)', borderRadius: '50%', filter: 'blur(50px)', animation: 'floatBubble 12s infinite ease-in-out reverse', zIndex: 0 }}></div>
+      <div style={{ position: 'fixed', top: '10%', left: '5%', width: '150px', height: '150px', background: `${accent}1A`, borderRadius: '50%', filter: 'blur(40px)', animation: 'floatBubble 8s infinite ease-in-out', zIndex: 0 }}></div>
+      <div style={{ position: 'fixed', bottom: '15%', right: '8%', width: '200px', height: '200px', background: `${accent}0D`, borderRadius: '50%', filter: 'blur(50px)', animation: 'floatBubble 12s infinite ease-in-out reverse', zIndex: 0 }}></div>
 
 
       <div style={{ position: 'absolute', width: '100%', zIndex: 1000 }}>
@@ -182,20 +202,18 @@ function HomeBase() {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'visible',
-        paddingTop: '80px'
+        paddingTop: '80px',
+        backgroundColor: bgPrimary
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundImage: `url(${ImagenFondoPaisaje})`, backgroundSize: 'cover',
-          backgroundPosition: 'center', zIndex: 1
-        }}></div>
-
         <Container style={{ position: 'relative', zIndex: 10, marginBottom: '2rem' }}>
           <Row className="justify-content-center text-center">
             <Col lg={10}>
-              <h1 className="display-4 fw-bold mb-3 animate__animated animate__fadeInDown" style={{ color: '#113d69' }}>
-                Domicilios rápidos. <span style={{ color: '#56bca7' }}>Repartidores verificados.</span>
+              <h1 className="display-4 fw-bold mb-3 animate__animated animate__fadeInDown" style={{ color: textPrimary }}>
+                Domicilios rápidos. <span style={{ color: accent }}>Repartidores verificados.</span>
               </h1>
+              <p style={{ fontSize: '1.2rem', color: textSecondary, maxWidth: '600px', margin: '0 auto' }}>
+                Conectamos clientes y repartidores de forma rápida, segura y confiable.
+              </p>
             </Col>
           </Row>
         </Container>
@@ -217,62 +235,62 @@ function HomeBase() {
               maxWidth: '800px',
               width: '85%',
               borderRadius: '20px',
-              filter: 'drop-shadow(0px 20px 40px rgba(0,0,0,0.2))',
+              filter: 'drop-shadow(0px 20px 40px rgba(0,0,0,0.5))',
               transition: 'all 0.3s ease'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.filter = 'drop-shadow(0px 30px 60px rgba(86, 188, 167, 0.3))'}
-            onMouseLeave={(e) => e.currentTarget.style.filter = 'drop-shadow(0px 20px 40px rgba(0,0,0,0.2))'}
+            onMouseEnter={(e) => e.currentTarget.style.filter = `drop-shadow(0px 30px 60px ${accent}4D)`}
+            onMouseLeave={(e) => e.currentTarget.style.filter = 'drop-shadow(0px 20px 40px rgba(0,0,0,0.5))'}
           />
         </div>
 
 
-        <WaveDivider color="#ffffff" />
+        <WaveDivider color={bgPrimary} />
       </div>
 
       <div id="como-funciona-seccion" className="reveal-section"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: theme.colors.bgSecondary,
           padding: '100px 0',
           marginTop: '60px',
-          boxShadow: '0 -10px 40px rgba(0,0,0,0.05)'
+          boxShadow: '0 -10px 40px rgba(0,0,0,0.2)'
         }}>
         <Container>
           <Row className="text-center mb-5">
             <Col>
-              <h2 className="fw-bold" style={{ fontSize: '2.5rem', color: '#113d69' }}>¿Cómo Funciona?</h2>
-              {/* ELIMINADO EL TEXTO "Tres simples pasos para comenzar tu experiencia" */}
+              <h2 className="fw-bold" style={{ fontSize: '2.5rem', color: textPrimary }}>¿Cómo Funciona?</h2>
             </Col>
           </Row>
 
           {/* SECCIÓN PARA CLIENTES */}
-          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Cliente</h3>
+          <h3 className="fw-bold mb-4" style={{ color: accent, textAlign: 'center' }}>Cliente</h3>
           <Row className="g-4 mb-5">
             {slidesUsuario.map((item) => (
               <Col key={item.id} xs={12} sm={6} lg={3}>
                 <div style={{
-                  background: 'transparent',
+                  background: bgCard,
                   padding: '32px 24px',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   textAlign: 'center',
-                  color: '#113d69',
+                  color: textPrimary,
+                  borderRadius: theme.borderRadius.lg,
                   transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                   cursor: 'pointer',
                   position: 'relative',
                   overflow: 'hidden',
-                  border: '1px solid rgba(86, 188, 167, 0.1)'
+                  border: `1px solid ${theme.colors.border}`
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(86, 188, 167, 0.15)';
-                  e.currentTarget.style.background = 'rgba(86, 188, 167, 0.03)';
+                  e.currentTarget.style.boxShadow = `0 20px 40px ${accent}26`;
+                  e.currentTarget.style.borderColor = accent;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0) scale(1)';
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = theme.colors.border;
                 }}>
                   <div style={{
                     position: 'absolute',
@@ -280,8 +298,8 @@ function HomeBase() {
                     left: 0,
                     width: '55px',
                     height: '55px',
-                    borderTop: '4px solid #56bca7',
-                    borderLeft: '4px solid #56bca7',
+                    borderTop: `4px solid ${accent}`,
+                    borderLeft: `4px solid ${accent}`,
                     borderTopLeftRadius: '30px',
                   }} />
                   
@@ -291,48 +309,48 @@ function HomeBase() {
                     right: 0,
                     width: '55px',
                     height: '55px',
-                    borderBottom: '4px solid #56bca7',
-                    borderRight: '4px solid #56bca7',
+                    borderBottom: `4px solid ${accent}`,
+                    borderRight: `4px solid ${accent}`,
                     borderBottomRightRadius: '30px',
                   }} />
                   
-                  <h3 className="fw-bold mb-3" style={{ fontSize: '1.3rem', color: '#56bca7' }}>{item.titulo}</h3>
-                  <p style={{ fontSize: '1rem', lineHeight: '1.5', color: '#113d69', marginBottom: 0 }}>{item.desc}</p>
+                  <h3 className="fw-bold mb-3" style={{ fontSize: '1.3rem', color: accent }}>{item.titulo}</h3>
+                  <p style={{ fontSize: '1rem', lineHeight: '1.5', color: textSecondary, marginBottom: 0 }}>{item.desc}</p>
                 </div>
               </Col>
             ))}
           </Row>
 
           {/* SECCIÓN PARA REPARTIDORES */}
-          <h3 className="fw-bold mb-4" style={{ color: '#56bca7', textAlign: 'center' }}>Repartidor</h3>
+          <h3 className="fw-bold mb-4" style={{ color: accent, textAlign: 'center' }}>Repartidor</h3>
           <Row className="g-4">
             {slidesRepartidor.map((item) => (
               <Col key={item.id} xs={12} sm={6} lg={3}>
                 <div style={{
-                  background: 'white',
+                  background: bgCard,
                   padding: '40px 24px',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   textAlign: 'center',
-                  color: '#113d69',
-                   borderRadius: '24px',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
+                  color: textPrimary,
+                  borderRadius: theme.borderRadius.lg,
+                  boxShadow: theme.shadows.card,
                   transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                   cursor: 'pointer',
                   position: 'relative',
-                  border: '1px solid transparent'
+                  border: `1px solid ${theme.colors.border}`
                 }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-15px) rotate(1deg)';
-                    e.currentTarget.style.boxShadow = '0 25px 50px rgba(0,0,0,0.12)';
-                    e.currentTarget.style.borderColor = 'rgba(86, 188, 167, 0.3)';
+                    e.currentTarget.style.boxShadow = theme.shadows.cardHover;
+                    e.currentTarget.style.borderColor = accent;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0) rotate(0)';
-                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.04)';
-                    e.currentTarget.style.borderColor = 'transparent';
+                    e.currentTarget.style.boxShadow = theme.shadows.card;
+                    e.currentTarget.style.borderColor = theme.colors.border;
                   }}>
                   <div style={{
                     position: 'absolute',
@@ -340,8 +358,8 @@ function HomeBase() {
                     left: -1,
                     width: '60px',
                     height: '60px',
-                    borderTop: '6px solid #56bca7',
-                    borderLeft: '6px solid #56bca7',
+                    borderTop: `6px solid ${accent}`,
+                    borderLeft: `6px solid ${accent}`,
                     borderTopLeftRadius: '20px',
                   }} />
 
@@ -351,13 +369,13 @@ function HomeBase() {
                     right: -1,
                     width: '60px',
                     height: '60px',
-                    borderBottom: '6px solid #56bca7',
-                    borderRight: '6px solid #56bca7',
+                    borderBottom: `6px solid ${accent}`,
+                    borderRight: `6px solid ${accent}`,
                     borderBottomRightRadius: '20px',
                   }} />
 
-                  <h3 className="fw-bold mb-3" style={{ fontSize: '1.25rem', color: '#56bca7' }}>{item.titulo}</h3>
-                  <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: '#113d69', marginBottom: 0 }}>{item.desc}</p>
+                  <h3 className="fw-bold mb-3" style={{ fontSize: '1.25rem', color: accent }}>{item.titulo}</h3>
+                  <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: textSecondary, marginBottom: 0 }}>{item.desc}</p>
                 </div>
               </Col>
             ))}
@@ -365,11 +383,11 @@ function HomeBase() {
         </Container>
       </div>
 
-      <WaveDivider color="#e8f6f3" flip={true} />
+      <WaveDivider color={bgPrimary} flip={true} />
       <div id="sostenibilidad-seccion" className="reveal-section">
         <SustainabilitySection />
       </div>
-      <WaveDivider color="#e8f6f3" />
+      <WaveDivider color={bgPrimary} />
 
       {/* NUEVAS SECCIONES: CALCULADORA */}
       <div id="calculadora-seccion" className="reveal-section">
@@ -377,29 +395,30 @@ function HomeBase() {
       </div>
 
 
-      <WaveDivider color="#56bca7" flip={true} />
+      <WaveDivider color={accent} flip={true} />
 
 
-      {/* SECCIÓN EQUIPO */}
       {/* SECCIÓN EQUIPO */}
       <div id="equipo-seccion" className="reveal-section">
         <Container className="py-5 mb-5">
           <Row className="justify-content-center">
             <Col lg={11}>
               <div style={{
-                backgroundColor: verdeMenta,
+                backgroundColor: bgCard,
                 borderRadius: '50px',
                 overflow: 'hidden',
-                boxShadow: '0 30px 60px rgba(86, 188, 167, 0.4)',
+                boxShadow: `0 30px 60px ${accent}26`,
                 padding: '80px 40px',
-                position: 'relative'
+                position: 'relative',
+                border: `1px solid ${theme.colors.border}`
               }}>
                 {/* Overlay decorativo */}
-                <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
+                <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: `${accent}1A`, borderRadius: '50%' }}></div>
+                <div style={{ position: 'absolute', bottom: '-80px', left: '-80px', width: '250px', height: '250px', background: `${accent}1A`, borderRadius: '50%' }}></div>
                 
                 <div className="text-center mb-5" style={{ position: 'relative', zIndex: 2 }}>
-                  <h2 className="fw-bold" style={{ color: '#fff', fontSize: '3rem', letterSpacing: '-1px' }}>Equipo DomiFlex</h2>
-                  <p className="text-white" style={{ fontSize: '1.2rem', opacity: 0.95 }}>Los cerebros detrás de tu nueva forma de pedir domicilios</p>
+                  <h2 className="fw-bold" style={{ color: textPrimary, fontSize: '3rem', letterSpacing: '-1px' }}>Equipo DomiFlex</h2>
+                  <p style={{ fontSize: '1.2rem', color: textSecondary }}>Los cerebros detrás de tu nueva forma de pedir domicilios</p>
                 </div>
                 <Row className="justify-content-center g-4" style={{ position: 'relative', zIndex: 2 }}>
                   {autores.map((autor) => (
@@ -410,9 +429,9 @@ function HomeBase() {
                         margin: '0 auto',
                         borderRadius: '30px',
                         overflow: 'hidden',
-                        backgroundColor: 'white',
-                        border: '4px solid white',
-                        boxShadow: '0 15px 30px rgba(0,0,0,0.2)',
+                        backgroundColor: theme.colors.border,
+                        border: `3px solid ${accent}`,
+                        boxShadow: `0 15px 30px rgba(0,0,0,0.4)`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -431,8 +450,8 @@ function HomeBase() {
                         />
                       </div>
                       <div className="team-info" style={{ transition: 'all 0.3s ease', paddingTop: '15px' }}>
-                        <h6 className="fw-bold mb-0" style={{ color: '#fff', fontSize: '1.1rem' }}>{autor.nombre}</h6>
-                        <p style={{ fontSize: '11px', color: '#113d69', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '6px', background: 'rgba(255,255,255,0.8)', padding: '2px 8px', borderRadius: '10px', display: 'inline-block' }}>{autor.rol}</p>
+                        <h6 className="fw-bold mb-0" style={{ color: textPrimary, fontSize: '1.1rem' }}>{autor.nombre}</h6>
+                        <p style={{ fontSize: theme.fontSize.xs, color: accent, fontWeight: theme.fontWeight.extrabold, textTransform: 'uppercase', letterSpacing: '1px', marginTop: '6px', background: `${accent}1A`, padding: '2px 8px', borderRadius: '10px', display: 'inline-block' }}>{autor.rol}</p>
                       </div>
                     </Col>
                   ))}
@@ -443,7 +462,7 @@ function HomeBase() {
         </Container>
       </div>
 
-      <WaveDivider color="#56bca7" />
+      <WaveDivider color={accent} />
       <div className="reveal-section">
         <FaqSection />
       </div>
@@ -455,21 +474,23 @@ function HomeBase() {
         <Row className="justify-content-center">
           <Col lg={8} className="text-center">
             <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backgroundColor: bgCard,
               borderRadius: '30px',
               padding: '50px',
-              boxShadow: '0 15px 35px rgba(0,0,0,0.1)'
+              boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
+              border: `1px solid ${theme.colors.border}`
             }}>
-              <h2 className="fw-bold mb-3" style={{ color: '#113d69' }}>
+              <h2 className="fw-bold mb-3" style={{ color: textPrimary }}>
                 ¿Tienes dudas o sugerencias?
               </h2>
-              <p className="mb-4 text-muted" style={{ fontSize: '1.1rem' }}>
+              <p className="mb-4" style={{ fontSize: '1.1rem', color: textSecondary }}>
                 Estamos aquí para ayudarte. Déjanos un mensaje y te responderemos lo más pronto posible.
               </p>
               <Button
                 onClick={handleShowContactModal}
                 style={{
-                  backgroundColor: verdeMenta,
+                  backgroundColor: accent,
+                  color: '#000',
                   border: 'none',
                   padding: '12px 40px',
                   borderRadius: '30px',
@@ -487,8 +508,8 @@ function HomeBase() {
 
       {/* MODAL DE CONTACTO */}
       <Modal show={showContactModal} onHide={handleCloseContactModal} centered size="lg">
-        <Modal.Header closeButton style={{ borderBottom: 'none', paddingBottom: '0' }}>
-          <Modal.Title className="fw-bold w-100 text-center" style={{ color: '#113d69' }}>
+        <Modal.Header closeButton style={{ borderBottom: `1px solid ${theme.colors.border}`, paddingBottom: '0' }}>
+          <Modal.Title className="fw-bold w-100 text-center" style={{ color: textPrimary }}>
             Contáctanos
           </Modal.Title>
         </Modal.Header>
@@ -504,7 +525,7 @@ function HomeBase() {
                   value={formData.nombre}
                   onChange={handleChange}
                   className="form-control"
-                  style={{ borderRadius: '15px', padding: '12px' }}
+                  style={{ borderRadius: '15px', padding: '12px', backgroundColor: theme.colors.bgInput, color: textPrimary, border: `1px solid ${theme.colors.border}` }}
                   required
                 />
               </Col>
@@ -517,7 +538,7 @@ function HomeBase() {
                   value={formData.correo}
                   onChange={handleChange}
                   className="form-control"
-                  style={{ borderRadius: '15px', padding: '12px' }}
+                  style={{ borderRadius: '15px', padding: '12px', backgroundColor: theme.colors.bgInput, color: textPrimary, border: `1px solid ${theme.colors.border}` }}
                   required
                 />
               </Col>
@@ -529,7 +550,7 @@ function HomeBase() {
                 value={formData.tipo}
                 onChange={handleChange}
                 className="form-select"
-                style={{ borderRadius: '15px', padding: '12px' }}
+                style={{ borderRadius: '15px', padding: '12px', backgroundColor: theme.colors.bgInput, color: textPrimary, border: `1px solid ${theme.colors.border}` }}
                 required
               >
                 <option value="">Seleccione tipo</option>
@@ -548,7 +569,7 @@ function HomeBase() {
                 value={formData.mensaje}
                 onChange={handleChange}
                 className="form-control"
-                style={{ borderRadius: '15px', padding: '12px' }}
+                style={{ borderRadius: '15px', padding: '12px', backgroundColor: theme.colors.bgInput, color: textPrimary, border: `1px solid ${theme.colors.border}` }}
                 required
               />
             </div>
@@ -557,7 +578,8 @@ function HomeBase() {
               <Button
                 type="submit"
                 style={{
-                  backgroundColor: verdeMenta,
+                  backgroundColor: accent,
+                  color: '#000',
                   border: 'none',
                   padding: '10px 40px',
                   borderRadius: '30px',
@@ -573,8 +595,8 @@ function HomeBase() {
               <p className="text-center mt-4 fw-semibold"
                 style={{
                   color: mensajeEstado.includes('Error')
-                    ? 'red'
-                    : verdeMenta
+                    ? theme.colors.danger
+                    : accent
                 }}>
                 {mensajeEstado}
               </p>
@@ -584,22 +606,24 @@ function HomeBase() {
         </Modal.Body>
       </Modal>
 
-      <footer className="py-5 text-white text-center mt-auto" style={{ background: '#cccbd2af' }}>
+      <footer className="py-5 text-center mt-auto" style={{ background: bgCard, borderTop: `1px solid ${theme.colors.border}` }}>
         <Container>
-          <h2 className="mb-4">Únete a nuestra comunidad</h2>
+          <h2 className="mb-4" style={{ color: textPrimary }}>Únete a nuestra comunidad</h2>
           <Button 
             as={Link} 
             to="/register" 
-            variant="light" 
             className="px-5 fw-bold shadow-sm"
             style={{ 
               borderRadius: '30px', 
               transition: 'all 0.3s ease',
-              transform: 'scale(1)'
+              transform: 'scale(1)',
+              backgroundColor: accent,
+              color: '#000',
+              border: 'none'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.1)';
-              e.currentTarget.style.boxShadow = '0 10px 20px rgba(255,255,255,0.2)';
+              e.currentTarget.style.boxShadow = `0 10px 20px ${accent}4D`;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
@@ -608,7 +632,7 @@ function HomeBase() {
           >
             Registrarse Ahora
           </Button>
-          <p className="mt-5 text-white small">© 2026 DomiFlex.</p>
+          <p className="mt-5 small" style={{ color: textSecondary }}>© 2026 DomiFlex.</p>
         </Container>
       </footer>
     </div>

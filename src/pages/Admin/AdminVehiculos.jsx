@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
+import theme from "../../styles/theme";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Modal, Image, Form, InputGroup } from "react-bootstrap";
 import { FaCheckCircle, FaTimesCircle, FaEye, FaCar } from "react-icons/fa";
 import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
@@ -242,11 +243,11 @@ function AdminVehiculos() {
     // COMPONENTES ESTILIZADOS
     const EstadoBadge = ({ estado }) => {
         const estilos = {
-            ACTIVO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-            INACTIVO: { backgroundColor: '#cccbd2af', color: '#113d69' }
+            ACTIVO: { backgroundColor: theme.colors.accent, color: '#000000' },
+            INACTIVO: { backgroundColor: theme.colors.border, color: theme.colors.textSecondary }
         };
 
-        const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+        const estilo = estilos[estado] || { backgroundColor: theme.colors.border, color: theme.colors.textSecondary };
 
         return (
             <span style={{
@@ -266,9 +267,9 @@ function AdminVehiculos() {
 
     const PlacaValidadaIcon = ({ validada }) => {
         if (validada) {
-            return <FaCheckCircle style={{ color: '#62d8d9' }} title="Placa Validada" size={18} />;
+            return <FaCheckCircle style={{ color: theme.colors.accent }} title="Placa Validada" size={18} />;
         } else {
-            return <FaTimesCircle style={{ color: '#113d69' }} title="Placa No Validada" size={18} />;
+            return <FaTimesCircle style={{ color: theme.colors.textMuted }} title="Placa No Validada" size={18} />;
         }
     };
 
@@ -276,9 +277,9 @@ function AdminVehiculos() {
         if (isWhite) {
             return (
                 <span style={{
-                    backgroundColor: '#ffffff',
-                    color: '#62d8d9',
-                    border: '1px solid #62d8d9',
+                    backgroundColor: theme.colors.bgCard,
+                    color: theme.colors.accent,
+                    border: `1px solid ${theme.colors.accent}`,
                     padding: '0.5rem 1rem',
                     borderRadius: '1rem',
                     fontSize: '0.9rem',
@@ -308,26 +309,26 @@ function AdminVehiculos() {
     const TipoVehiculoBadge = ({ tipo }) => {
         if (!tipo) return null;
 
-        let estilo = { backgroundColor: '#e9ecef', color: '#113d69' };
+        let estilo = { backgroundColor: theme.colors.border, color: theme.colors.textSecondary };
 
         switch (tipo.toUpperCase()) {
             case 'AUTOMOVIL':
             case 'AUTO':
             case 'CARRO':
-                estilo = { backgroundColor: '#62d8d9', color: '#ffffff' };
+                estilo = { backgroundColor: theme.colors.accent, color: '#000000' };
                 break;
             case 'MOTOCICLETA':
             case 'MOTO':
             case 'BICICLETA':
-                estilo = { backgroundColor: '#6c757d', color: '#ffffff' };
+                estilo = { backgroundColor: '#30363D', color: theme.colors.textPrimary };
                 break;
             case 'CAMIONETA':
             case 'SUV':
-                estilo = { backgroundColor: '#113d69', color: '#ffffff' };
+                estilo = { backgroundColor: theme.colors.bgCardHover, color: theme.colors.textPrimary };
                 break;
             case 'VAN':
             case 'FURGON':
-                estilo = { backgroundColor: '#495057', color: '#ffffff' };
+                estilo = { backgroundColor: '#21262D', color: theme.colors.textPrimary };
                 break;
         }
 
@@ -358,22 +359,22 @@ function AdminVehiculos() {
                         fontWeight: '500',
                         borderRadius: '50px',
                         padding: '0.4rem 0.8rem',
-                        border: `2px solid ${children === "Validar Placa" ? '#62d8d9' : '#113d69'}`,
-                        backgroundColor: disabled ? '#e9ecef' : 'transparent',
-                        color: children === "Validar Placa" ? '#62d8d9' : '#113d69',
-                        borderColor: children === "Validar Placa" ? '#62d8d9' : '#113d69',
+                        border: `2px solid ${children === "Validar Placa" ? theme.colors.accent : theme.colors.textMuted}`,
+                        backgroundColor: disabled ? theme.colors.border : 'transparent',
+                        color: children === "Validar Placa" ? theme.colors.accent : theme.colors.textSecondary,
+                        borderColor: children === "Validar Placa" ? theme.colors.accent : theme.colors.textMuted,
                         opacity: disabled ? 0.6 : 1
                     }}
                     onMouseEnter={(e) => {
                         if (!disabled) {
-                            e.target.style.backgroundColor = children === "Validar Placa" ? '#62d8d9' : '#113d69';
-                            e.target.style.color = 'white';
+                            e.target.style.backgroundColor = children === "Validar Placa" ? theme.colors.accent : theme.colors.textMuted;
+                            e.target.style.color = '#000000';
                         }
                     }}
                     onMouseLeave={(e) => {
                         if (!disabled) {
                             e.target.style.backgroundColor = 'transparent';
-                            e.target.style.color = children === "Validar Placa" ? '#62d8d9' : '#113d69';
+                            e.target.style.color = children === "Validar Placa" ? theme.colors.accent : theme.colors.textSecondary;
                         }
                     }}
                 >
@@ -392,20 +393,20 @@ function AdminVehiculos() {
                     fontWeight: '500',
                     borderRadius: '50px',
                     padding: '0.4rem 0.8rem',
-                    border: `2px solid ${estado === 'ACTIVO' ? '#62d8d9' : '#62d8d9'}`,
-                    backgroundColor: estado === 'ACTIVO' ? 'transparent' : '#62d8d9',
-                    color: estado === 'ACTIVO' ? '#62d8d9' : '#ffffff',
+                    border: `2px solid ${theme.colors.accent}`,
+                    backgroundColor: estado === 'ACTIVO' ? 'transparent' : theme.colors.accent,
+                    color: estado === 'ACTIVO' ? theme.colors.accent : '#000000',
                 }}
                 onMouseEnter={(e) => {
                     if (estado === 'ACTIVO') {
-                        e.target.style.backgroundColor = '#62d8d9';
-                        e.target.style.color = 'white';
+                        e.target.style.backgroundColor = theme.colors.accent;
+                        e.target.style.color = '#000000';
                     }
                 }}
                 onMouseLeave={(e) => {
                     if (estado === 'ACTIVO') {
                         e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = '#62d8d9';
+                        e.target.style.color = theme.colors.accent;
                     }
                 }}
             >
@@ -422,16 +423,16 @@ function AdminVehiculos() {
                 onClick={onClick}
                 className="p-0 text-decoration-none mt-1"
                 style={{
-                    color: '#62d8d9',
+                    color: theme.colors.accent,
                     transition: 'all 0.2s',
                     fontWeight: '500',
                     fontSize: '0.8rem'
                 }}
                 onMouseEnter={(e) => {
-                    e.target.style.color = '#113d69';
+                    e.target.style.color = theme.colors.accentLight;
                 }}
                 onMouseLeave={(e) => {
-                    e.target.style.color = '#62d8d9';
+                    e.target.style.color = theme.colors.accent;
                 }}
             >
                 <FaEye className="me-1" /> Ver Foto
@@ -451,7 +452,7 @@ function AdminVehiculos() {
     }
 
     function formatearCapacidad(capacidad) {
-        if (!capacidad) return <span className="text-muted fst-italic">No especificado</span>;
+        if (!capacidad) return <span className="fst-italic" style={{ color: theme.colors.textMuted }}>No especificado</span>;
         if (typeof capacidad === 'number' || !isNaN(parseInt(capacidad))) {
             const numCapacidad = parseInt(capacidad);
             return `${numCapacidad} kg`;
@@ -484,9 +485,9 @@ function AdminVehiculos() {
                     disabled={paginaActual === 1}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: paginaActual === 1 ? '#e9ecef' : 'white',
-                        color: paginaActual === 1 ? '#6c757d' : '#62d8d9',
-                        border: `1px solid ${paginaActual === 1 ? '#dee2e6' : '#62d8d9'}`,
+                        backgroundColor: paginaActual === 1 ? theme.colors.border : theme.colors.bgCard,
+                        color: paginaActual === 1 ? theme.colors.textMuted : theme.colors.accent,
+                        border: `1px solid ${paginaActual === 1 ? theme.colors.borderLight : theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '50px 0 0 50px',
                         cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
@@ -506,9 +507,9 @@ function AdminVehiculos() {
                         onClick={() => cambiarPagina(1)}
                         style={{
                             ...buttonStyle,
-                            backgroundColor: 'white',
-                            color: '#62d8d9',
-                            border: '1px solid #62d8d9',
+                            backgroundColor: theme.colors.bgCard,
+                            color: theme.colors.accent,
+                            border: `1px solid ${theme.colors.accent}`,
                             margin: '0 2px',
                             borderRadius: '50px',
                             cursor: 'pointer',
@@ -525,7 +526,7 @@ function AdminVehiculos() {
                             style={{
                                 ...buttonStyle,
                                 backgroundColor: 'transparent',
-                                color: '#113d69',
+                                color: theme.colors.textSecondary,
                                 border: 'none',
                                 margin: '0 2px',
                                 fontWeight: '500'
@@ -545,9 +546,9 @@ function AdminVehiculos() {
                         onClick={() => !esActivo && cambiarPagina(numero)}
                         style={{
                             ...buttonStyle,
-                            backgroundColor: esActivo ? '#62d8d9' : 'white',
-                            color: esActivo ? 'white' : '#62d8d9',
-                            border: '1px solid #62d8d9',
+                            backgroundColor: esActivo ? theme.colors.accent : theme.colors.bgCard,
+                            color: esActivo ? '#000000' : theme.colors.accent,
+                            border: `1px solid ${theme.colors.accent}`,
                             margin: '0 2px',
                             borderRadius: '50px',
                             cursor: esActivo ? 'default' : 'pointer',
@@ -568,7 +569,7 @@ function AdminVehiculos() {
                             style={{
                                 ...buttonStyle,
                                 backgroundColor: 'transparent',
-                                color: '#113d69',
+                                color: theme.colors.textSecondary,
                                 border: 'none',
                                 margin: '0 2px',
                                 fontWeight: '500'
@@ -584,9 +585,9 @@ function AdminVehiculos() {
                         onClick={() => cambiarPagina(totalPaginas)}
                         style={{
                             ...buttonStyle,
-                            backgroundColor: 'white',
-                            color: '#62d8d9',
-                            border: '1px solid #62d8d9',
+                            backgroundColor: theme.colors.bgCard,
+                            color: theme.colors.accent,
+                            border: `1px solid ${theme.colors.accent}`,
                             margin: '0 2px',
                             borderRadius: '50px',
                             cursor: 'pointer',
@@ -605,9 +606,9 @@ function AdminVehiculos() {
                     disabled={paginaActual === totalPaginas}
                     style={{
                         ...buttonStyle,
-                        backgroundColor: paginaActual === totalPaginas ? '#e9ecef' : 'white',
-                        color: paginaActual === totalPaginas ? '#6c757d' : '#62d8d9',
-                        border: `1px solid ${paginaActual === totalPaginas ? '#dee2e6' : '#62d8d9'}`,
+                        backgroundColor: paginaActual === totalPaginas ? theme.colors.border : theme.colors.bgCard,
+                        color: paginaActual === totalPaginas ? theme.colors.textMuted : theme.colors.accent,
+                        border: `1px solid ${paginaActual === totalPaginas ? theme.colors.borderLight : theme.colors.accent}`,
                         margin: '0 2px',
                         borderRadius: '0 50px 50px 0',
                         cursor: paginaActual === totalPaginas ? 'not-allowed' : 'pointer',
@@ -625,7 +626,7 @@ function AdminVehiculos() {
 
         return (
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 px-4 pb-4" style={{ gap: '1rem' }}>
-                <div className="text-muted text-center text-md-start" style={{ color: '#113d69', fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
+                <div className="text-center text-md-start" style={{ color: theme.colors.textSecondary, fontSize: window.innerWidth < 768 ? '0.8rem' : '0.9rem' }}>
                     Mostrando {indicePrimerElemento + 1} - {Math.min(indiceUltimoElemento, vehiculosFiltrados.length)} de {vehiculosFiltrados.length} vehículos
                     {busqueda && ` (filtrados de ${vehiculos.length} totales)`}
                 </div>
@@ -643,29 +644,29 @@ function AdminVehiculos() {
                     <Col>
                         <Card className="border-0 shadow" style={{
                             borderRadius: '16px',
-                            borderLeft: '6px solid #62d8d9',
+                            borderLeft: `6px solid ${theme.colors.accent}`,
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-4">
                                 <h1 className="display-5 fw-bold mb-0" style={{
-                                    color: '#113d69',
+                                    color: theme.colors.textPrimary,
                                     letterSpacing: '-0.02em'
                                 }}>
                                     Lista de Vehículos
                                 </h1>
-                                <p className="mb-0 small" style={{ color: '#113d69' }}>
-                                    <span style={{ color: '#62d8d9' }}>●</span> Administra los vehículos registrados en la plataforma
+                                <p className="mb-0 small" style={{ color: theme.colors.textSecondary }}>
+                                    <span style={{ color: theme.colors.accent }}>●</span> Administra los vehículos registrados en la plataforma
                                 </p>
                             </Card.Body>
                         </Card>
 
-                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px' }}>
+                        <Card className="border-0 shadow-sm mt-3" style={{ borderRadius: '12px', backgroundColor: theme.colors.bgCard }}>
                             <Card.Body className="p-3">
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
-                                        <InputGroup.Text className="bg-white border-end-0">
-                                            <BsSearch style={{ color: '#113d69' }} />
+                                        <InputGroup.Text style={{ backgroundColor: theme.colors.bgInput, border: `1px solid ${theme.colors.border}`, borderRight: 'none' }}>
+                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -676,17 +677,30 @@ function AdminVehiculos() {
                                                 setPaginaActual(1);
                                             }}
                                             className="border-start-0"
-                                            style={{ color: '#113d69' }}
+                                            style={{
+                                                color: theme.colors.textPrimary,
+                                                backgroundColor: theme.colors.bgInput,
+                                                border: `1px solid ${theme.colors.border}`,
+                                                borderLeft: 'none'
+                                            }}
                                         />
                                         {busqueda && (
-                                            <Button variant="outline-secondary" className="border-start-0 border-end-0 bg-white" onClick={limpiarBusqueda}>
-                                                <BsXCircle style={{ color: '#113d69' }} />
+                                            <Button
+                                                className="border-start-0 border-end-0"
+                                                onClick={limpiarBusqueda}
+                                                style={{
+                                                    backgroundColor: theme.colors.bgInput,
+                                                    border: `1px solid ${theme.colors.border}`,
+                                                    color: theme.colors.textSecondary
+                                                }}
+                                            >
+                                                <BsXCircle />
                                             </Button>
                                         )}
                                         <Button
                                             variant="primary"
                                             type="submit"
-                                            style={{ backgroundColor: '#62d8d9', border: 'none', color: '#ffffff' }}
+                                            style={{ backgroundColor: theme.colors.accent, border: 'none', color: '#000000' }}
                                         >
                                             Buscar
                                         </Button>
@@ -696,7 +710,7 @@ function AdminVehiculos() {
                         </Card>
 
                         <div className="d-flex gap-3 mt-3 flex-wrap">
-                            <StatsBadge bgColor="transparent" color="#113d69">
+                            <StatsBadge bgColor="transparent" color={theme.colors.textSecondary}>
                                 Total: {vehiculos.length}
                             </StatsBadge>
                             {busqueda && (
@@ -704,10 +718,10 @@ function AdminVehiculos() {
                                     Resultados: {vehiculosFiltrados.length}
                                 </StatsBadge>
                             )}
-                            <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                            <StatsBadge bgColor={theme.colors.accent} color="#000000">
                                 Activos: {vehiculos.filter(v => v.estado === 'ACTIVO').length}
                             </StatsBadge>
-                            <StatsBadge bgColor="#cccbd2af" color="#113d69">
+                            <StatsBadge bgColor={theme.colors.border} color={theme.colors.textSecondary}>
                                 Inactivos: {vehiculos.filter(v => v.estado === 'INACTIVO').length}
                             </StatsBadge>
                         </div>
@@ -717,8 +731,8 @@ function AdminVehiculos() {
                 {error && (
                     <Row className="mb-3">
                         <Col>
-                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: '#cccbd2af', color: '#113d69' }}>
-                                <strong style={{ color: '#113d69' }}>Error:</strong> <span style={{ color: '#113d69' }}>{error}</span>
+                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: theme.colors.dangerDark, color: theme.colors.textPrimary }}>
+                                <strong>Error:</strong> {error}
                             </Alert>
                         </Col>
                     </Row>
@@ -729,48 +743,49 @@ function AdminVehiculos() {
                         <Card className="shadow border-0" style={{
                             borderRadius: '16px',
                             overflow: 'hidden',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                            backgroundColor: theme.colors.bgCard
                         }}>
                             <Card.Body className="p-0">
                                 {loading ? (
                                     <div className="text-center py-5">
-                                        <Spinner animation="border" style={{ color: '#62d8d9' }} />
-                                        <p className="mt-3" style={{ color: '#113d69' }}>Cargando vehículos...</p>
+                                        <Spinner animation="border" style={{ color: theme.colors.accent }} />
+                                        <p className="mt-3" style={{ color: theme.colors.textSecondary }}>Cargando vehículos...</p>
                                     </div>
                                 ) : (
                                     <>
                                         <div className="table-responsive">
                                             <Table hover className="align-middle mb-0">
                                                 <thead style={{
-                                                    backgroundColor: 'rgba(248, 249, 250, 0.9)',
-                                                    borderBottom: '2px solid #62d8d9'
+                                                    backgroundColor: theme.colors.bgCardHover,
+                                                    borderBottom: `2px solid ${theme.colors.accent}`
                                                 }}>
                                                     <tr>
-                                                        <th className="py-3 px-4" style={{ color: '#113d69' }}>ID</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Propietario</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Vehículo</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Placa / Foto</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Capacidad</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Estado</th>
-                                                        <th className="py-3" style={{ color: '#113d69' }}>Acciones</th>
+                                                        <th className="py-3 px-4" style={{ color: theme.colors.textSecondary }}>ID</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Propietario</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Vehículo</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Placa / Foto</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Capacidad</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Estado</th>
+                                                        <th className="py-3" style={{ color: theme.colors.textSecondary }}>Acciones</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
+                                                <tbody>
                                                     {vehiculosFiltrados.length === 0 ? (
                                                         <tr>
-                                                            <td colSpan="7" className="text-center py-4" style={{ color: '#113d69' }}>
+                                                            <td colSpan="7" className="text-center py-4" style={{ color: theme.colors.textSecondary }}>
                                                                 {busqueda ? "No se encontraron vehículos con esos criterios" : "No hay vehículos registrados"}
                                                             </td>
                                                         </tr>
                                                     ) : (
                                                         vehiculosPaginados.map((vehiculo, index) => (
                                                             <tr key={vehiculo.idVehiculos} style={{
-                                                                backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0.9)' : 'rgba(250, 250, 250, 0.9)'
+                                                                backgroundColor: index % 2 === 0 ? theme.colors.bgCard : theme.colors.bgCardHover,
+                                                                borderBottom: `1px solid ${theme.colors.border}`
                                                             }}>
                                                                 <td className="fw-semibold px-4">
                                                                     <span style={{
-                                                                        backgroundColor: '#62d8d9',
-                                                                        color: '#fafafa',
+                                                                        backgroundColor: theme.colors.accent,
+                                                                        color: '#000000',
                                                                         padding: '0.4rem 0.8rem',
                                                                         borderRadius: '8px',
                                                                         display: 'inline-block',
@@ -782,27 +797,27 @@ function AdminVehiculos() {
                                                                     </span>
                                                                 </td>
                                                                 <td>
-                                                                    <div className="fw-medium" style={{ color: '#113d69' }}>
+                                                                    <div className="fw-medium" style={{ color: theme.colors.textPrimary }}>
                                                                         {obtenerNombreUsuario(vehiculo.idUsuario)}
                                                                     </div>
-                                                                    <small className="text-muted">
+                                                                    <small style={{ color: theme.colors.textMuted }}>
                                                                         ID: {vehiculo.idUsuario}
                                                                     </small>
                                                                 </td>
                                                                 <td>
-                                                                    <div className="fw-medium" style={{ color: '#113d69' }}>
+                                                                    <div className="fw-medium" style={{ color: theme.colors.textPrimary }}>
                                                                         {vehiculo.marca} {vehiculo.modelo}
                                                                     </div>
                                                                     <div className="d-flex gap-1 mt-1 align-items-center">
                                                                         <TipoVehiculoBadge tipo={vehiculo.tipo} />
                                                                         {vehiculo.anio && (
-                                                                            <small className="text-muted ms-1">({vehiculo.anio})</small>
+                                                                            <small className="ms-1" style={{ color: theme.colors.textMuted }}>({vehiculo.anio})</small>
                                                                         )}
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div className="d-flex align-items-center gap-2">
-                                                                        <span className="fw-semibold" style={{ color: '#113d69', fontSize: '1.05rem' }}>
+                                                                        <span className="fw-semibold" style={{ color: theme.colors.textPrimary, fontSize: '1.05rem' }}>
                                                                             {vehiculo.placa}
                                                                         </span>
                                                                         <PlacaValidadaIcon validada={vehiculo.placaValidada} />
@@ -814,7 +829,7 @@ function AdminVehiculos() {
                                                                         }} />
                                                                     )}
                                                                 </td>
-                                                                <td style={{ color: '#113d69' }}>
+                                                                <td style={{ color: theme.colors.textSecondary }}>
                                                                     {formatearCapacidad(vehiculo.capacidad)}
                                                                 </td>
                                                                 <td>
@@ -860,21 +875,21 @@ function AdminVehiculos() {
                 size="lg"
                 centered
                 style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                    backgroundColor: theme.colors.overlay
                 }}
             >
                 <Modal.Header
                     closeButton
                     style={{
-                        borderBottom: '2px solid #62d8d9',
-                        backgroundColor: 'rgba(255, 255, 255, 0.98)'
+                        borderBottom: `2px solid ${theme.colors.accent}`,
+                        backgroundColor: theme.colors.bgCard
                     }}
                 >
-                    <Modal.Title style={{ color: '#113d69' }}>
-                        <FaCar className="me-2" style={{ color: '#62d8d9' }} /> Foto del Vehículo
+                    <Modal.Title style={{ color: theme.colors.textPrimary }}>
+                        <FaCar className="me-2" style={{ color: theme.colors.accent }} /> Foto del Vehículo
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="text-center p-0" style={{ backgroundColor: '#1a1a1a' }}>
+                <Modal.Body className="text-center p-0" style={{ backgroundColor: theme.colors.bgPrimary }}>
                     <Image
                         src={selectedPhoto}
                         fluid
@@ -889,17 +904,18 @@ function AdminVehiculos() {
                         }}
                     />
                 </Modal.Body>
-                <Modal.Footer style={{ backgroundColor: 'rgba(255, 255, 255, 0.98)' }}>
+                <Modal.Footer style={{ backgroundColor: theme.colors.bgCard }}>
                     <Button
                         variant="secondary"
                         onClick={handleClosePhotoModal}
                         style={{
-                            backgroundColor: '#6c757d',
+                            backgroundColor: theme.colors.border,
                             border: 'none',
                             transition: 'all 0.2s',
                             fontWeight: '500',
                             padding: '0.5rem 1.5rem',
-                            borderRadius: '50px'
+                            borderRadius: '50px',
+                            color: theme.colors.textPrimary
                         }}
                     >
                         Cerrar

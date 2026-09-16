@@ -1,0 +1,87 @@
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FaHome, FaSearch, FaClipboardList, FaUser } from "react-icons/fa";
+import theme from "../styles/theme";
+
+const tabs = [
+  { id: "inicio", label: "Inicio", icon: FaHome, path: "/home" },
+  { id: "buscar", label: "Buscar", icon: FaSearch, path: "/restaurantes" },
+  { id: "pedidos", label: "Pedidos", icon: FaClipboardList, path: "/mis-pedidos" },
+  { id: "perfil", label: "Perfil", icon: FaUser, path: "/perfil" },
+];
+
+export default function BottomTabs() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path || location.pathname.startsWith(path + "/");
+  };
+
+  return (
+    <div style={styles.container}>
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const active = isActive(tab.path);
+        return (
+          <button
+            key={tab.id}
+            style={{
+              ...styles.tab,
+              color: active ? theme.colors.accent : theme.colors.textMuted,
+            }}
+            onClick={() => navigate(tab.path)}
+          >
+            <Icon size={20} />
+            <span style={styles.label}>{tab.label}</span>
+            {active && <div style={styles.indicator} />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: theme.colors.bgNavbar,
+    backdropFilter: "blur(10px)",
+    borderTop: `1px solid ${theme.colors.border}`,
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: "8px 0 12px",
+    zIndex: theme.zIndex.fixed,
+  },
+  tab: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "4px",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    padding: "4px 16px",
+    position: "relative",
+    transition: theme.transitions.fast,
+    fontFamily: "'Inter', sans-serif",
+  },
+  label: {
+    fontSize: theme.fontSize.xs,
+    fontWeight: theme.fontWeight.medium,
+  },
+  indicator: {
+    position: "absolute",
+    top: "-8px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "20px",
+    height: "3px",
+    backgroundColor: theme.colors.accent,
+    borderRadius: "2px",
+  },
+};
