@@ -122,7 +122,7 @@ const styles = {
   },
   hero: {
     position: "relative",
-    padding: "120px 24px 80px",
+    padding: "clamp(56px, 12vw, 120px) 16px clamp(40px, 8vw, 80px)",
     textAlign: "center",
     background: `radial-gradient(ellipse at 50% 0%, ${theme.colors.accent}15 0%, transparent 60%)`,
     overflow: "hidden",
@@ -147,10 +147,12 @@ const styles = {
     height: "auto",
   },
   heroTitle: {
-    fontSize: theme.fontSize.hero,
+    fontSize: "clamp(28px, 8vw, 40px)",
     fontWeight: theme.fontWeight.extrabold,
-    lineHeight: 1.2,
+    lineHeight: 1.15,
     marginBottom: "16px",
+    overflowWrap: "break-word",
+    textWrap: "balance",
   },
   heroAccent: {
     color: theme.colors.accent,
