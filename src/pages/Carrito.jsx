@@ -7,10 +7,12 @@ import { Button } from "../components/common";
 import CartItem from "../components/CartItem";
 import EmptyState from "../components/ui/EmptyState";
 import { api } from "../api/client";
+import { useIsMobile } from "../hooks/useMediaQuery";
 
 export default function Carrito() {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const { cart: initialCart = [], negocio = null } = location.state || {};
 
   const [cart, setCart] = useState(initialCart);
@@ -107,7 +109,7 @@ export default function Carrito() {
   };
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, paddingBottom: isMobile ? "120px" : "40px" }}>
       <div style={styles.header}>
         <button type="button" aria-label="Volver" style={styles.backBtn} onClick={() => navigate(-1)}>
           <FaArrowLeft size={18} aria-hidden="true" />
