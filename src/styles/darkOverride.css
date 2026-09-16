@@ -1,189 +1,55 @@
-/* ===== DARK THEME GLOBAL OVERRIDE ===== */
-/* Applies dark theme to all Admin, Driver, User, and Dashboard pages */
-/* without modifying individual files */
+/* ===== DARK THEME GLOBAL - DomiFlex ===== */
+/* NOTA: las páginas DomiFlex usan estilos inline con theme.js.
+   Este archivo SOLO contiene reglas seguras. NO usar selectores
+   por atributo [style*=...] ni `color: inherit !important` global:
+   rompían el layout (ej: el contenedor fixed de react-hot-toast
+   quedaba con fondo sólido tapando toda la página). */
 
-/* --- Base background --- */
+/* --- Base --- */
 body {
-  background-color: #0D1117 !important;
-  color: #E6EDF3 !important;
+  background-color: #0d1117;
+  color: #e6edf3;
 }
 
-/* --- Admin/Driver/User page containers --- */
-[class*="admin"], [class*="driver"], [class*="user"],
-[class*="Admin"], [class*="Driver"], [class*="User"],
-[class*="dashboard"], [class*="Dashboard"] {
-  background-color: #0D1117 !important;
-  color: #E6EDF3 !important;
-}
-
-/* --- Tables --- */
-table, thead, tbody, tr, td, th {
-  color: #E6EDF3 !important;
-}
-
-table {
-  background-color: #161B22 !important;
-  border-color: #21262D !important;
-}
-
-thead {
-  background-color: #0D1117 !important;
-}
-
-thead tr {
-  background-color: #0D1117 !important;
-}
-
-thead th {
-  background-color: #0D1117 !important;
-  color: #8B949E !important;
-  border-color: #21262D !important;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #161B22 !important;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #0D1117 !important;
-}
-
-tbody tr:hover {
-  background-color: #1C2333 !important;
-}
-
-tbody td {
-  background-color: transparent !important;
-  border-color: #21262D !important;
-  color: #E6EDF3 !important;
-}
-
-/* --- Cards / Panels --- */
-div[style*="background-color: white"],
-div[style*="background-color: #fff"],
-div[style*="background-color: #ffffff"],
-div[style*="backgroundColor: 'white'"],
-div[style*="backgroundColor: '#fff'"],
-div[style*="backgroundColor: '#ffffff'"] {
-  background-color: #161B22 !important;
-}
-
-div[style*="border: 1px solid"] {
-  border-color: #21262D !important;
-}
-
-div[style*="border-radius"],
-div[style*="borderRadius"] {
-  background-color: #161B22 !important;
-}
-
-/* --- Cards in Admin pages --- */
-div[style*="padding"] {
-  border-color: #21262D !important;
-}
-
-/* --- All card-like containers --- */
-main > div, .content > div, section > div {
-  background-color: transparent !important;
-}
-
-/* --- Form elements --- */
-input, select, textarea {
-  background-color: #0D1117 !important;
-  color: #E6EDF3 !important;
-  border-color: #21262D !important;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: #00E676 !important;
-  outline: none !important;
-  box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.15) !important;
-}
-
-input::placeholder, textarea::placeholder {
-  color: #8B949E !important;
-}
-
-/* --- Buttons (base) --- */
-button {
-  transition: all 0.2s ease !important;
-}
-
-button[style*="background-color: #62d8d9"],
-button[style*="background-color: rgb(98, 216, 217)"] {
-  background-color: #00E676 !important;
-  color: #0D1117 !important;
-}
-
-button[style*="background-color: #00E676"] {
-  background-color: #00E676 !important;
-}
-
-/* --- Text colors overrides for common patterns --- */
-h1, h2, h3, h4, h5, h6, p, span, label, td, th, div {
-  color: inherit !important;
-}
-
-/* --- Links --- */
-a {
-  color: #00E676 !important;
-}
-
-a:hover {
-  color: #33FF9E !important;
-}
-
-/* --- Scrollbar dark theme --- */
+/* --- Scrollbar --- */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0D1117;
+  background: #0d1117;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #21262D;
+  background: #21262d;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #30363D;
+  background: #30363d;
 }
 
-/* --- Modals / Overlays --- */
-div[style*="position: fixed"],
-div[style*="position:fixed"] {
-  background-color: #161B22 !important;
-  border-color: #21262D !important;
-}
-
-/* --- Pagination / Navigation in tables --- */
-nav {
+/* --- Toast container: SIEMPRE transparente, nunca tapar la página --- */
+div[data-rht-toaster] {
   background-color: transparent !important;
 }
 
-/* --- Dropdowns --- */
+/* --- Form focus --- */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00e676 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.15) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8b949e !important;
+}
+
 select option {
-  background-color: #0D1117 !important;
-  color: #E6EDF3 !important;
-}
-
-/* --- Alerts / Notifications --- */
-div[style*="alert"], div[style*="Alert"] {
-  background-color: #161B22 !important;
-  border-color: #21262D !important;
-}
-
-/* --- Specific Admin page overrides --- */
-.admin-header, .driver-header, .user-header {
-  background-color: #0D1117 !important;
-}
-
-/* --- Responsive dark override for legacy components --- */
-@media (max-width: 768px) {
-  div[style*="background-color: white"] {
-    background-color: #0D1117 !important;
-  }
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
 }
