@@ -1,0 +1,121 @@
+/* Fachada oscura SOLO para el área admin (.admin-shell).
+   Las páginas legacy usan estilos inline claros; estas reglas con alcance
+   limitado los adaptan al tema sin tocar el resto de la app.
+   PROHIBIDO aquí: reglas de position/fixed, z-index y color global. */
+
+.admin-shell .card {
+  background-color: #161b22 !important;
+  border-color: #21262d !important;
+  color: #ffffff !important;
+}
+
+.admin-shell .card-body {
+  color: #ffffff !important;
+}
+
+.admin-shell .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #e6edf3;
+  --bs-table-border-color: #21262d;
+  --bs-table-hover-bg: #1c2333;
+  --bs-table-hover-color: #ffffff;
+  color: #e6edf3 !important;
+}
+
+.admin-shell .table thead,
+.admin-shell .table tbody,
+.admin-shell .table tr,
+.admin-shell .table td,
+.admin-shell .table th {
+  background-color: transparent !important;
+  border-color: #21262d !important;
+  color: #e6edf3 !important;
+}
+
+.admin-shell .form-control,
+.admin-shell .input-group-text,
+.admin-shell .form-select {
+  background-color: #0d1117 !important;
+  border-color: #21262d !important;
+  color: #e6edf3 !important;
+}
+
+.admin-shell .form-control::placeholder {
+  color: #9aa4b2 !important;
+}
+
+.admin-shell .btn-primary {
+  background-color: #00e676 !important;
+  border-color: #00e676 !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+.admin-shell .btn-outline-secondary {
+  border-color: #30363d !important;
+  color: #9aa4b2 !important;
+}
+
+.admin-shell .btn-outline-warning {
+  border-color: #ffd740 !important;
+  color: #ffd740 !important;
+}
+
+.admin-shell .btn-outline-danger {
+  border-color: #ff6b6b !important;
+  color: #ff6b6b !important;
+}
+
+.admin-shell .btn-success {
+  background-color: #00e676 !important;
+  border-color: #00e676 !important;
+  color: #000000 !important;
+}
+
+.admin-shell .btn-danger {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
+}
+
+.admin-shell .btn-secondary {
+  background-color: #1c2333 !important;
+  border-color: #30363d !important;
+  color: #ffffff !important;
+}
+
+.admin-shell .modal-content {
+  background-color: #161b22 !important;
+  border-color: #21262d !important;
+  color: #ffffff !important;
+}
+
+.admin-shell .modal-header,
+.admin-shell .modal-footer {
+  border-color: #21262d !important;
+}
+
+.admin-shell .dropdown-menu {
+  background-color: #161b22 !important;
+  border-color: #21262d !important;
+}
+
+.admin-shell .dropdown-item {
+  color: #e6edf3 !important;
+}
+
+.admin-shell .dropdown-item:hover {
+  background-color: #1c2333 !important;
+  color: #ffffff !important;
+}
+
+.admin-shell .page-link {
+  background-color: #161b22 !important;
+  border-color: #21262d !important;
+  color: #9aa4b2 !important;
+}
+
+.admin-shell .page-item.active .page-link {
+  background-color: #00e676 !important;
+  border-color: #00e676 !important;
+  color: #000000 !important;
+}

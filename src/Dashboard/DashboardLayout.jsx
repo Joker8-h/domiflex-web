@@ -3,17 +3,28 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../pages/context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import theme from "../styles/theme";
+import { useIsMobile } from "../hooks/useMediaQuery";
+import "../design/admin.css";
 
 const DashboardLayout = ({ children, openSidebarToggle, OpenSidebar }) => {
     const { token } = useAuth();
+    const isMobile = useIsMobile();
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const rafRef = useRef(0);
 
     useEffect(() => {
-        const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
+        const handleMouseMove = (e) => {
+            const { clientX, clientY } = e;
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = requestAnimationFrame(() => setMousePos({ x: clientX, y: clientY }));
+        };
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            cancelAnimationFrame(rafRef.current);
+        };
     }, []);
 
     if (!token) {
@@ -60,9 +71,9 @@ const DashboardLayout = ({ children, openSidebarToggle, OpenSidebar }) => {
             <Header />
             <div style={{ display: 'flex', flex: 1, position: 'relative', width: '100%', overflow: 'hidden', zIndex: 2 }}>
                 <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-                <div style={{
+                <div className="admin-shell" style={{
                     flex: 1,
-                    marginLeft: openSidebarToggle ? '280px' : '0px',
+                    marginLeft: openSidebarToggle && !isMobile ? '280px' : '0px',
                     transition: 'margin-left 0.3s ease-in-out',
                     backgroundColor: 'transparent',
                     height: '100%',
