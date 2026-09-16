@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
-import "./styles/darkOverride.css";
+import "./design/global.css";
 import { AuthProvider, useAuth } from "./pages/context/AuthContext";
 import { SocketProvider } from "./pages/context/SocketContext";
 import { Toaster } from "react-hot-toast";

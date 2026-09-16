@@ -24,7 +24,7 @@ export default function Landing() {
       <div style={styles.hero}>
         <div style={styles.heroContent}>
           <div style={styles.logoLarge}>
-            <span style={styles.logoIcon}>📍</span>
+            <img src="/logo-domiflex.jpg" alt="DomiFlex — Delivery, rapidez y flexibilidad" style={styles.logoImg} />
           </div>
           <h1 style={styles.heroTitle}>
             Tu comida favorita, <br />
@@ -134,18 +134,17 @@ const styles = {
     margin: "0 auto",
   },
   logoLarge: {
-    width: "80px",
-    height: "80px",
+    maxWidth: "340px",
     margin: "0 auto 24px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: `${theme.colors.accent}15`,
-    borderRadius: "50%",
-    border: `2px solid ${theme.colors.accent}30`,
+    borderRadius: theme.borderRadius.lg,
+    overflow: "hidden",
+    border: `1px solid ${theme.colors.border}`,
+    boxShadow: "0 8px 32px rgba(0, 230, 118, 0.15)",
   },
-  logoIcon: {
-    fontSize: "40px",
+  logoImg: {
+    display: "block",
+    width: "100%",
+    height: "auto",
   },
   heroTitle: {
     fontSize: theme.fontSize.hero,

@@ -1,5 +1,15 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import { API_URL } from "../../config";
+import { api } from "../../api/client";
+
+function safeParse(raw) {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
 
 const AuthContext = createContext();
 
@@ -17,7 +27,12 @@ export const AuthProvider = ({ children }) => {
   
   const [usuario, setUsuario] = useState(() => {
     const userSaved = localStorage.getItem("domiflex_usuario") || localStorage.getItem("app_usuario");
-    return userSaved ? JSON.parse(userSaved) : null;
+    const parsed = safeParse(userSaved);
+    if (userSaved && !parsed) {
+      localStorage.removeItem("domiflex_usuario");
+      localStorage.removeItem("app_usuario");
+    }
+    return parsed;
   });
 
   useEffect(() => {
@@ -37,19 +52,19 @@ export const AuthProvider = ({ children }) => {
     setUsuario(datosUsuario);
   };
 
-  const login = (tk, datosUsuario) => {
+  const login = useCallback((tk, datosUsuario) => {
     guardarToken(tk);
     guardarUsuario(datosUsuario);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setUsuario(null);
     localStorage.removeItem("domiflex_token");
     localStorage.removeItem("domiflex_usuario");
     localStorage.removeItem("app_token");
     localStorage.removeItem("app_usuario");
-  };
+  }, []);
 
   const getRolNombre = () => {
     const raw = typeof usuario?.rol === 'string' ? usuario.rol : (usuario?.rol?.nombre || "");
@@ -66,38 +81,43 @@ export const AuthProvider = ({ children }) => {
     'Content-Type': 'application/json'
   });
 
-  const getRepartidores = async () => {
-    const res = await fetch(`${API_URL}/auth/repartidores`, { headers: authHeaders() });
-    if (!res.ok) throw new Error('No se pudo listar repartidores');
-    return res.json();
-  };
+  const getRepartidores = useCallback(async () => {
+    try {
+      return await api.get("/auth/repartidores", { token });
+    } catch {
+      throw new Error('No se pudo listar repartidores');
+    }
+  }, [token]);
 
-  const getClientes = async () => {
-    const res = await fetch(`${API_URL}/auth/clientes`, { headers: authHeaders() });
-    if (!res.ok) throw new Error('No se pudo listar clientes');
-    return res.json();
-  };
+  const getClientes = useCallback(async () => {
+    try {
+      return await api.get("/auth/clientes", { token });
+    } catch {
+      throw new Error('No se pudo listar clientes');
+    }
+  }, [token]);
+
+  const value = useMemo(() => ({
+    token,
+    guardarToken,
+    usuario,
+    guardarUsuario,
+    login,
+    logout,
+    setUsuario,
+    getRolNombre,
+    isAdmin,
+    isRepartidor,
+    isCliente,
+    isComercio,
+    getRepartidores,
+    getClientes,
+    authHeaders,
+    ROLES: ROLES_DOMIFLEX
+  }), [token, usuario, login, logout, getRepartidores, getClientes]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        token,
-        guardarToken,
-        usuario,
-        guardarUsuario,
-        login,
-        logout,
-        setUsuario,
-        getRolNombre,
-        isAdmin,
-        isRepartidor,
-        isCliente,
-        isComercio,
-        getRepartidores,
-        getClientes,
-        ROLES: ROLES_DOMIFLEX
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

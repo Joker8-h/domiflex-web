@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaUserCircle, FaDoorOpen, FaKey, FaQuestionCircle, FaBell } from "react-icons/fa";
-import Logo from "../pages/Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png";
+import Logo from "/logo-domiflex.jpg";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
 import theme from "../styles/theme";
