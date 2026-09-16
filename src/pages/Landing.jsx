@@ -27,8 +27,7 @@ export default function Landing() {
             <img src="/logo-domiflex.jpg" alt="DomiFlex — Delivery, rapidez y flexibilidad" style={styles.logoImg} />
           </div>
           <h1 style={styles.heroTitle}>
-            Tu comida favorita, <br />
-            <span style={styles.heroAccent}>más cerca de ti</span>
+            Tu comida favorita, <span style={styles.heroAccent}>más cerca de ti</span>
           </h1>
           <p style={styles.heroSubtitle}>
             Domicilios rápidos. Repartidores verificados. Paga en efectivo.
