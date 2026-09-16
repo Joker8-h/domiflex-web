@@ -1,7 +1,8 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
+import { Download, Mail, QrCode, Printer, Clock, User } from "lucide-react";
 import { Modal, Button, Alert, Badge } from 'react-bootstrap';
 import QRCode from 'react-qr-code';
-import { FaDownload, FaPrint, FaQrcode, FaUserTag, FaShieldAlt, FaClock, FaEnvelope, FaUser } from 'react-icons/fa';
+
 import PropTypes from 'prop-types';
 
 const QRModal = ({
@@ -256,7 +257,7 @@ const QRModal = ({
         }}
       >
         <Modal.Title className="d-flex align-items-center fw-bold">
-          <FaQrcode className="me-3" size={28} />
+          <QrCode className="me-3" size={28} />
           {titulo}
         </Modal.Title>
       </Modal.Header>
@@ -317,14 +318,14 @@ const QRModal = ({
                       color: 'white'
                     }}
                   >
-                    <FaUser size={24} />
+                    <User size={24} />
                   </div>
                   <div>
                     <h5 className="fw-bold mb-1" style={{ color: colores.primary }}>
                       {usuario?.nombre || 'Usuario'}
                     </h5>
                     <div className="d-flex align-items-center text-muted">
-                      <FaEnvelope size={12} className="me-1" />
+                      <Mail size={12} className="me-1" />
                       <small>{usuario?.email || 'Email no disponible'}</small>
                     </div>
                   </div>
@@ -340,7 +341,7 @@ const QRModal = ({
                       fontSize: '0.85rem'
                     }}
                   >
-                    <FaUserTag className="me-1" />
+                    <UserTag className="me-1" />
                     {getRolNombre(usuario?.idRol)}
                   </Badge>
                   
@@ -354,7 +355,7 @@ const QRModal = ({
                       border: `1px solid ${colores.secondary}`
                     }}
                   >
-                    <FaClock className="me-1" />
+                    <Clock className="me-1" />
                     {mensajeExpiracion}
                   </Badge>
                 </div>
@@ -384,7 +385,7 @@ const QRModal = ({
                     e.target.style.color = colores.primary;
                   }}
                 >
-                  <FaDownload className="me-2" />
+                  <Download className="me-2" />
                   Descargar QR
                 </Button>
                 
@@ -410,7 +411,7 @@ const QRModal = ({
                     e.target.style.color = colores.primary;
                   }}
                 >
-                  <FaPrint className="me-2" />
+                  <Printer className="me-2" />
                   Imprimir QR
                 </Button>
               </div>
@@ -462,7 +463,7 @@ const QRModal = ({
               border: 'none'
             }}
           >
-            <FaQrcode size={48} className="mb-3 opacity-50" />
+            <QrCode size={48} className="mb-3 opacity-50" />
             <h5>No hay datos para generar el QR</h5>
             <p className="mb-0 text-muted">Intenta nuevamente o contacta al soporte</p>
           </Alert>

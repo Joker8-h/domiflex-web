@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { ChevronDown, CircleX, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from '../../config';
 import theme from '../../styles/theme';
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Form, InputGroup } from "react-bootstrap";
-import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
+
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
@@ -137,7 +138,7 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                         color: estado === 'ACTIVO' ? '#000' : theme.colors.accent
                     }}
                 >
-                    <BsChevronDown style={{
+                    <ChevronDown style={{
                         transform: mostrarMenu ? 'rotate(180deg)' : 'none',
                         transition: 'transform 0.2s'
                     }} />
@@ -494,7 +495,7 @@ function AdminClientes() {
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
                                         <InputGroup.Text style={{ backgroundColor: theme.colors.bgCard, borderColor: theme.colors.border }}>
-                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
+                                            <Search style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -509,7 +510,7 @@ function AdminClientes() {
                                         />
                                         {busqueda && (
                                             <Button variant="outline-secondary" className="border-start-0 border-end-0" style={{ backgroundColor: theme.colors.bgCard, borderColor: theme.colors.border }} onClick={limpiarBusqueda}>
-                                                <BsXCircle style={{ color: theme.colors.textSecondary }} />
+                                                <CircleX style={{ color: theme.colors.textSecondary }} />
                                             </Button>
                                         )}
                                         <Button
@@ -572,7 +573,7 @@ function AdminClientes() {
                                 ) : (
                                     <>
                                         <div className="table-responsive">
-                                            <Table hover className="align-middle mb-0">
+                                            <Table hover variant="dark" className="align-middle mb-0">
                                                 <thead style={{
                                                     backgroundColor: theme.colors.bgPrimary,
                                                     borderBottom: `2px solid ${theme.colors.accent}`

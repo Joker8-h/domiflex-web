@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import { ArrowLeftRight, Check, X, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import { API_URL } from "../../config";
 import { Container, Row, Col, Card, Table, Button, Badge, Alert, Spinner, Modal, Form } from "react-bootstrap";
-import { FaCheck, FaTimes, FaUser, FaExchangeAlt } from "react-icons/fa";
+
 import Navbar from "../../components/Navbar";
 
 const AdminVehicleRequests = () => {
@@ -117,11 +118,11 @@ const AdminVehicleRequests = () => {
                             </div>
                         ) : solicitudes.length === 0 ? (
                             <div className="text-center py-5 text-muted">
-                                <FaCheck size={48} className="mb-3 opacity-25" />
+                                <Check size={48} className="mb-3 opacity-25" />
                                 <p>No hay solicitudes pendientes de revisión.</p>
                             </div>
                         ) : (
-                            <Table responsive hover className="mb-0 align-middle">
+                            <Table responsive hover variant="dark" className="mb-0 align-middle">
                                 <thead className="bg-light">
                                     <tr>
                                         <th className="px-4 py-3 border-0">Repartidor</th>
@@ -137,7 +138,7 @@ const AdminVehicleRequests = () => {
                                             <td className="px-4 py-3">
                                                 <div className="d-flex align-items-center">
                                                     <div className="rounded-circle bg-light d-flex align-items-center justify-content-center me-2" style={{ width: '32px', height: '32px' }}>
-                                                        <FaUser size={14} color={brandColor} />
+                                                        <User size={14} color={brandColor} />
                                                     </div>
                                                     <div>
                                                         <div className="fw-semibold">{s.vehiculo?.usuario?.nombre || 'N/A'}</div>
@@ -207,15 +208,15 @@ const AdminVehicleRequests = () => {
                                     <div className="p-3 bg-light rounded-3 border-start border-primary border-4 shadow-sm" style={{ backgroundColor: '#F0F9FF' }}>
                                         <p className="mb-1">
                                             <strong>Marca:</strong> {selectedSolicitud.marcaNueva || selectedSolicitud.vehiculo.marca}
-                                            {selectedSolicitud.marcaNueva && selectedSolicitud.marcaNueva !== selectedSolicitud.vehiculo.marca && <FaExchangeAlt className="ms-2 text-primary" size={12} />}
+                                            {selectedSolicitud.marcaNueva && selectedSolicitud.marcaNueva !== selectedSolicitud.vehiculo.marca && <ArrowLeftRight className="ms-2 text-primary" size={12} />}
                                         </p>
                                         <p className="mb-1">
                                             <strong>Modelo:</strong> {selectedSolicitud.modeloNuevo || selectedSolicitud.vehiculo.modelo}
-                                            {selectedSolicitud.modeloNuevo && selectedSolicitud.modeloNuevo !== selectedSolicitud.vehiculo.modelo && <FaExchangeAlt className="ms-2 text-primary" size={12} />}
+                                            {selectedSolicitud.modeloNuevo && selectedSolicitud.modeloNuevo !== selectedSolicitud.vehiculo.modelo && <ArrowLeftRight className="ms-2 text-primary" size={12} />}
                                         </p>
                                         <p className="mb-0">
                                             <strong>Capacidad:</strong> {selectedSolicitud.capacidadNueva || selectedSolicitud.vehiculo.capacidad} kg
-                                            {selectedSolicitud.capacidadNueva && selectedSolicitud.capacidadNueva !== selectedSolicitud.vehiculo.capacidad && <FaExchangeAlt className="ms-2 text-primary" size={12} />}
+                                            {selectedSolicitud.capacidadNueva && selectedSolicitud.capacidadNueva !== selectedSolicitud.vehiculo.capacidad && <ArrowLeftRight className="ms-2 text-primary" size={12} />}
                                         </p>
                                     </div>
                                 </Col>
@@ -240,7 +241,7 @@ const AdminVehicleRequests = () => {
                                     onClick={() => handleProcesar(selectedSolicitud.idSolicitud, false)}
                                     disabled={procesando}
                                 >
-                                    {procesando === selectedSolicitud.idSolicitud ? <Spinner animation="border" size="sm" /> : <><FaTimes className="me-2" /> Rechazar</>}
+                                    {procesando === selectedSolicitud.idSolicitud ? <Spinner animation="border" size="sm" /> : <><X className="me-2" /> Rechazar</>}
                                 </Button>
                                 <Button
                                     className="w-100 py-2 rounded-pill border-0"
@@ -248,7 +249,7 @@ const AdminVehicleRequests = () => {
                                     onClick={() => handleProcesar(selectedSolicitud.idSolicitud, true)}
                                     disabled={procesando}
                                 >
-                                    {procesando === selectedSolicitud.idSolicitud ? <Spinner animation="border" size="sm" /> : <><FaCheck className="me-2" /> Aprobar y Aplicar</>}
+                                    {procesando === selectedSolicitud.idSolicitud ? <Spinner animation="border" size="sm" /> : <><Check className="me-2" /> Aprobar y Aplicar</>}
                                 </Button>
                             </div>
                         </>

@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { TriangleAlert, Banknote, Mail, Clock, Trash, Check, Bell, Car } from "lucide-react";
 import { Badge, ListGroup, Button, Spinner, Modal } from "react-bootstrap";
-import {
-  FaBell,
-  FaExclamationCircle,
-  FaCar,
-  FaMoneyBillWave,
-  FaEnvelope,
-  FaCheckDouble,
-  FaClock,
-  FaEllipsisV,
-  FaTrash
-} from "react-icons/fa";
-import { BsExclamationTriangleFill } from "react-icons/bs";
+
+
 import { useAuth } from '../pages/context/AuthContext';
 import { API_URL } from '../config';
 import toast from 'react-hot-toast';
@@ -159,12 +150,12 @@ function Notificaciones() {
   const getIcono = (tipo) => {
     const iconos = {
       SISTEMA: { icon: FaExclamationCircle, color: '#6366f1', bg: '#EEF2FF' },
-      PEDIDO: { icon: FaCar, color: '#10b981', bg: '#E7F7F0' },
-      PAGO: { icon: FaMoneyBillWave, color: '#f59e0b', bg: '#FEF3C7' },
-      MENSAJE: { icon: FaEnvelope, color: '#3b82f6', bg: '#E8F0FE' }
+      PEDIDO: { icon: Car, color: '#10b981', bg: '#E7F7F0' },
+      PAGO: { icon: Banknote, color: '#f59e0b', bg: '#FEF3C7' },
+      MENSAJE: { icon: Mail, color: '#3b82f6', bg: '#E8F0FE' }
     };
     const config = iconos[tipo?.toUpperCase()] || {
-      icon: FaBell,
+      icon: Bell,
       color: '#6b7280',
       bg: '#F3F4F6'
     };
@@ -238,7 +229,7 @@ function Notificaciones() {
           outline: 'none'
         }}
       >
-        <FaBell size={20} />
+        <Bell size={20} />
         {noLeidas > 0 && (
           <Badge
             bg=""
@@ -268,7 +259,7 @@ function Notificaciones() {
         }}
       >
         <Modal.Body className="text-center p-4">
-          <BsExclamationTriangleFill 
+          <TriangleAlert 
             size={48} 
             style={{ color: '#113d69', marginBottom: '1rem' }} 
           />
@@ -347,7 +338,7 @@ function Notificaciones() {
           <div className="p-3 border-bottom d-flex justify-content-between align-items-center" style={{ backgroundColor: '#F9FAFB' }}>
             <div>
               <h6 className="mb-0 fw-semibold d-flex align-items-center gap-2" style={{ color: '#111827', fontSize: '0.95rem' }}>
-                <FaBell size={14} style={{ color: '#6b7280' }} />
+                <Bell size={14} style={{ color: '#6b7280' }} />
                 Notificaciones
               </h6>
               <small className="text-muted" style={{ fontSize: '0.75rem' }}>
@@ -362,7 +353,7 @@ function Notificaciones() {
                 className="text-decoration-none p-1"
                 style={{ color: '#6b7280', fontSize: '0.75rem' }}
               >
-                <FaCheckDouble size={12} className="me-1" />
+                <CheckDouble size={12} className="me-1" />
                 Leer todo
               </Button>
             )}
@@ -377,7 +368,7 @@ function Notificaciones() {
             ) : notificaciones.length === 0 ? (
               <div className="text-center py-5">
                 <div className="d-inline-flex p-3 mb-2 rounded-circle" style={{ backgroundColor: '#F3F4F6' }}>
-                  <FaBell size={24} className="text-muted opacity-50" />
+                  <Bell size={24} className="text-muted opacity-50" />
                 </div>
                 <p className="text-muted small mb-0">No tienes notificaciones</p>
               </div>
@@ -440,7 +431,7 @@ function Notificaciones() {
                           </p>
 
                           <div className="d-flex align-items-center" style={{ color: '#9ca3af' }}>
-                            <FaClock size={10} className="me-1" />
+                            <Clock size={10} className="me-1" />
                             <small style={{ fontSize: '0.7rem' }}>
                               {getTimeAgo(notif.fechaCreacion)}
                             </small>
@@ -463,7 +454,7 @@ function Notificaciones() {
                           color: '#6b7280'
                         }}
                       >
-                        <FaTrash size={14} />
+                        <Trash size={14} />
                       </Button>
                     </ListGroup.Item>
                   );

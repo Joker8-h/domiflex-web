@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Wallet } from "lucide-react";
 import { Container, Row, Col, Form, Card } from "react-bootstrap";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label } from "recharts";
-import { FaWallet } from "react-icons/fa";
+
 
 const SavingsCalculator = () => {
     const [distancia, setDistancia] = useState(5); 
@@ -99,7 +100,7 @@ const SavingsCalculator = () => {
                                   }}>
                                 <div className="d-flex align-items-center">
                                     <div className="rounded-circle p-3 me-3" style={{ backgroundColor: "rgba(255,255,255,0.2)" }}>
-                                        <FaWallet size={28} />
+                                        <Wallet size={28} />
                                     </div>
                                     <div>
                                         <h6 className="mb-0 opacity-75 fw-bold">{isMelo ? '¡Pedido largo detectado!' : 'Costo estimado por pedido'}</h6>

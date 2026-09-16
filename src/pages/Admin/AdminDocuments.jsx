@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { ChevronDown, CircleX, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
 import theme from "../../styles/theme";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Image, Modal, Form, InputGroup } from "react-bootstrap";
-import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
+
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
@@ -533,7 +534,7 @@ function AdminDocumentos() {
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
                                         <InputGroup.Text style={{ backgroundColor: theme.colors.bgInput, border: `1px solid ${theme.colors.border}`, borderRight: 'none' }}>
-                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
+                                            <Search style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -561,7 +562,7 @@ function AdminDocumentos() {
                                                     color: theme.colors.textSecondary
                                                 }}
                                             >
-                                                <BsXCircle />
+                                                <CircleX />
                                             </Button>
                                         )}
                                         <Button
@@ -618,7 +619,7 @@ function AdminDocumentos() {
                                     </div>
                                 ) : (
                                     <div className="table-responsive">
-                                        <Table hover className="align-middle mb-0">
+                                        <Table hover variant="dark" className="align-middle mb-0">
                                             <thead style={{
                                                 backgroundColor: theme.colors.bgCardHover,
                                                 borderBottom: `2px solid ${theme.colors.accent}`

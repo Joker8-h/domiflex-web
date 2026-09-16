@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { CircleUserRound, CarFront, Repeat, Users, Circle, Banknote, Star, StarHalf, Truck, Medal } from "lucide-react";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
-import { BsPeopleFill, BsPersonCircle, BsTruck, BsCarFrontFill, BsStarFill, BsStarHalf, BsStar, BsCircleFill, BsArrowRepeat, BsCashStack } from "react-icons/bs";
+
 import { useSocket } from "../pages/context/SocketContext";
-import { FaMedal } from "react-icons/fa";
+
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import imagenDashboard from "../pages/Imagenes/HomeBaseImage.png";
+import theme from "../styles/theme";
 
 // Componentes personalizados
 const CustomBadge = ({ color, bgColor, onClick, children, isActive, activeColor }) => {
     const estilo = {
         backgroundColor: isActive ? activeColor : bgColor,
-        color: isActive ? '#ffffff' : color,
+        color: isActive ? '#000000' : color,
         padding: '0.5rem 1rem',
         borderRadius: '2rem',
         fontSize: '0.9rem',
         fontWeight: '500',
         display: 'inline-block',
         cursor: onClick ? 'pointer' : 'default',
-        border: '1px solid #dee2e6'
+        border: `1px solid ${theme.colors.border}`
     };
 
     return (
@@ -32,10 +34,10 @@ const CustomBadge = ({ color, bgColor, onClick, children, isActive, activeColor 
 const StatsCard = ({ icon, title, value, iconBgColor, iconColor }) => {
     return (
         <div style={{
-            backgroundColor: '#ffffff',
+            backgroundColor: theme.colors.bgCard,
             borderRadius: '1rem',
-            border: 'none',
-            boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
+            border: `1px solid ${theme.colors.border}`,
+            boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.3)',
             height: '100%',
             padding: '1.5rem'
         }}>
@@ -50,8 +52,8 @@ const StatsCard = ({ icon, title, value, iconBgColor, iconColor }) => {
                     {icon}
                 </div>
                 <div>
-                    <h6 style={{ color: '#6c757d', marginBottom: '0.25rem', fontSize: '0.875rem' }}>{title}</h6>
-                    <h3 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>{value}</h3>
+                    <h6 style={{ color: theme.colors.textSecondary, marginBottom: '0.25rem', fontSize: '0.875rem' }}>{title}</h6>
+                    <h3 style={{ fontWeight: 'bold', margin: 0, color: theme.colors.textPrimary }}>{value}</h3>
                 </div>
             </div>
         </div>
@@ -70,7 +72,7 @@ const CustomListItem = ({ children, style }) => {
     return (
         <div style={{
             padding: '1rem 0',
-            borderBottom: '1px solid #e9ecef',
+            borderBottom: `1px solid ${theme.colors.border}`,
             ...style
         }}>
             {children}
@@ -80,12 +82,12 @@ const CustomListItem = ({ children, style }) => {
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
-        activo: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        inactivo: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        suspendido: { backgroundColor: '#113d69', color: '#ffffff' }
+        activo: { backgroundColor: theme.colors.success, color: '#000000' },
+        inactivo: { backgroundColor: theme.colors.bgCardHover, color: theme.colors.textSecondary },
+        suspendido: { backgroundColor: theme.colors.warning, color: '#000000' }
     };
 
-    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado] || { backgroundColor: theme.colors.bgCardHover, color: theme.colors.textSecondary };
 
     return (
         <span style={{
@@ -107,7 +109,7 @@ const OnlineIndicator = () => {
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            backgroundColor: '#62d8d9',
+            backgroundColor: theme.colors.accent,
             display: 'inline-block'
         }} />
     );
@@ -135,9 +137,9 @@ function Home() {
 
     const [chartData, setChartData] = useState([]);
     const [donutData, setDonutData] = useState([
-        { name: 'Activos', value: 0, color: '#62d8d9' },
-        { name: 'Inactivos', value: 0, color: '#cccbd2af' },
-        { name: 'Suspendidos', value: 0, color: '#113d69' }
+        { name: 'Activos', value: 0, color: theme.colors.accent },
+        { name: 'Inactivos', value: 0, color: theme.colors.borderLight },
+        { name: 'Suspendidos', value: 0, color: theme.colors.warning }
     ]);
     const [topRepartidores, setTopRepartidores] = useState([]);
     const [topClientes, setTopClientes] = useState([]);
@@ -151,11 +153,11 @@ function Home() {
     });
 
     const colores = {
-        estrella: '#62d8d9',
-        badgeFondo: '#113d69',
-        badgeTexto: '#ffffff',
-        verdeMenta: '#62d8d9',
-        azulFuerte: '#113d69'
+        estrella: theme.colors.warning,
+        badgeFondo: theme.colors.bgCardHover,
+        badgeTexto: theme.colors.textPrimary,
+        verdeMenta: theme.colors.accent,
+        azulFuerte: theme.colors.textPrimary
     };
 
     useEffect(() => {
@@ -242,9 +244,9 @@ function Home() {
 
                 setStats(prev => ({ ...prev, totalUsuarios: usuarios.length, totalRepartidores: repartidores, totalClientes: clientes }));
                 setDonutData([
-                    { name: 'Activos', value: activos, color: '#62d8d9' },
-                    { name: 'Inactivos', value: inactivos, color: '#cccbd2af' },
-                    { name: 'Suspendidos', value: suspendidos, color: '#113d69' }
+                    { name: 'Activos', value: activos, color: theme.colors.accent },
+                    { name: 'Inactivos', value: inactivos, color: theme.colors.bgCardHover },
+                    { name: 'Suspendidos', value: suspendidos, color: theme.colors.textPrimary }
                 ]);
             }
         } catch (error) {
@@ -366,9 +368,9 @@ function Home() {
         const fullStars = Math.floor(promedio);
         const hasHalfStar = promedio % 1 >= 0.5;
         for (let i = 1; i <= 5; i++) {
-            if (i <= fullStars) stars.push(<BsStarFill key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
-            else if (i === fullStars + 1 && hasHalfStar) stars.push(<BsStarHalf key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
-            else stars.push(<BsStar key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
+            if (i <= fullStars) stars.push(<Star key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
+            else if (i === fullStars + 1 && hasHalfStar) stars.push(<StarHalf key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
+            else stars.push(<Star key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
         }
         return <div style={{ display: 'flex' }}>{stars}</div>;
     };
@@ -378,7 +380,7 @@ function Home() {
             <div style={{ position: 'relative', zIndex: 1, padding: '1.5rem' }}>
                 {/* Encabezado */}
                 <div style={{
-                    backgroundColor: '#ffffff',
+                    backgroundColor: theme.colors.bgCard,
                     borderRadius: '1rem',
                     border: 'none',
                     boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
@@ -396,11 +398,11 @@ function Home() {
                         </div>
                         <div style={{ flex: 1, textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
                             <h2 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: colores.azulFuerte }}>¡Bienvenido de nuevo, {usuario?.nombre || 'Administrador'}!</h2>
-                            <p style={{ color: '#6c757d', margin: 0 }}>Gestión global de la plataforma DomiFlex</p>
+                            <p style={{ color: theme.colors.textSecondary, margin: 0 }}>Gestión global de la plataforma DomiFlex</p>
                         </div>
                         <div style={{ marginTop: window.innerWidth < 768 ? '1rem' : 0, display: 'flex', gap: '0.5rem' }}>
                             <CustomBadge
-                                color="#113d69"
+                                color={theme.colors.textSecondary}
                                 bgColor="transparent"
                                 activeColor={colores.verdeMenta}
                                 isActive={periodoAdmin === 'diario'}
@@ -409,7 +411,7 @@ function Home() {
                                 Día
                             </CustomBadge>
                             <CustomBadge
-                                color="#113d69"
+                                color={theme.colors.textSecondary}
                                 bgColor="transparent"
                                 activeColor={colores.verdeMenta}
                                 isActive={periodoAdmin === 'mensual'}
@@ -418,7 +420,7 @@ function Home() {
                                 Mes
                             </CustomBadge>
                             <CustomBadge
-                                color="#113d69"
+                                color={theme.colors.textSecondary}
                                 bgColor="transparent"
                                 activeColor={colores.verdeMenta}
                                 isActive={periodoAdmin === 'anual'}
@@ -437,34 +439,34 @@ function Home() {
                 ) : (
                     <>
                         {/* Tarjetas Principales */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
                             <StatsCard
-                                icon={<BsPeopleFill size={20} />}
+                                icon={<Users size={20} />}
                                 title="Total Usuarios"
                                 value={stats.totalUsuarios}
-                                iconBgColor="#e0f4f2"
+                                iconBgColor={`${theme.colors.accent}15`}
                                 iconColor={colores.verdeMenta}
                             />
                             <StatsCard
-                                icon={<BsTruck size={20} />}
+                                icon={<Truck size={20} />}
                                 title="Repartidores"
                                 value={stats.totalRepartidores}
-                                iconBgColor="#ebf3f9"
-                                iconColor="#113d69"
+                                iconBgColor={theme.colors.bgCardHover}
+                                iconColor={theme.colors.textSecondary}
                             />
                             <StatsCard
-                                icon={<BsCashStack size={20} />}
+                                icon={<Banknote size={20} />}
                                 title="Ingresos Totales"
                                 value={formatearMoneda(statsFinancieras.ingresosPlataforma.total)}
-                                iconBgColor="#ebf3f9"
-                                iconColor="#62d8d9"
+                                iconBgColor={theme.colors.bgCardHover}
+                                iconColor={theme.colors.accent}
                             />
                         </div>
 
                         {/* Gráficos de Finanzas */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
@@ -472,7 +474,7 @@ function Home() {
                                 padding: '1.5rem'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                                    <BsCashStack size={20} style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
+                                    <Banknote size={20} style={{ marginRight: '0.5rem', color: theme.colors.accent }} />
                                     <h5 style={{ fontWeight: 'bold', margin: 0, color: colores.azulFuerte }}>Flujo de Ingresos de Plataforma</h5>
                                 </div>
                                 <div style={{ height: '300px' }}>
@@ -484,9 +486,9 @@ function Home() {
                                                     <stop offset="95%" stopColor={colores.verdeMenta} stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
-                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} />
-                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} />
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.colors.border} />
+                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9AA4B2', fontSize: 11 }} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9AA4B2', fontSize: 11 }} />
                                             <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
                                             <Area type="monotone" dataKey="value" stroke={colores.verdeMenta} strokeWidth={3} fillOpacity={1} fill="url(#colorAdminIngresos)" name="Ingresos ($)" />
                                         </AreaChart>
@@ -496,9 +498,9 @@ function Home() {
                         </div>
 
                         {/* Actividad y Estados */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
@@ -508,19 +510,19 @@ function Home() {
                                 <div style={{ height: '300px' }}>
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={chartData}>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
-                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 11 }} />
-                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 11 }} />
-                                            <Tooltip cursor={{ fill: '#f8f9fa' }} contentStyle={{ borderRadius: '12px', border: 'none' }} />
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.colors.border} />
+                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9AA4B2', fontSize: 11 }} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9AA4B2', fontSize: 11 }} />
+                                            <Tooltip cursor={{ fill: theme.colors.bgCardHover }} contentStyle={{ borderRadius: '12px', border: 'none' }} />
                                             <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                                            <Bar dataKey="usuarios" fill="#62d8d9" name="Reg. Usuarios" radius={[4, 4, 0, 0]} barSize={25} />
-                                            <Bar dataKey="pedidos" fill="#113d69" name="Pedidos Realizados" radius={[4, 4, 0, 0]} barSize={25} />
+                                            <Bar dataKey="usuarios" fill={theme.colors.accent} name="Reg. Usuarios" radius={[4, 4, 0, 0]} barSize={25} />
+                                            <Bar dataKey="pedidos" fill={theme.colors.accentDark} name="Pedidos Realizados" radius={[4, 4, 0, 0]} barSize={25} />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
                             </div>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
@@ -538,8 +540,8 @@ function Home() {
                                         </PieChart>
                                     </ResponsiveContainer>
                                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                                        <h3 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>{stats.totalUsuarios}</h3>
-                                        <small style={{ color: '#6c757d' }}>Total</small>
+                                        <h3 style={{ fontWeight: 'bold', margin: 0, color: theme.colors.textPrimary }}>{stats.totalUsuarios}</h3>
+                                        <small style={{ color: theme.colors.textSecondary }}>Total</small>
                                     </div>
                                 </div>
                                 <div style={{ marginTop: '1rem' }}>
@@ -550,14 +552,14 @@ function Home() {
                                             alignItems: 'center',
                                             marginBottom: '0.5rem',
                                             padding: '0.5rem 1rem',
-                                            backgroundColor: '#f8f9fa',
+                                            backgroundColor: theme.colors.bgCardHover,
                                             borderRadius: '0.5rem'
                                         }}>
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: item.color, marginRight: '10px' }} />
-                                                <span style={{ fontSize: '0.875rem', fontWeight: '600', color: '#113d69' }}>{item.name}</span>
+                                                <span style={{ fontSize: '0.875rem', fontWeight: '600', color: theme.colors.textPrimary }}>{item.name}</span>
                                             </div>
-                                            <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69' }}>{item.value}</span>
+                                            <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.colors.textPrimary }}>{item.value}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -565,41 +567,41 @@ function Home() {
                         </div>
 
                         {/* Rankings a tres columnas */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
                                 height: '100%',
                                 padding: '1.5rem'
                             }}>
-                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: '#113d69' }}>
-                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Repartidores
+                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: theme.colors.textPrimary }}>
+                                    <Medal style={{ marginRight: '0.5rem', color: theme.colors.accent }} /> Top Repartidores
                                 </h6>
                                 <CustomListGroup>
                                     {cargandoTop ? (
                                         <div style={{ textAlign: 'center', padding: '2rem' }}><Spinner size="sm" style={{ color: colores.verdeMenta }} /></div>
                                     ) : topRepartidores.length === 0 ? (
-                                        <p style={{ color: '#6c757d', textAlign: 'center', padding: '2rem' }}>Sin datos</p>
+                                        <p style={{ color: theme.colors.textSecondary, textAlign: 'center', padding: '2rem' }}>Sin datos</p>
                                     ) : (
                                         topRepartidores.slice(0, 5).map((c, i) => (
                                             <CustomListItem key={i} style={{ padding: '0.75rem 0' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <div style={{ marginRight: '0.75rem', fontWeight: 'bold', color: '#6c757d', width: '20px' }}>{i + 1}</div>
+                                                        <div style={{ marginRight: '0.75rem', fontWeight: 'bold', color: theme.colors.textSecondary, width: '20px' }}>{i + 1}</div>
                                                         <div>
-                                                            <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>{c.nombre}</div>
+                                                            <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: theme.colors.textPrimary }}>{c.nombre}</div>
                                                             <div style={{ marginTop: '0.25rem' }}>{renderStars(c.promedioEstrellas || 0)}</div>
                                                         </div>
                                                     </div>
                                                     <span style={{
                                                         padding: '0.25rem 0.5rem',
-                                                        backgroundColor: '#f8f9fa',
+                                                        backgroundColor: theme.colors.bgCardHover,
                                                         borderRadius: '2rem',
                                                         fontSize: '0.8rem',
-                                                        border: '1px solid #dee2e6',
-                                                        color: '#113d69'
+                                                        border: `1px solid ${theme.colors.border}`,
+                                                        color: theme.colors.textPrimary
                                                     }}>
                                                         {c.promedioEstrellas?.toFixed(1) || '0.0'}
                                                     </span>
@@ -610,39 +612,39 @@ function Home() {
                                 </CustomListGroup>
                             </div>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
                                 height: '100%',
                                 padding: '1.5rem'
                             }}>
-                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: '#113d69' }}>
-                                    <FaMedal style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Top Clientes
+                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: theme.colors.textPrimary }}>
+                                    <Medal style={{ marginRight: '0.5rem', color: theme.colors.accent }} /> Top Clientes
                                 </h6>
                                 <CustomListGroup>
                                     {cargandoTop ? (
                                         <div style={{ textAlign: 'center', padding: '2rem' }}><Spinner size="sm" style={{ color: colores.verdeMenta }} /></div>
                                     ) : topClientes.length === 0 ? (
-                                        <p style={{ color: '#6c757d', textAlign: 'center', padding: '2rem' }}>Sin datos</p>
+                                        <p style={{ color: theme.colors.textSecondary, textAlign: 'center', padding: '2rem' }}>Sin datos</p>
                                     ) : (
                                         topClientes.slice(0, 5).map((v, i) => (
                                             <CustomListItem key={i} style={{ padding: '0.75rem 0' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <div style={{ marginRight: '0.75rem', fontWeight: 'bold', color: '#6c757d', width: '20px' }}>{i + 1}</div>
+                                                        <div style={{ marginRight: '0.75rem', fontWeight: 'bold', color: theme.colors.textSecondary, width: '20px' }}>{i + 1}</div>
                                                         <div>
-                                                            <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>{v.nombre}</div>
+                                                            <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: theme.colors.textPrimary }}>{v.nombre}</div>
                                                             <div style={{ marginTop: '0.25rem' }}>{renderStars(v.promedioEstrellas || 0)}</div>
                                                         </div>
                                                     </div>
                                                     <span style={{
                                                         padding: '0.25rem 0.5rem',
-                                                        backgroundColor: '#f8f9fa',
+                                                        backgroundColor: theme.colors.bgCardHover,
                                                         borderRadius: '2rem',
                                                         fontSize: '0.8rem',
-                                                        border: '1px solid #dee2e6',
-                                                        color: '#113d69'
+                                                        border: `1px solid ${theme.colors.border}`,
+                                                        color: theme.colors.textPrimary
                                                     }}>
                                                         {v.promedioEstrellas?.toFixed(1) || '0.0'}
                                                     </span>
@@ -653,34 +655,34 @@ function Home() {
                                 </CustomListGroup>
                             </div>
                             <div style={{
-                                backgroundColor: '#ffffff',
+                                backgroundColor: theme.colors.bgCard,
                                 borderRadius: '1rem',
                                 border: 'none',
                                 boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
                                 height: '100%',
                                 padding: '1.5rem'
                             }}>
-                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: '#113d69' }}>
-                                    <BsCircleFill size={10} style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> En Línea Ahora
+                                <h6 style={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', color: theme.colors.textPrimary }}>
+                                    <Circle size={10} style={{ marginRight: '0.5rem', color: theme.colors.accent }} /> En Línea Ahora
                                 </h6>
                                 <CustomListGroup>
                                     {onlineUsers?.length === 0 ? (
-                                        <p style={{ color: '#6c757d', textAlign: 'center', padding: '2rem' }}>Sin usuarios en línea</p>
+                                        <p style={{ color: theme.colors.textSecondary, textAlign: 'center', padding: '2rem' }}>Sin usuarios en línea</p>
                                     ) : (
                                         onlineUsers?.slice(0, 5).map((u, i) => (
                                             <CustomListItem key={i} style={{ padding: '0.5rem 0' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                                     <div style={{
                                                         padding: '0.5rem',
-                                                        backgroundColor: '#f8f9fa',
+                                                        backgroundColor: theme.colors.bgCardHover,
                                                         borderRadius: '50%',
                                                         marginRight: '0.5rem'
                                                     }}>
-                                                        <BsPersonCircle style={{ color: '#6c757d' }} />
+                                                        <CircleUserRound style={{ color: theme.colors.textSecondary }} />
                                                     </div>
                                                     <div style={{ flex: 1 }}>
-                                                        <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>{u.nombre}</div>
-                                                        <small style={{ color: '#6c757d', fontSize: '10px', textTransform: 'uppercase' }}>{u.role}</small>
+                                                        <div style={{ fontWeight: 'bold', fontSize: '0.875rem', color: theme.colors.textPrimary }}>{u.nombre}</div>
+                                                        <small style={{ color: theme.colors.textSecondary, fontSize: '10px', textTransform: 'uppercase' }}>{u.role}</small>
                                                     </div>
                                                     <OnlineIndicator />
                                                 </div>

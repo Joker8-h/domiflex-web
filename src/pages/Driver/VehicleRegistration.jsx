@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
+import { TriangleAlert, CircleCheck, FileImage, ArrowLeft, Camera, IdCard, Video, Check, Smile, Frown, Car } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert, Modal, Badge } from "react-bootstrap";
-import { FaCar, FaFileImage, FaArrowLeft, FaCheckCircle, FaCamera, FaVideo, FaExclamationTriangle, FaSmile, FaFrown, FaIdCard } from "react-icons/fa";
+
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
 import Navbar from '../../components/Navbar';
@@ -450,7 +451,7 @@ function VehicleRegistration() {
                   </div>
 
                   <h3 className="text-center mb-4" style={{ color: '#62d8d9', fontWeight: '600' }}>
-                    <FaCar className="me-2" />
+                    <Car className="me-2" />
                     Registro de Vehículo
                   </h3>
 
@@ -459,14 +460,14 @@ function VehicleRegistration() {
 
                   {errorBackend && (
                     <Alert variant="danger" className="py-2 small d-flex align-items-center">
-                      <FaExclamationTriangle className="me-2" />
+                      <TriangleAlert className="me-2" />
                       {errorBackend}
                     </Alert>
                   )}
 
                   {placaValidada && (
                     <Alert variant="success" className="py-2 small d-flex align-items-center">
-                      <FaCheckCircle className="me-2" />
+                      <CircleCheck className="me-2" />
                       ¡Placa validada correctamente!
                     </Alert>
                   )}
@@ -505,7 +506,7 @@ function VehicleRegistration() {
                       <Col md={6}>
                         <Form.Group className="mb-3">
                           <Form.Label className="fw-bold small">
-                            <FaIdCard className="me-1" /> Placa <span className="text-danger">*</span>
+                            <IdCard className="me-1" /> Placa <span className="text-danger">*</span>
                           </Form.Label>
                           <Form.Control
                             type="text"
@@ -558,7 +559,7 @@ function VehicleRegistration() {
 
                     <div className="mb-4">
                       <Form.Label className="d-flex align-items-center fw-bold small">
-                        <FaCamera className="me-2" />
+                        <Camera className="me-2" />
                         Fotos Requeridas <span className="text-danger">*</span>
                       </Form.Label>
 
@@ -584,11 +585,11 @@ function VehicleRegistration() {
                               <img src={fotoPlaca} alt="Placa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                               <>
-                                <FaIdCard size={20} color="#62d8d9" />
+                                <IdCard size={20} color="#62d8d9" />
                                 <span style={{ fontSize: '10px', marginTop: '5px' }}>PLACA</span>
                               </>
                             )}
-                            {placaValidada && <FaCheckCircle style={{ position: 'absolute', top: '5px', right: '5px', color: '#4acfbd' }} />}
+                            {placaValidada && <CircleCheck style={{ position: 'absolute', top: '5px', right: '5px', color: '#4acfbd' }} />}
                           </div>
                         </Col>
 
@@ -612,7 +613,7 @@ function VehicleRegistration() {
                               <img src={fotoAuto1} alt="Auto 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                               <>
-                                <FaCar size={20} color="#62d8d9" />
+                                <Car size={20} color="#62d8d9" />
                                 <span style={{ fontSize: '10px', marginTop: '5px' }}>AUTO 1</span>
                               </>
                             )}
@@ -639,7 +640,7 @@ function VehicleRegistration() {
                               <img src={fotoAuto2} alt="Auto 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                               <>
-                                <FaCar size={20} color="#62d8d9" />
+                                <Car size={20} color="#62d8d9" />
                                 <span style={{ fontSize: '10px', marginTop: '5px' }}>AUTO 2</span>
                               </>
                             )}
@@ -666,7 +667,7 @@ function VehicleRegistration() {
                               <img src={fotoAuto3} alt="Auto 3" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                               <>
-                                <FaCar size={20} color="#62d8d9" />
+                                <Car size={20} color="#62d8d9" />
                                 <span style={{ fontSize: '10px', marginTop: '5px' }}>AUTO 3</span>
                               </>
                             )}
@@ -688,21 +689,21 @@ function VehicleRegistration() {
 
                     {!verificandoImagen && imagenValida === true && (
                       <Alert variant="success" className="py-2 small d-flex align-items-center">
-                        <FaSmile className="me-2" />
+                        <Smile className="me-2" />
                         Placa validada por IA correctamente
                       </Alert>
                     )}
 
                     {!verificandoImagen && imagenValida === false && (
                       <Alert variant="warning" className="py-2 small d-flex align-items-center">
-                        <FaFrown className="me-2" />
+                        <Frown className="me-2" />
                         {mensajeImagen}
                       </Alert>
                     )}
 
                     <div className="mt-3 p-3 bg-light rounded-4 small" style={{ backgroundColor: '#f8fafb' }}>
                       <div className="fw-bold mb-2">
-                        <FaExclamationTriangle className="me-1 text-warning" />
+                        <TriangleAlert className="me-1 text-warning" />
                         Recomendaciones
                       </div>
                       <ul className="mb-0 ps-3" style={{ color: '#666' }}>
@@ -733,7 +734,7 @@ function VehicleRegistration() {
                         className="px-4"
                         style={{ borderRadius: '12px' }}
                       >
-                        <FaArrowLeft />
+                        <ArrowLeft />
                       </Button>
                     </div>
                   </Form>
@@ -785,7 +786,7 @@ function VehicleRegistration() {
               disabled={!cameraActive}
               style={{ background: '#4acfbd', border: 'none', borderRadius: '12px' }}
             >
-              <FaCamera className="me-2" /> Tomar Foto
+              <Camera className="me-2" /> Tomar Foto
             </Button>
           </Modal.Footer>
         </Modal>

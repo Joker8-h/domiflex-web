@@ -213,7 +213,7 @@ function Login() {
                                 </div>
 
                                 {error && (
-                                    <div style={{
+                                    <div role="alert" style={{
                                         backgroundColor: 'rgba(255, 82, 82, 0.1)',
                                         color: theme.colors.danger,
                                         border: `1px solid ${theme.colors.danger}`,
@@ -228,6 +228,9 @@ function Login() {
 
                                 <Form onSubmit={guardar}>
                                     <Form.Group className="mb-3">
+                                        <label htmlFor="login-email" style={{ display: 'block', fontSize: theme.fontSize.sm, fontWeight: theme.fontWeight.medium, color: theme.colors.textSecondary, marginBottom: '6px' }}>
+                                            Correo electrónico
+                                        </label>
                                         <div style={{ position: 'relative' }}>
                                             <Mail style={{
                                                 position: 'absolute',
@@ -238,8 +241,10 @@ function Login() {
                                                 zIndex: 1
                                             }} />
                                             <input
+                                                id="login-email"
                                                 type="email"
-                                                placeholder="Correo electrónico"
+                                                placeholder="tucorreo@ejemplo.com"
+                                                autoComplete="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 required
@@ -268,6 +273,9 @@ function Login() {
                                     </Form.Group>
 
                                     <Form.Group className="mb-3">
+                                        <label htmlFor="login-password" style={{ display: 'block', fontSize: theme.fontSize.sm, fontWeight: theme.fontWeight.medium, color: theme.colors.textSecondary, marginBottom: '6px' }}>
+                                            Contraseña
+                                        </label>
                                         <div style={{ position: 'relative' }}>
                                             <Lock style={{
                                                 position: 'absolute',
@@ -278,8 +286,10 @@ function Login() {
                                                 zIndex: 1
                                             }} />
                                             <input
+                                                id="login-password"
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="Contraseña"
+                                                placeholder="Tu contraseña"
+                                                autoComplete="current-password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 required
@@ -304,19 +314,29 @@ function Login() {
                                                     e.target.style.boxShadow = 'none';
                                                 }}
                                             />
-                                            <span
+                                            <button
+                                                type="button"
+                                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                                aria-pressed={showPassword}
                                                 style={{
                                                     position: 'absolute',
-                                                    right: '14px',
+                                                    right: '6px',
                                                     top: '50%',
                                                     transform: 'translateY(-50%)',
                                                     cursor: 'pointer',
-                                                    color: theme.colors.textMuted
+                                                    color: theme.colors.textMuted,
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    minWidth: '44px',
+                                                    minHeight: '44px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
                                                 }}
                                                 onClick={() => setShowPassword(!showPassword)}
                                             >
                                                 {showPassword ? <EyeOff /> : <Eye />}
-                                            </span>
+                                            </button>
                                         </div>
                                     </Form.Group>
 

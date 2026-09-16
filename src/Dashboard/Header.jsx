@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { Bell, LogOut } from "lucide-react";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Logo from "../pages/Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png";
+import Logo from "/logo-domiflex.jpg";
 import Notificaciones from "../components/Notificaciones";
 import { useSocket } from "../pages/context/SocketContext";
-import { BsBellFill } from "react-icons/bs";
+
 import theme from "../styles/theme";
 
 function Header() {
@@ -145,7 +146,7 @@ function Header() {
                 onClick={() => navigate('/admin/solicitudes-vehiculos')}
                 title={`${pendingRequests} solicitudes pendientes`}
               >
-                <BsBellFill size={20} />
+                <Bell size={20} />
                 <span className="ms-1 fw-bold" style={{ fontSize: '0.8rem' }}>{pendingRequests}</span>
                 <style>
                   {`
@@ -211,7 +212,7 @@ function Header() {
                   className="py-2 d-flex justify-content-center"
                   style={{ color: theme.colors.danger }}
                 >
-                  <i className="bi bi-box-arrow-right me-2"></i>
+                  <LogOut size={14} aria-hidden="true" style={{ marginRight: "8px" }} />
                   Cerrar sesión
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -224,3 +225,4 @@ function Header() {
 }
 
 export default Header;
+

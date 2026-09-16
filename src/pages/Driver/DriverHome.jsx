@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
+import { CircleCheck, Info, ArrowRight, History, FileText, Funnel, Wallet, Search, IdCard, Route, Clock, Check, List, Car } from "lucide-react";
 import { Container, Row, Col, Card, Modal, Alert, Spinner, Form, Image } from "react-bootstrap";
-import { FaCar, FaIdCard, FaInfoCircle, FaWallet, FaArrowRight, FaFileAlt, FaHistory, FaClock, FaRoute, FaCheckCircle, FaSearch, FaFilter, FaList } from "react-icons/fa";
+
 import {
     BarChart, Bar, XAxis, YAxis,
     CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area
@@ -232,7 +233,7 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
                 justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default'
             }} onClick={onClick}>
-                <FaCar size={size * 0.4} color="#62d8d9" />
+                <Car size={size * 0.4} color="#62d8d9" />
             </div>
         );
     }
@@ -282,10 +283,10 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
             {vehiculo.marca && vehiculo.modelo ? (
                 <>
                     <span>{vehiculo.marca.charAt(0)}{vehiculo.modelo.charAt(0)}</span>
-                    <FaCar size={size * 0.3} color="#62d8d9" style={{ marginTop: 2 }} />
+                    <Car size={size * 0.3} color="#62d8d9" style={{ marginTop: 2 }} />
                 </>
             ) : (
-                <FaCar size={size * 0.4} color="#62d8d9" />
+                <Car size={size * 0.4} color="#62d8d9" />
             )}
         </div>
     );
@@ -1090,7 +1091,7 @@ const DriverHome = () => {
                                         marginLeft: '0.5rem'
                                     }}
                                 >
-                                    <FaInfoCircle style={{ marginRight: '0.25rem' }} /> Ayuda
+                                    <Info style={{ marginRight: '0.25rem' }} /> Ayuda
                                 </button>
                             </div>
                             <p style={{ color: '#6c757d', margin: 0 }}>Bienvenido, gestiona tu actividad diaria</p>
@@ -1137,28 +1138,28 @@ const DriverHome = () => {
                     marginBottom: '1.5rem'
                 }}>
                     <StatsCard
-                        icon={<FaWallet size={20} />}
+                        icon={<Wallet size={20} />}
                         title="Ganancias"
                         value={`$${totalGananciasBackend.toLocaleString()}`}
                         color="#62d8d9"
                         bgColor="#62d8d915"
                     />
                     <StatsCard
-                        icon={<FaClock size={20} />}
+                        icon={<Clock size={20} />}
                         title="Tiempo en Línea"
                         value={`${statsAvanzadas.tiempoEnLinea.totalHoras}h`}
                         color="#113d69"
                         bgColor="#113d6915"
                     />
                     <StatsCard
-                        icon={<FaCheckCircle size={20} />}
+                        icon={<CircleCheck size={20} />}
                         title="Pedidos Entregados"
                         value={statsAvanzadas.resumenPedidos.total}
                         color="#62d8d9"
                         bgColor="#62d8d915"
                     />
                     <StatsCard
-                        icon={<FaRoute size={20} />}
+                        icon={<Route size={20} />}
                         title="Ruta Principal"
                         value={statsAvanzadas.rutasFrecuentes[0]?.name || 'N/A'}
                         color="#113d69"
@@ -1253,7 +1254,7 @@ const DriverHome = () => {
                                     backgroundColor: '#62d8d915', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center', marginRight: '12px'
                                 }}>
-                                    <FaWallet size={20} style={{ color: '#62d8d9' }} />
+                                    <Wallet size={20} style={{ color: '#62d8d9' }} />
                                 </div>
                                 <h5 style={{ margin: 0, fontWeight: 'bold', color: '#113d69' }}>Comisión del Mes (10%)</h5>
                             </div>
@@ -1293,7 +1294,7 @@ const DriverHome = () => {
                                     backgroundColor: '#113d6915', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center', marginRight: '12px'
                                 }}>
-                                    <FaFileAlt size={20} style={{ color: '#113d69' }} />
+                                    <FileText size={20} style={{ color: '#113d69' }} />
                                 </div>
                                 <h5 style={{ margin: 0, fontWeight: 'bold', color: '#62d8d9' }}>Enviar Comprobante de Pago</h5>
                             </div>
@@ -1415,7 +1416,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         marginRight: '12px'
                                     }}>
-                                        <FaCar size={20} style={{ color: '#62d8d9' }} />
+                                        <Car size={20} style={{ color: '#62d8d9' }} />
                                     </div>
                                     <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Vehículo Activo</h5>
                                 </div>
@@ -1436,7 +1437,7 @@ const DriverHome = () => {
                                             gap: '0.25rem'
                                         }}
                                     >
-                                        <FaList /> Ver todos ({vehiculos.length})
+                                        <List /> Ver todos ({vehiculos.length})
                                     </button>
                                 )}
                             </div>
@@ -1487,7 +1488,7 @@ const DriverHome = () => {
                                                     fontSize: '0.75rem',
                                                     fontWeight: '500'
                                                 }}>
-                                                    <FaCheckCircle style={{ marginRight: '0.25rem' }} size={10} /> Placa validada
+                                                    <CircleCheck style={{ marginRight: '0.25rem' }} size={10} /> Placa validada
                                                 </span>
                                             )}
                                         </div>
@@ -1532,7 +1533,7 @@ const DriverHome = () => {
                                         }}
                                     >
                                         Registrar Otro Vehículo
-                                        <FaArrowRight size={12} style={{ color: '#62d8d9' }} />
+                                        <ArrowRight size={12} style={{ color: '#62d8d9' }} />
                                     </button>
                                 </div>
                             )}
@@ -1552,7 +1553,7 @@ const DriverHome = () => {
                                     justifyContent: 'center',
                                     marginRight: '12px'
                                 }}>
-                                    <FaIdCard size={20} style={{ color: '#113d69' }} />
+                                    <IdCard size={20} style={{ color: '#113d69' }} />
                                 </div>
                                 <h5 style={{ margin: 0, fontWeight: '600', color: '#62d8d9' }}>Licencia de Conducir</h5>
                             </div>
@@ -1626,7 +1627,7 @@ const DriverHome = () => {
                             alignItems: window.innerWidth < 768 ? 'flex-start' : 'center',
                             gap: '0.5rem'
                         }}>
-                            <FaInfoCircle size={24} style={{ marginRight: '0.75rem', color: '#dc3545' }} />
+                            <Info size={24} style={{ marginRight: '0.75rem', color: '#dc3545' }} />
                             <div style={{ flex: 1 }}>
                                 <h5 style={{ marginBottom: '0.25rem', fontWeight: '600' }}>Documentación Rechazada</h5>
                                 <p style={{ marginBottom: 0, fontSize: '0.875rem' }}>Tu documentación no ha sido aprobada. No podrás publicar nuevos pedidos hasta que actualices tus documentos.</p>
@@ -1647,7 +1648,7 @@ const DriverHome = () => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: '#62d8d915', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
-                                        <FaList size={20} style={{ color: '#62d8d9' }} />
+                                        <List size={20} style={{ color: '#62d8d9' }} />
                                     </div>
                                     <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos disponibles</h5>
                                 </div>
@@ -1701,7 +1702,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         marginRight: '12px'
                                     }}>
-                                        <FaHistory size={20} style={{ color: '#62d8d9' }} />
+                                        <History size={20} style={{ color: '#62d8d9' }} />
                                     </div>
                                     <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos Recientes</h5>
                                 </div>
@@ -1741,7 +1742,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaHistory size={24} style={{ color: '#6c757d' }} />
+                                        <History size={24} style={{ color: '#6c757d' }} />
                                     </div>
                                     <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay pedidos recientes</p>
                                 </div>
@@ -1785,7 +1786,7 @@ const DriverHome = () => {
                                                                 justifyContent: 'center',
                                                                 margin: '0 auto'
                                                             }}>
-                                                                <FaCar size={16} color="#62d8d9" />
+                                                                <Car size={16} color="#62d8d9" />
                                                             </div>
                                                         )}
                                                     </div>
@@ -1797,7 +1798,7 @@ const DriverHome = () => {
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                            <FaRoute size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
+                                                            <Route size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
                                                             <small style={{ color: '#113d69' }}>
                                                                 {pedido.ruta?.nombre || 'Ruta no disponible'}
                                                             </small>
@@ -1862,13 +1863,13 @@ const DriverHome = () => {
                             borderBottom: 'none'
                         }}>
                             <h5 style={{ margin: 0, fontWeight: '600' }}>
-                                <FaCar style={{ marginRight: '0.5rem' }} /> Mis Vehículos ({vehiculos.length})
+                                <Car style={{ marginRight: '0.5rem' }} /> Mis Vehículos ({vehiculos.length})
                             </h5>
                         </div>
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
                             {vehiculos.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                    <FaCar size={50} style={{ color: '#62d8d9' }} />
+                                    <Car size={50} style={{ color: '#62d8d9' }} />
                                     <p style={{ color: '#6c757d', marginTop: '1rem' }}>No tienes vehículos registrados</p>
                                     <AccionButton
                                         variant="primary"
@@ -1991,7 +1992,7 @@ const DriverHome = () => {
                             alignItems: 'center'
                         }}>
                             <h5 style={{ margin: 0, color: '#113d69' }}>
-                                <FaCar style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Foto del Vehículo
+                                <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Foto del Vehículo
                             </h5>
                             <button
                                 onClick={() => setShowPhotoModal(false)}
@@ -2054,7 +2055,7 @@ const DriverHome = () => {
                             borderBottom: 'none'
                         }}>
                             <h5 style={{ fontWeight: '600', color: '#62d8d9' }}>
-                                <FaHistory style={{ marginRight: '0.5rem' }} /> Historial Completo de Pedidos
+                                <History style={{ marginRight: '0.5rem' }} /> Historial Completo de Pedidos
                             </h5>
                         </div>
                         <div style={{ padding: '1rem 1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 120px)' }}>
@@ -2072,7 +2073,7 @@ const DriverHome = () => {
                                             border: `1px solid #62d8d9`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <FaSearch color="#62d8d9" />
+                                            <Search color="#62d8d9" />
                                         </span>
                                         <input
                                             placeholder="Buscar por # de pedido o nombre de ruta..."
@@ -2097,7 +2098,7 @@ const DriverHome = () => {
                                             border: `1px solid #113d69`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <FaFilter color="#113d69" />
+                                            <Funnel color="#113d69" />
                                         </span>
                                         <select
                                             value={filtroEstado}
@@ -2140,7 +2141,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaHistory size={24} style={{ color: '#62d8d9' }} />
+                                        <History size={24} style={{ color: '#62d8d9' }} />
                                     </div>
                                     <p style={{ color: '#6c757d' }}>No se encontraron pedidos con los filtros seleccionados</p>
                                     <button
@@ -2198,7 +2199,7 @@ const DriverHome = () => {
                                                             justifyContent: 'center',
                                                             margin: '0 auto'
                                                         }}>
-                                                            <FaCar size={20} color="#62d8d9" />
+                                                            <Car size={20} color="#62d8d9" />
                                                         </div>
                                                     )}
                                                 </div>
@@ -2210,7 +2211,7 @@ const DriverHome = () => {
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <FaRoute size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
+                                                        <Route size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
                                                         <small style={{ fontWeight: '600', color: '#113d69' }}>Ruta:</small>
                                                         <span style={{ marginLeft: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>{pedido.ruta?.nombre || 'No disponible'}</span>
                                                     </div>
@@ -2222,7 +2223,7 @@ const DriverHome = () => {
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <small style={{ color: '#6c757d', display: 'block' }}>
-                                                        <FaClock style={{ marginRight: '0.25rem' }} size={10} />
+                                                        <Clock style={{ marginRight: '0.25rem' }} size={10} />
                                                         {pedido.distanciaKm ? `${Number(pedido.distanciaKm).toFixed(1)} km` : (pedido.dirEntrega || 'Domicilio')}
                                                     </small>
                                                 </div>
@@ -2275,7 +2276,7 @@ const DriverHome = () => {
                             padding: '1.5rem'
                         }}>
                             <h5 style={{ fontWeight: '600', color: '#113d69' }}>
-                                <FaCar style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
+                                <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
                             </h5>
                         </div>
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
@@ -2316,7 +2317,7 @@ const DriverHome = () => {
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             {pedidoSeleccionado.ruta?.nombre && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <FaRoute size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <Route size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Ruta:</span>
                                                         <span style={{ fontWeight: '600', display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.nombre}</span>
@@ -2325,7 +2326,7 @@ const DriverHome = () => {
                                             )}
                                             {pedidoSeleccionado.ruta?.descripcion && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <FaInfoCircle size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <Info size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Descripción:</span>
                                                         <span style={{ display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.descripcion}</span>
@@ -2401,7 +2402,7 @@ const DriverHome = () => {
                                                 onClick={() => avanzarEstado(pedidoSeleccionado)}
                                                 disabled={accionPedidoId === pedidoSeleccionado.idPedido}
                                             >
-                                                <FaCheckCircle style={{ marginRight: '0.5rem' }} />
+                                                <CircleCheck style={{ marginRight: '0.5rem' }} />
                                                 {accionPedidoId === pedidoSeleccionado.idPedido ? 'Actualizando...' : `Marcar ${SIGUIENTE_ESTADO[pedidoSeleccionado.estado].replace('_', ' ')}`}
                                             </AccionButton>
                                         )}
@@ -2494,7 +2495,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaWallet size={40} style={{ color: '#62d8d9' }} />
+                                        <Wallet size={40} style={{ color: '#62d8d9' }} />
                                     </div>
                                     <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#113d69' }}>Tus Ganancias</h3>
                                     <p style={{ color: '#6c757d' }}>Monitorea tus ingresos diarios de forma transparente.</p>
@@ -2532,7 +2533,7 @@ const DriverHome = () => {
                                                 }}
                                             />
                                         ) : (
-                                            <FaCar size={40} style={{ color: '#62d8d9' }} />
+                                            <Car size={40} style={{ color: '#62d8d9' }} />
                                         )}
                                     </div>
                                     <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#113d69' }}>Vehículo</h3>
@@ -2551,7 +2552,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaFileAlt size={40} style={{ color: '#113d69' }} />
+                                        <FileText size={40} style={{ color: '#113d69' }} />
                                     </div>
                                     <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#62d8d9' }}>Documentación</h3>
                                     <p style={{ color: '#6c757d' }}>¡Casi listo! Solo falta validar tu documentación oficial.</p>

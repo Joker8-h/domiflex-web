@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { ChevronDown, CircleCheck, CircleX, Search, Check, X, Eye, Car } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
 import theme from "../../styles/theme";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Modal, Image, Form, InputGroup } from "react-bootstrap";
-import { FaCheckCircle, FaTimesCircle, FaEye, FaCar } from "react-icons/fa";
-import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
+
+
 
 function AdminVehiculos() {
     const { token } = useAuth();
@@ -267,9 +268,9 @@ function AdminVehiculos() {
 
     const PlacaValidadaIcon = ({ validada }) => {
         if (validada) {
-            return <FaCheckCircle style={{ color: theme.colors.accent }} title="Placa Validada" size={18} />;
+            return <CircleCheck style={{ color: theme.colors.accent }} title="Placa Validada" size={18} />;
         } else {
-            return <FaTimesCircle style={{ color: theme.colors.textMuted }} title="Placa No Validada" size={18} />;
+            return <CircleX style={{ color: theme.colors.textMuted }} title="Placa No Validada" size={18} />;
         }
     };
 
@@ -435,7 +436,7 @@ function AdminVehiculos() {
                     e.target.style.color = theme.colors.accent;
                 }}
             >
-                <FaEye className="me-1" /> Ver Foto
+                <Eye className="me-1" /> Ver Foto
             </Button>
         );
     };
@@ -666,7 +667,7 @@ function AdminVehiculos() {
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
                                         <InputGroup.Text style={{ backgroundColor: theme.colors.bgInput, border: `1px solid ${theme.colors.border}`, borderRight: 'none' }}>
-                                            <BsSearch style={{ color: theme.colors.textSecondary }} />
+                                            <Search style={{ color: theme.colors.textSecondary }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -694,7 +695,7 @@ function AdminVehiculos() {
                                                     color: theme.colors.textSecondary
                                                 }}
                                             >
-                                                <BsXCircle />
+                                                <CircleX />
                                             </Button>
                                         )}
                                         <Button
@@ -754,7 +755,7 @@ function AdminVehiculos() {
                                 ) : (
                                     <>
                                         <div className="table-responsive">
-                                            <Table hover className="align-middle mb-0">
+                                            <Table hover variant="dark" className="align-middle mb-0">
                                                 <thead style={{
                                                     backgroundColor: theme.colors.bgCardHover,
                                                     borderBottom: `2px solid ${theme.colors.accent}`
@@ -886,7 +887,7 @@ function AdminVehiculos() {
                     }}
                 >
                     <Modal.Title style={{ color: theme.colors.textPrimary }}>
-                        <FaCar className="me-2" style={{ color: theme.colors.accent }} /> Foto del Vehículo
+                        <Car className="me-2" style={{ color: theme.colors.accent }} /> Foto del Vehículo
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="text-center p-0" style={{ backgroundColor: theme.colors.bgPrimary }}>

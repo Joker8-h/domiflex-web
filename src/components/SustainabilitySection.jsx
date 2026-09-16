@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Car, Leaf, Building } from "lucide-react";
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { FaLeaf, FaCarSide, FaCity } from 'react-icons/fa';
+
 
 const SustainabilitySection = () => {
     const brandColor = "#56bca7";
@@ -17,9 +18,9 @@ const SustainabilitySection = () => {
     }, []);
 
     const impacts = [
-        { icon: <FaLeaf size={40} />, title: "10/12/15%", desc: "Comisión justa por distancia en cada domicilio entregado.", delay: "0.2s" },
-        { icon: <FaCarSide size={40} />, title: "$2000 + $800/km", desc: "Costo de envío transparente calculado por distancia real.", delay: "0.4s" },
-        { icon: <FaCity size={40} />, title: "100%", desc: "Pedidos trazables con repartidores verificados en Popayán.", delay: "0.6s" }
+        { icon: <Leaf size={40} />, title: "10/12/15%", desc: "Comisión justa por distancia en cada domicilio entregado.", delay: "0.2s" },
+        { icon: <Car size={40} />, title: "$2000 + $800/km", desc: "Costo de envío transparente calculado por distancia real.", delay: "0.4s" },
+        { icon: <Building size={40} />, title: "100%", desc: "Pedidos trazables con repartidores verificados en Popayán.", delay: "0.6s" }
     ];
 
     return (

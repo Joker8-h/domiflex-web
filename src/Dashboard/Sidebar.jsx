@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  BsGrid1X2Fill, BsFillGrid3X3GapFill, BsPeopleFill, BsListCheck, BsMenuButtonWideFill, BsChevronRight,
-  BsChevronLeft, BsQrCode, BsFileEarmarkTextFill, BsArrowRepeat, BsCashCoin
-} from "react-icons/bs";
+import { FileText, LayoutGrid, Car, ChevronRight, LayoutDashboard, Repeat, ChevronLeft, Users, ListChecks, Coins, QrCode, LogOut } from "lucide-react";
+
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../pages/context/AuthContext";
 import { useSocket } from "../pages/context/SocketContext";
 import { API_URL } from "../config";
-import Logo from "../pages/Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png";
+import Logo from "/logo-domiflex.jpg";
 import theme from "../styles/theme";
 
 const STORAGE_KEY = "admin_badge_counts";
@@ -119,14 +117,14 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
   };
 
   const menuItems = [
-    { icon: <BsGrid1X2Fill />, label: "Dashboard", path: "/dashboard/home", badgeKey: null },
-    { icon: <BsPeopleFill />, label: "Clientes", path: "/admin/clientes", badgeKey: "clientes" },
-    { icon: <BsFillGrid3X3GapFill />, label: "Repartidores", path: "/admin/repartidores", badgeKey: "repartidores" },
-    { icon: <BsListCheck />, label: "Usuarios", path: "/admin/usuarios", badgeKey: "usuarios" },
-    { icon: <BsMenuButtonWideFill />, label: "Vehículos", path: "/admin/vehiculos", badgeKey: null },
-    { icon: <BsFileEarmarkTextFill />, label: "Documentos", path: "/admin/documentos", badgeKey: "documentos" },
-    { icon: <BsArrowRepeat />, label: "Solicitudes", path: "/admin/solicitudes-vehiculos", badgeKey: "solicitudes" },
-    { icon: <BsCashCoin />, label: "Reportes de Pago", path: "/admin/reportes-pago", badgeKey: "reportesPago" }
+    { icon: <LayoutDashboard />, label: "Dashboard", path: "/dashboard/home", badgeKey: null },
+    { icon: <Users />, label: "Clientes", path: "/admin/clientes", badgeKey: "clientes" },
+    { icon: <LayoutGrid />, label: "Repartidores", path: "/admin/repartidores", badgeKey: "repartidores" },
+    { icon: <ListChecks />, label: "Usuarios", path: "/admin/usuarios", badgeKey: "usuarios" },
+    { icon: <Car />, label: "Vehículos", path: "/admin/vehiculos", badgeKey: null },
+    { icon: <FileText />, label: "Documentos", path: "/admin/documentos", badgeKey: "documentos" },
+    { icon: <Repeat />, label: "Solicitudes", path: "/admin/solicitudes-vehiculos", badgeKey: "solicitudes" },
+    { icon: <Coins />, label: "Reportes de Pago", path: "/admin/reportes-pago", badgeKey: "reportesPago" }
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -150,7 +148,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
             alignItems: 'center', justifyContent: 'center'
           }}
         >
-          <BsChevronRight size={15} style={{ color: theme.colors.textSecondary }} />
+          <ChevronRight size={15} style={{ color: theme.colors.textSecondary }} />
         </button>
       )}
 
@@ -163,6 +161,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
       )}
 
       <aside
+        aria-label="Navegación de administración"
         className={`position-fixed top-0 start-0 vh-100 overflow-y-auto shadow-sm
           ${openSidebarToggle ? 'd-block' : ''} col-md-3 col-lg-2 p-0`}
         style={{
@@ -181,7 +180,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
         }}>
           <img src={Logo} alt="Logo DomiFlex" style={{ width: '100px', height: 'auto' }} />
           <button className="btn btn-link p-0" onClick={OpenSidebar} style={{ color: theme.colors.textSecondary }}>
-            <BsChevronLeft size={15} />
+            <ChevronLeft size={15} />
           </button>
         </div>
 
@@ -238,7 +237,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
               fontSize: '0.8rem'
             }}
           >
-            <i className="bi bi-box-arrow-right me-2"></i>
+            <LogOut size={14} aria-hidden="true" style={{ marginRight: "8px" }} />
             CERRAR SESIÓN
           </button>
         </div>

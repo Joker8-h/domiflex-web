@@ -24,10 +24,12 @@ export default function SearchBar({ placeholder = "Buscar...", onSearch, value =
         boxShadow: focused ? theme.shadows.input : "none",
       }}
     >
-      <Search style={{ color: theme.colors.textMuted, fontSize: "16px" }} />
+      <Search style={{ color: theme.colors.textMuted, fontSize: "16px" }} aria-hidden="true" />
       <input
         style={styles.input}
-        type="text"
+        type="search"
+        role="searchbox"
+        aria-label={placeholder}
         placeholder={placeholder}
         value={query}
         onChange={handleChange}
@@ -35,8 +37,8 @@ export default function SearchBar({ placeholder = "Buscar...", onSearch, value =
         onBlur={() => setFocused(false)}
       />
       {query && (
-        <button style={styles.clearBtn} onClick={handleClear}>
-          <X size={12} />
+        <button type="button" aria-label="Limpiar búsqueda" style={styles.clearBtn} onClick={handleClear}>
+          <X size={14} aria-hidden="true" />
         </button>
       )}
     </div>

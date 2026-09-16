@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Calendar, CircleUserRound, History, Wallet, QrCode, IdCard, Route, Phone, Star, User, Save } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import { API_URL } from "../../config";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
-import { FaUser, FaStar, FaQrcode, FaUserCircle, FaCalendarAlt, FaRoute, FaWallet, FaIdCard, FaHistory, FaSave, FaPhone } from "react-icons/fa";
+
 import QRModal from "../../components/QRModal";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
@@ -329,9 +330,9 @@ function Profile() {
     const fullStars = Math.floor(promedio);
     const hasHalfStar = promedio % 1 >= 0.5;
     for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) stars.push(<FaStar key={i} style={{ color: accentColor, fontSize: '14px', marginRight: '2px' }} />);
-      else if (i === fullStars + 1 && hasHalfStar) stars.push(<FaStar key={i} style={{ color: accentColor, fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
-      else stars.push(<FaStar key={i} style={{ color: '#e9ecef', fontSize: '14px', marginRight: '2px' }} />);
+      if (i <= fullStars) stars.push(<Star key={i} style={{ color: accentColor, fontSize: '14px', marginRight: '2px' }} />);
+      else if (i === fullStars + 1 && hasHalfStar) stars.push(<Star key={i} style={{ color: accentColor, fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
+      else stars.push(<Star key={i} style={{ color: '#e9ecef', fontSize: '14px', marginRight: '2px' }} />);
     }
     return <div style={{ display: 'flex' }}>{stars}</div>;
   };
@@ -444,7 +445,7 @@ function Profile() {
                           }}
                         />
                       ) : (
-                        <FaUserCircle size={150} color={brandColor} style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
+                        <CircleUserRound size={150} color={brandColor} style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
                       )}
                     </div>
 
@@ -468,7 +469,7 @@ function Profile() {
                         marginBottom: '1rem',
                         flexWrap: 'wrap'
                       }}>
-                        <FaStar />
+                        <Star />
                         {formatearCalificacion(estadisticas.promedioCalificacion)}
                         ({estadisticas.totalCalificaciones || 0})
                       </div>
@@ -480,7 +481,7 @@ function Profile() {
                       onClick={generarQr}
                       style={{ marginBottom: '1rem' }}
                     >
-                      <FaQrcode style={{ marginRight: '0.5rem' }} />
+                      <QrCode style={{ marginRight: '0.5rem' }} />
                       Generar QR de acceso
                     </CustomButton>
 
@@ -489,19 +490,19 @@ function Profile() {
                     {/* Información de estadísticas */}
                     <div style={{ textAlign: 'left', padding: '0 1rem' }}>
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>
-                        <FaCalendarAlt style={{ marginRight: '0.5rem', color: accentColor }} />
+                        <Calendar style={{ marginRight: '0.5rem', color: accentColor }} />
                         Miembro desde
                       </p>
                       <p style={{ fontWeight: 'bold', marginBottom: '1rem', color: brandColor, wordBreak: 'break-word' }}>{formatearFecha(usuario?.creadoEn)}</p>
 
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>
-                        <FaRoute style={{ marginRight: '0.5rem', color: accentColor }} />
+                        <Route style={{ marginRight: '0.5rem', color: accentColor }} />
                         Pedidos realizados
                       </p>
                       <p style={{ fontWeight: 'bold', marginBottom: '1rem', color: brandColor }}>{estadisticas.totalPedidos} pedidos</p>
 
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>
-                        <FaWallet style={{ marginRight: '0.5rem', color: accentColor }} />
+                        <Wallet style={{ marginRight: '0.5rem', color: accentColor }} />
                         Total Gastado
                       </p>
                       <p style={{ fontWeight: 'bold', fontSize: '1.2rem', color: accentColor, wordBreak: 'break-word' }}>
@@ -531,7 +532,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                          <FaUser style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <User style={{ marginRight: '0.5rem', color: accentColor }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: brandColor, textTransform: 'uppercase' }}>
                             Nombre Completo
                           </span>
@@ -549,7 +550,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                          <FaIdCard style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <IdCard style={{ marginRight: '0.5rem', color: accentColor }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: brandColor, textTransform: 'uppercase' }}>
                             Teléfono
                           </span>
@@ -574,7 +575,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                          <FaUser style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <User style={{ marginRight: '0.5rem', color: accentColor }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: brandColor, textTransform: 'uppercase' }}>
                             Nombre Emergencia
                           </span>
@@ -605,7 +606,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                          <FaPhone style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <Phone style={{ marginRight: '0.5rem', color: accentColor }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: brandColor, textTransform: 'uppercase' }}>
                             Número Emergencia
                           </span>
@@ -637,7 +638,7 @@ function Profile() {
                         border: 'none'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                          <FaWallet style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <Wallet style={{ marginRight: '0.5rem', color: accentColor }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: brandColor, textTransform: 'uppercase' }}>
                             Correo Electrónico
                           </span>
@@ -655,7 +656,7 @@ function Profile() {
                             disabled={loadingUpdate}
                             style={{ flex: 1 }}
                         >
-                            <FaSave style={{ marginRight: '0.5rem' }} /> 
+                            <Save style={{ marginRight: '0.5rem' }} /> 
                             {loadingUpdate ? 'Guardando...' : 'Guardar Cambios Profile'}
                         </CustomButton>
                     </div>
@@ -709,7 +710,7 @@ function Profile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-                          <FaStar style={{ marginRight: '0.5rem', color: accentColor }} />
+                          <Star style={{ marginRight: '0.5rem', color: accentColor }} />
                           <h5 style={{ fontWeight: 'bold', marginBottom: 0, color: accentColor, fontSize: '2rem' }}>
                             {formatearCalificacion(estadisticas.promedioCalificacion)}
                           </h5>
@@ -723,7 +724,7 @@ function Profile() {
                       variant="success"
                       onClick={() => navigate('/user-home')}
                     >
-                      <FaHistory style={{ marginRight: '0.5rem' }} />
+                      <History style={{ marginRight: '0.5rem' }} />
                       Volver al Inicio
                     </CustomButton>
                   </div>

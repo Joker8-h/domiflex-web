@@ -1,9 +1,10 @@
 import React from 'react';
+import { MapPin, User, Car } from "lucide-react";
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import { Container, Card } from 'react-bootstrap';
-import { FaMapMarkerAlt, FaUsers, FaCar } from 'react-icons/fa';
+
 
 // Arreglar iconos de Leaflet (forma más segura)
 const DefaultIcon = L.icon({
@@ -54,7 +55,7 @@ const InteractiveMap = () => {
                             <Marker key={`rep-${rep.id}`} position={rep.pos}>
                                 <Popup>
                                     <div className="text-center" style={{ minWidth: '150px' }}>
-                                        <FaCar color={brandColor} className="mb-2" />
+                                        <Car color={brandColor} className="mb-2" />
                                         <h6 className="mb-1 fw-bold">{rep.name}</h6>
                                         <small className="text-muted">{rep.via}</small>
                                     </div>
@@ -71,7 +72,7 @@ const InteractiveMap = () => {
                             >
                                 <Popup>
                                     <div className="text-center">
-                                        <FaUsers color={accentColor} className="mb-2" />
+                                        <Users color={accentColor} className="mb-2" />
                                         <h6 className="mb-0 fw-bold">{p.name}</h6>
                                     </div>
                                 </Popup>
@@ -82,7 +83,7 @@ const InteractiveMap = () => {
                     {/* Leyenda flotante */}
                     <Card className="position-absolute bottom-0 start-0 m-3 p-3 border-0 shadow" style={{ zIndex: 1000, borderRadius: "15px" }}>
                         <div className="d-flex align-items-center mb-2">
-                            <FaMapMarkerAlt color={brandColor} />
+                            <MapPin color={brandColor} />
                             <span className="ms-2 small fw-bold">Repartidores</span>
                         </div>
                         <div className="d-flex align-items-center">

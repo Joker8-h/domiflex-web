@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Info, QrCode, Camera, Upload, X } from "lucide-react";
 import { Modal, Button, Alert } from 'react-bootstrap';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { FaQrcode, FaCamera, FaUpload, FaTimes, FaInfoCircle } from 'react-icons/fa';
+
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../pages/context/AuthContext';
 
@@ -218,7 +219,7 @@ function QRScanner({ show, onHide }) {
                 }}
             >
                 <Modal.Title className="d-flex align-items-center fw-bold">
-                    <FaQrcode className="me-3" size={28} />
+                    <QrCode className="me-3" size={28} />
                     Escanear Código QR
                 </Modal.Title>
             </Modal.Header>
@@ -253,7 +254,7 @@ function QRScanner({ show, onHide }) {
                             color: '#721c24'
                         }}
                     >
-                        <FaInfoCircle className="me-2" />
+                        <Info className="me-2" />
                         {error}
                     </Alert>
                 )}
@@ -269,7 +270,7 @@ function QRScanner({ show, onHide }) {
                                         border: `1px solid ${colores.secondary}30`
                                     }}
                                 >
-                                    <FaCamera size={48} style={{ color: colores.primary }} className="mb-3" />
+                                    <Camera size={48} style={{ color: colores.primary }} className="mb-3" />
                                     <p className="mb-3" style={{ color: colores.primary }}>
                                         Haz clic en "Iniciar Cámara" para comenzar a escanear
                                     </p>
@@ -296,7 +297,7 @@ function QRScanner({ show, onHide }) {
                                         e.target.style.boxShadow = `0 10px 20px -5px ${colores.primary}60`;
                                     }}
                                 >
-                                    <FaCamera className="me-2" />
+                                    <Camera className="me-2" />
                                     Iniciar Cámara
                                 </Button>
                             </div>
@@ -324,7 +325,7 @@ function QRScanner({ show, onHide }) {
                                             fontWeight: '500'
                                         }}
                                     >
-                                        <FaTimes className="me-2" />
+                                        <X className="me-2" />
                                         Detener Escaneo
                                     </Button>
                                 </div>
@@ -353,7 +354,7 @@ function QRScanner({ show, onHide }) {
                                 e.currentTarget.style.borderColor = colores.secondary;
                             }}
                         >
-                            <FaUpload 
+                            <Upload 
                                 size={50} 
                                 className="mb-3" 
                                 style={{ color: colores.primary }} 
@@ -388,7 +389,7 @@ function QRScanner({ show, onHide }) {
                                 color: colores.primary
                             }}
                         >
-                            <FaInfoCircle className="me-2" style={{ color: colores.secondary }} />
+                            <Info className="me-2" style={{ color: colores.secondary }} />
                             Asegúrate de que el código QR esté bien iluminado y enfocado para una mejor lectura.
                         </Alert>
                     </div>

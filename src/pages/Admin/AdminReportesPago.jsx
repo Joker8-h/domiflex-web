@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { TriangleAlert, Banknote, CircleX } from "lucide-react";
 import { Container, Modal, Form, Card, Row, Col, Spinner } from 'react-bootstrap';
-import {
-    BsCheckCircleFill,
-    BsXCircleFill,
-    BsEyeFill,
-    BsCalendar3,
-    BsFunnelFill,
-    BsExclamationTriangleFill,
-    BsEnvelopeFill,
-    BsCashStack
-} from 'react-icons/bs';
+
 import { useAuth } from '../../pages/context/AuthContext';
 import { API_URL } from '../../config';
 import toast from 'react-hot-toast';
@@ -311,7 +303,7 @@ function AdminReportesPago() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <div>
                     <h3 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: '#113d69' }}>
-                        <BsCashStack style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                        <Banknote style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
                         Reportes de Pago
                     </h3>
                     <p style={{ color: '#6c757d', margin: 0 }}>Gestión de comprobantes de pago de repartidores</p>
@@ -526,7 +518,7 @@ function AdminReportesPago() {
                                                         variant="danger"
                                                         onClick={() => { setReporteSeleccionado(reporte); setShowRechazarModal(true); }}
                                                     >
-                                                        <BsXCircleFill />
+                                                        <CircleXFill />
                                                     </CustomButton>
                                                 </>
                                             )}
@@ -632,7 +624,7 @@ function AdminReportesPago() {
                                         variant="danger"
                                         onClick={() => setShowRechazarModal(true)}
                                     >
-                                        <BsXCircleFill style={{ marginRight: '0.25rem' }} /> Rechazar
+                                        <CircleXFill style={{ marginRight: '0.25rem' }} /> Rechazar
                                     </CustomButton>
                                 </>
                             )}
@@ -724,7 +716,7 @@ function AdminReportesPago() {
                         padding: '2rem',
                         textAlign: 'center'
                     }} onClick={(e) => e.stopPropagation()}>
-                        <BsExclamationTriangleFill size={48} style={{ color: '#113d69', marginBottom: '1rem' }} />
+                        <TriangleAlert size={48} style={{ color: '#113d69', marginBottom: '1rem' }} />
                         <h4 style={{ color: '#113d69', marginBottom: '1rem', fontWeight: '600' }}>
                             Verificar Pagos Mensuales
                         </h4>

@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { ChevronDown, CircleX, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../../config";
 import { Container, Row, Col, Card, Table, Button, Alert, Spinner, Form, InputGroup } from "react-bootstrap";
-import { BsSearch, BsXCircle, BsChevronDown } from "react-icons/bs";
+
 
 const EstadoBadge = ({ estado }) => {
     const estilos = {
@@ -190,7 +191,7 @@ const AccionButton = ({ estado, onActivarDesactivar, onSuspender }) => {
                         color: estado === 'ACTIVO' ? '#ffffff' : '#62d8d9'
                     }}
                 >
-                    <BsChevronDown style={{
+                    <ChevronDown style={{
                         transform: mostrarMenu ? 'rotate(180deg)' : 'none',
                         transition: 'transform 0.2s'
                     }} />
@@ -554,7 +555,7 @@ function AdminUsuarios() {
                                 <Form onSubmit={handleSearch}>
                                     <InputGroup>
                                         <InputGroup.Text className="bg-white border-end-0">
-                                            <BsSearch style={{ color: '#113d69' }} />
+                                            <Search style={{ color: '#113d69' }} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             type="text"
@@ -569,7 +570,7 @@ function AdminUsuarios() {
                                         />
                                         {busqueda && (
                                             <Button variant="outline-secondary" className="border-start-0 border-end-0 bg-white" onClick={limpiarBusqueda}>
-                                                <BsXCircle style={{ color: '#113d69' }} />
+                                                <CircleX style={{ color: '#113d69' }} />
                                             </Button>
                                         )}
                                         <Button
@@ -609,7 +610,7 @@ function AdminUsuarios() {
                 {error && (
                     <Row className="mb-3">
                         <Col>
-                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: '#cccbd2af', color: '#113d69' }}>
+                            <Alert variant="danger" onClose={() => setError("")} dismissible className="border-0 shadow" style={{ backgroundColor: theme.colors.dangerDark, color: theme.colors.textPrimary }}>
                                 <strong style={{ color: '#113d69' }}>Error:</strong> <span style={{ color: '#113d69' }}>{error}</span>
                             </Alert>
                         </Col>
@@ -632,7 +633,7 @@ function AdminUsuarios() {
                                 ) : (
                                     <>
                                         <div className="table-responsive">
-                                            <Table hover className="align-middle mb-0">
+                                            <Table hover variant="dark" className="align-middle mb-0">
                                                 <thead style={{
                                                     backgroundColor: 'rgba(248, 249, 250, 0.9)',
                                                     borderBottom: '2px solid #62d8d9'

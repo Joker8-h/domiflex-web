@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { CircleUserRound, FileText, QrCode, IdCard, Star, User, Save, Car } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import { Container, Row, Col, Form, Spinner } from "react-bootstrap";
-import { FaCar, FaIdCard, FaStar, FaSave, FaQrcode, FaUserCircle, FaFileAlt } from "react-icons/fa";
+
 import QRModal from "../../components/QRModal";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
@@ -418,9 +419,9 @@ function DriverProfile() {
     const fullStars = Math.floor(promedio);
     const hasHalfStar = promedio % 1 >= 0.5;
     for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) stars.push(<FaStar key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px' }} />);
-      else if (i === fullStars + 1 && hasHalfStar) stars.push(<FaStar key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
-      else stars.push(<FaStar key={i} style={{ color: '#e9ecef', fontSize: '14px', marginRight: '2px' }} />);
+      if (i <= fullStars) stars.push(<Star key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px' }} />);
+      else if (i === fullStars + 1 && hasHalfStar) stars.push(<Star key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
+      else stars.push(<Star key={i} style={{ color: '#e9ecef', fontSize: '14px', marginRight: '2px' }} />);
     }
     return <div style={{ display: 'flex' }}>{stars}</div>;
   };
@@ -492,7 +493,7 @@ function DriverProfile() {
                           }} 
                         />
                       ) : (
-                        <FaUserCircle size={150} color="#62d8d9" style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
+                        <CircleUserRound size={150} color="#62d8d9" style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
                       )}
                     </div>
 
@@ -509,19 +510,19 @@ function DriverProfile() {
                       marginBottom: '1rem',
                       flexWrap: 'wrap'
                     }}>
-                      <FaStar /> {formatearPromedio(datosCalificacion.promedio)} ({datosCalificacion.total || 0} reseñas)
+                      <Star /> {formatearPromedio(datosCalificacion.promedio)} ({datosCalificacion.total || 0} reseñas)
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
                       <CustomButton variant="outline-success" onClick={() => navigate("/documentacion")}>
-                        <FaFileAlt style={{ marginRight: '0.5rem' }} /> Subir Documentación
+                        <FileText style={{ marginRight: '0.5rem' }} /> Subir Documentación
                       </CustomButton>
 
                       <CustomButton 
                         variant="outline-primary" 
                         onClick={() => { setQrValue(`${token}|${usuario?.nombre}`); setShowQRModal(true); }}
                       >
-                        <FaQrcode style={{ marginRight: '0.5rem' }} /> Generar QR
+                        <QrCode style={{ marginRight: '0.5rem' }} /> Generar QR
                       </CustomButton>
                     </div>
 
@@ -630,7 +631,7 @@ function DriverProfile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                          <FaIdCard style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
+                          <IdCard style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>LICENCIA DE CONDUCIR</span>
                         </div>
 
@@ -679,7 +680,7 @@ function DriverProfile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                          <FaCar style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
+                          <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
                           <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>VEHÍCULO</span>
                         </div>
                         
@@ -720,7 +721,7 @@ function DriverProfile() {
                       disabled={loading}
                       style={{ width: '100%' }}
                     >
-                      <FaSave style={{ marginRight: '0.5rem' }} /> {loading ? 'Guardando...' : 'GUARDAR CAMBIOS'}
+                      <Save style={{ marginRight: '0.5rem' }} /> {loading ? 'Guardando...' : 'GUARDAR CAMBIOS'}
                     </CustomButton>
                   </div>
                 </div>

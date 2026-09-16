@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Banknote, MapPin, Calendar, Send, Bike, ArrowRight, ChartLine, History, Funnel, Wallet, Search, Route, Clock, X, Star, User } from "lucide-react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
-import { FaUser, FaRoute, FaWallet, FaHistory, FaStar, FaCalendarAlt, FaArrowRight, FaChartLine, FaSearch, FaFilter, FaClock, FaMapMarkerAlt, FaMotorcycle, FaMoneyBillWave, FaPaperPlane, FaTimes } from "react-icons/fa";
+
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, AreaChart, Area
@@ -815,21 +816,21 @@ const UserHome = () => {
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <FaMotorcycle size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
+                                    <Bike size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
                                     <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Nuevo domicilio</h5>
                                 </div>
                                 <AccionButton variant={showCrearPedido ? 'outline-secondary' : 'primary'} onClick={() => setShowCrearPedido(v => !v)}>
-                                    {showCrearPedido ? <><FaTimes style={{ marginRight: '0.5rem' }} /> Cerrar</> : <><FaPaperPlane style={{ marginRight: '0.5rem' }} /> Pedir domicilio</>}
+                                    {showCrearPedido ? <><X style={{ marginRight: '0.5rem' }} /> Cerrar</> : <><Send style={{ marginRight: '0.5rem' }} /> Pedir domicilio</>}
                                 </AccionButton>
                             </div>
                             {showCrearPedido && (
                                 <form onSubmit={crearPedido} style={{ marginTop: '1rem' }}>
                                     <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                                         <AccionButton variant={modoMapa === 'recogida' ? 'primary' : 'outline-primary'} onClick={() => setModoMapa('recogida')}>
-                                            <FaMapMarkerAlt style={{ marginRight: '0.5rem' }} /> Marcar recogida
+                                            <MapPin style={{ marginRight: '0.5rem' }} /> Marcar recogida
                                         </AccionButton>
                                         <AccionButton variant={modoMapa === 'entrega' ? 'primary' : 'outline-primary'} onClick={() => setModoMapa('entrega')}>
-                                            <FaMapMarkerAlt style={{ marginRight: '0.5rem' }} /> Marcar entrega
+                                            <MapPin style={{ marginRight: '0.5rem' }} /> Marcar entrega
                                         </AccionButton>
                                     </div>
                                     <div style={{ height: '300px', borderRadius: '0.75rem', overflow: 'hidden', border: `1px solid ${accentColor}`, marginBottom: '1rem' }}>
@@ -858,7 +859,7 @@ const UserHome = () => {
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', backgroundColor: '#f8f9fa', borderRadius: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                         <span style={{ color: '#6c757d', display: 'flex', alignItems: 'center' }}>
-                                            <FaMoneyBillWave style={{ marginRight: '0.5rem', color: accentColor }} />
+                                            <Banknote style={{ marginRight: '0.5rem', color: accentColor }} />
                                             {estimando ? 'Calculando...' : estimacion ? `${estimacion.distanciaKm.toFixed(1)} km · Base $2.000 + $800/km` : 'Toca el mapa para ubicar los puntos'}
                                         </span>
                                         <strong style={{ color: accentColor, fontSize: '1.25rem' }}>
@@ -866,7 +867,7 @@ const UserHome = () => {
                                         </strong>
                                     </div>
                                     <AccionButton variant="primary" onClick={crearPedido} disabled={creandoPedido} style={{ width: '100%', padding: '0.75rem' }}>
-                                        <FaMoneyBillWave style={{ marginRight: '0.5rem' }} />
+                                        <Banknote style={{ marginRight: '0.5rem' }} />
                                         {creandoPedido ? 'Creando pedido...' : 'Crear pedido · Pago en efectivo'}
                                     </AccionButton>
                                 </form>
@@ -886,7 +887,7 @@ const UserHome = () => {
                             <div style={{ padding: '1.5rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaChartLine size={20} style={{ color: accentColor, marginRight: '0.5rem' }} />
+                                        <ChartLine size={20} style={{ color: accentColor, marginRight: '0.5rem' }} />
                                         <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Hábitos de Gasto</h5>
                                     </div>
                                     <StatsBadge bgColor="#f8f9fa" color="#113d69">Tendencia {periodo}</StatsBadge>
@@ -916,7 +917,7 @@ const UserHome = () => {
                             <div style={{ padding: '1.5rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaHistory size={20} style={{ color: brandColor, marginRight: '0.5rem' }} />
+                                        <History size={20} style={{ color: brandColor, marginRight: '0.5rem' }} />
                                         <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Frecuencia de Pedidos</h5>
                                     </div>
                                     <StatsBadge bgColor="#f8f9fa" color="#113d69">Pedidos {periodo}</StatsBadge>
@@ -947,7 +948,7 @@ const UserHome = () => {
                         <div style={{ ...cardStyle, height: '100%' }}>
                             <div style={{ padding: '1.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                                    <FaUser size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
+                                    <User size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
                                     <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Resumen de Actividad</h5>
                                 </div>
                                 <div style={{
@@ -983,7 +984,7 @@ const UserHome = () => {
                         <div style={{ ...cardStyle, height: '100%' }}>
                             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                                    <FaWallet size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
+                                    <Wallet size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
                                     <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Pagos Recientes</h5>
                                 </div>
                                 
@@ -1029,7 +1030,7 @@ const UserHome = () => {
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <FaHistory size={24} style={{ color: accentColor, marginRight: '0.5rem' }} />
+                                    <History size={24} style={{ color: accentColor, marginRight: '0.5rem' }} />
                                     <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Pedidos Recientes</h5>
                                 </div>
                                 <AccionButton
@@ -1064,7 +1065,7 @@ const UserHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaHistory size={24} style={{ color: '#6c757d' }} />
+                                        <History size={24} style={{ color: '#6c757d' }} />
                                     </div>
                                     <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay pedidos recientes</p>
                                 </div>
@@ -1090,7 +1091,7 @@ const UserHome = () => {
                                                 alignItems: 'center'
                                             }}>
                                                 <div style={{ textAlign: 'center', gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                    <FaRoute size={20} color={accentColor} />
+                                                    <Route size={20} color={accentColor} />
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <p style={{ marginBottom: 0, fontWeight: 'bold', color: brandColor }}>
@@ -1144,7 +1145,7 @@ const UserHome = () => {
                             borderBottom: 'none'
                         }}>
                             <h5 style={{ fontWeight: '600', color: accentColor }}>
-                                <FaHistory style={{ marginRight: '0.5rem' }} /> Mis Pedidos
+                                <History style={{ marginRight: '0.5rem' }} /> Mis Pedidos
                             </h5>
                         </div>
                         <div style={{ padding: '1rem 1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 120px)' }}>
@@ -1162,7 +1163,7 @@ const UserHome = () => {
                                             border: `1px solid ${accentColor}`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <FaSearch color={accentColor} />
+                                            <Search color={accentColor} />
                                         </span>
                                         <input
                                             placeholder="Buscar por # de pedido o nombre de ruta..."
@@ -1187,7 +1188,7 @@ const UserHome = () => {
                                             border: `1px solid ${brandColor}`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <FaFilter color={brandColor} />
+                                            <Funnel color={brandColor} />
                                         </span>
                                         <select
                                             value={filtroEstado}
@@ -1230,7 +1231,7 @@ const UserHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FaHistory size={24} style={{ color: accentColor }} />
+                                        <History size={24} style={{ color: accentColor }} />
                                     </div>
                                     <p style={{ color: '#6c757d' }}>No se encontraron pedidos con los filtros seleccionados</p>
                                     <button
@@ -1272,7 +1273,7 @@ const UserHome = () => {
                                                 alignItems: 'center'
                                             }}>
                                                 <div style={{ textAlign: 'center', gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                    <FaRoute size={20} color={accentColor} />
+                                                    <Route size={20} color={accentColor} />
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <p style={{ marginBottom: 0, fontWeight: '600', color: brandColor }}>Pedido #{pedido.idPedido}</p>
@@ -1282,7 +1283,7 @@ const UserHome = () => {
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <FaRoute size={12} color={accentColor} style={{ marginRight: '0.25rem' }} />
+                                                        <Route size={12} color={accentColor} style={{ marginRight: '0.25rem' }} />
                                                         <small style={{ fontWeight: '600', color: brandColor }}>Ruta:</small>
                                                         <span style={{ marginLeft: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>{pedido.ruta?.nombre || 'No disponible'}</span>
                                                     </div>
@@ -1292,7 +1293,7 @@ const UserHome = () => {
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <small style={{ color: '#6c757d', display: 'flex', alignItems: 'center' }}>
-                                                        <FaClock style={{ marginRight: '0.25rem' }} size={10} />
+                                                        <Clock style={{ marginRight: '0.25rem' }} size={10} />
                                                         {pedido.dirRecogida && pedido.dirEntrega ? `${pedido.dirRecogida} → ${pedido.dirEntrega}` : (pedido.detallePedido || 'Domicilio')}
                                                     </small>
                                                 </div>
@@ -1346,7 +1347,7 @@ const UserHome = () => {
                             padding: '1.5rem'
                         }}>
                             <h5 style={{ fontWeight: '600', color: brandColor }}>
-                                <FaRoute style={{ marginRight: '0.5rem', color: accentColor }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
+                                <Route style={{ marginRight: '0.5rem', color: accentColor }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
                             </h5>
                         </div>
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
@@ -1391,7 +1392,7 @@ const UserHome = () => {
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             {pedidoSeleccionado.dirRecogida && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <FaMapMarkerAlt size={14} color={accentColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <MapPin size={14} color={accentColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Recogida:</span>
                                                         <span style={{ fontWeight: '600', display: 'block', color: brandColor }}>{pedidoSeleccionado.dirRecogida}</span>
@@ -1400,7 +1401,7 @@ const UserHome = () => {
                                             )}
                                             {pedidoSeleccionado.dirEntrega && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <FaMapMarkerAlt size={14} color={brandColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <MapPin size={14} color={brandColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Entrega:</span>
                                                         <span style={{ fontWeight: '600', display: 'block', color: brandColor }}>{pedidoSeleccionado.dirEntrega}</span>
@@ -1417,7 +1418,7 @@ const UserHome = () => {
                                             )}
                                             {pedidoSeleccionado.ruta?.nombre && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <FaRoute size={14} color={accentColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <Route size={14} color={accentColor} style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Ruta:</span>
                                                         <span style={{ fontWeight: '600', display: 'block', color: brandColor }}>{pedidoSeleccionado.ruta.nombre}</span>
@@ -1443,7 +1444,7 @@ const UserHome = () => {
                                                     padding: '0.25rem 0.6rem', borderRadius: '2rem',
                                                     fontSize: '0.7rem', fontWeight: '600'
                                                 }}>{paso.replace('_', ' ')}</span>
-                                                {i < FLUJO_PEDIDO.length - 1 && <FaArrowRight size={10} color="#ccc" />}
+                                                {i < FLUJO_PEDIDO.length - 1 && <ArrowRight size={10} color="#ccc" />}
                                             </div>
                                         );
                                     })}
@@ -1469,7 +1470,7 @@ const UserHome = () => {
                                         </AccionButton>
                                     )}
                                     <AccionButton variant="outline-primary" onClick={() => pagarEfectivo(pedidoSeleccionado)} disabled={accionando}>
-                                        <FaMoneyBillWave style={{ marginRight: '0.5rem' }} /> Pagar en efectivo
+                                        <Banknote style={{ marginRight: '0.5rem' }} /> Pagar en efectivo
                                     </AccionButton>
                                     {pedidoSeleccionado.idRepartidor && (
                                         <AccionButton variant="outline-primary" onClick={() => iniciarChat(pedidoSeleccionado)}>
@@ -1481,11 +1482,11 @@ const UserHome = () => {
                             {pedidoSeleccionado.estado === 'ENTREGADO' && pedidoSeleccionado.idRepartidor && (
                                 <div style={{ backgroundColor: '#F9FAFB', border: `1px solid ${brandColor}20`, borderRadius: '1rem', padding: '1rem', marginBottom: '1rem' }}>
                                     <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: brandColor }}>
-                                        <FaStar style={{ marginRight: '0.5rem', color: accentColor }} /> Calificar al repartidor
+                                        <Star style={{ marginRight: '0.5rem', color: accentColor }} /> Calificar al repartidor
                                     </h6>
                                     <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '0.5rem' }}>
                                         {[1, 2, 3, 4, 5].map(n => (
-                                            <FaStar key={n} onClick={() => setPuntuacion(n)} style={{ cursor: 'pointer', color: n <= puntuacion ? accentColor : '#e9ecef', fontSize: '22px' }} />
+                                            <Star key={n} onClick={() => setPuntuacion(n)} style={{ cursor: 'pointer', color: n <= puntuacion ? accentColor : '#e9ecef', fontSize: '22px' }} />
                                         ))}
                                     </div>
                                     <textarea value={comentarioCalif} onChange={(e) => setComentarioCalif(e.target.value)} placeholder="Cuéntanos cómo fue tu domicilio (opcional)" rows={2} style={{ width: '100%', padding: '0.5rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #ced4da', marginBottom: '0.5rem' }} />
