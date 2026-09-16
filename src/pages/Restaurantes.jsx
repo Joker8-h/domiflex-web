@@ -1,52 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaFilter } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import theme from "../styles/theme";
 import SearchBar from "../components/SearchBar";
 import CategoryChips from "../components/CategoryChips";
 import NegocioCard from "../components/NegocioCard";
-import API_URL from "../config";
+import { SkeletonCard } from "../components/ui/Skeleton";
+import EmptyState from "../components/ui/EmptyState";
+import ErrorState from "../components/ui/ErrorState";
+import { api } from "../api/client";
 
 export default function Restaurantes() {
   const navigate = useNavigate();
   const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
-    fetchNegocios();
-  }, [selectedCategory]);
-
-  const fetchNegocios = async () => {
-    setLoading(true);
-    try {
-      let url = `${API_URL}/negocios`;
-      if (selectedCategory) {
-        url += `?tipo=${selectedCategory}`;
+    const controller = new AbortController();
+    const fetchNegocios = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let url = "/negocios";
+        if (selectedCategory) {
+          url += `?tipo=${encodeURIComponent(selectedCategory)}`;
+        }
+        const data = await api.get(url, { signal: controller.signal });
+        if (!controller.signal.aborted) setNegocios(Array.isArray(data) ? data : []);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          console.error("Error al cargar negocios:", err);
+          setError(err.message || "No se pudieron cargar los negocios.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-      const res = await fetch(url);
-      const data = await res.json();
-      setNegocios(data);
-    } catch (err) {
-      console.error("Error al cargar negocios:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchNegocios();
+    return () => controller.abort();
+  }, [selectedCategory, retryKey]);
 
   const filteredNegocios = negocios.filter((n) =>
-    n.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+    (n.nombre || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div style={styles.page}>
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <FaArrowLeft size={18} />
+        <button
+          type="button"
+          aria-label="Volver"
+          style={styles.backBtn}
+          onClick={() => navigate(-1)}
+        >
+          <FaArrowLeft size={18} aria-hidden="true" />
         </button>
         <h1 style={styles.title}>Explorar</h1>
-        <div style={{ width: "36px" }} />
+        <div style={{ width: "36px" }} aria-hidden="true" />
       </div>
 
       <div style={styles.content}>
@@ -63,15 +77,29 @@ export default function Restaurantes() {
         </div>
 
         {loading ? (
-          <div style={styles.loading}>
-            <div style={styles.spinner} />
-            <p style={styles.loadingText}>Cargando negocios...</p>
+          <div style={styles.grid} aria-busy="true" aria-label="Cargando negocios">
+            {[0, 1, 2, 3].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
+        ) : error ? (
+          <ErrorState
+            title="No pudimos cargar los negocios"
+            description={error}
+            onRetry={() => setRetryKey((k) => k + 1)}
+          />
         ) : filteredNegocios.length === 0 ? (
-          <div style={styles.empty}>
-            <span style={{ fontSize: "48px" }}>🏪</span>
-            <p style={styles.emptyText}>No se encontraron negocios</p>
-          </div>
+          <EmptyState
+            icon="🏪"
+            title="No se encontraron negocios"
+            description={
+              searchQuery
+                ? `Sin resultados para "${searchQuery}". Prueba con otra búsqueda.`
+                : "Aún no hay negocios en esta categoría. Vuelve pronto."
+            }
+            actionLabel={searchQuery ? "Limpiar búsqueda" : undefined}
+            onAction={searchQuery ? () => setSearchQuery("") : undefined}
+          />
         ) : (
           <div style={styles.grid}>
             {filteredNegocios.map((negocio) => (
@@ -106,8 +134,8 @@ const styles = {
     zIndex: theme.zIndex.sticky,
   },
   backBtn: {
-    width: "36px",
-    height: "36px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     border: `1px solid ${theme.colors.border}`,
     backgroundColor: theme.colors.bgCard,
@@ -132,37 +160,5 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
     gap: "16px",
-  },
-  loading: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "60px 0",
-    gap: "16px",
-  },
-  spinner: {
-    width: "40px",
-    height: "40px",
-    border: `3px solid ${theme.colors.border}`,
-    borderTopColor: theme.colors.accent,
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  },
-  loadingText: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.fontSize.sm,
-  },
-  empty: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "60px 0",
-    gap: "16px",
-  },
-  emptyText: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.fontSize.md,
   },
 };

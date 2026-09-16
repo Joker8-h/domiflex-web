@@ -45,6 +45,29 @@ import AdminReportesPago from "./pages/Admin/AdminReportesPago";
 // Components
 import BottomTabs from "./components/BottomTabs";
 import NavbarCustom from "./components/Navbar";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
+import { useIsMobile } from "./hooks/useMediaQuery";
+
+// Navegación móvil real: BottomTabs solo en móvil, solo autenticado,
+// solo flujo cliente (admin/driver conservan su layout).
+function MobileNav() {
+  const { token } = useAuth();
+  const location = useLocation();
+  const isMobile = useIsMobile();
+  if (!token || !isMobile) return null;
+  const path = location.pathname;
+  if (
+    path.startsWith("/dashboard") ||
+    path.startsWith("/admin") ||
+    path.startsWith("/repartidor") ||
+    path.startsWith("/vehicle-registration") ||
+    path === "/login" ||
+    path === "/register"
+  ) {
+    return null;
+  }
+  return <BottomTabs />;
+}
 
 const ROLES = { ADMIN: "ADMIN", REPARTIDOR: "REPARTIDOR", CLIENTE: "CLIENTE", COMERCIO: "COMERCIO" };
 
@@ -65,6 +88,7 @@ function App() {
           }}
         />
         <BrowserRouter>
+          <ErrorBoundary>
           <Routes>
             {/* Public */}
             <Route path="/" element={<Landing />} />
@@ -167,6 +191,8 @@ function App() {
             <Route path="/driver-home" element={<Navigate to="/repartidor-home" replace />} />
             <Route path="/driver-profile" element={<Navigate to="/repartidor-profile" replace />} />
           </Routes>
+          </ErrorBoundary>
+          <MobileNav />
         </BrowserRouter>
       </SocketProvider>
     </AuthProvider>

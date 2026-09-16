@@ -19,26 +19,28 @@ export default function BottomTabs() {
   };
 
   return (
-    <div style={styles.container}>
+    <nav aria-label="Navegación principal" style={styles.container}>
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const active = isActive(tab.path);
         return (
           <button
             key={tab.id}
+            type="button"
+            aria-current={active ? "page" : undefined}
             style={{
               ...styles.tab,
               color: active ? theme.colors.accent : theme.colors.textMuted,
             }}
             onClick={() => navigate(tab.path)}
           >
-            <Icon size={20} />
+            <Icon size={22} aria-hidden="true" />
             <span style={styles.label}>{tab.label}</span>
-            {active && <div style={styles.indicator} />}
+            {active && <div style={styles.indicator} aria-hidden="true" />}
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }
 
@@ -61,11 +63,14 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     gap: "4px",
     background: "none",
     border: "none",
     cursor: "pointer",
-    padding: "4px 16px",
+    padding: "6px 16px",
+    minHeight: "56px",
+    minWidth: "64px",
     position: "relative",
     transition: theme.transitions.fast,
     fontFamily: "'Inter', sans-serif",
