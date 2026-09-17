@@ -138,7 +138,7 @@ export default function PedidoDetalle() {
           <div style={styles.divider} />
           <div style={styles.row}>
             <span style={styles.totalLabel}>Total</span>
-            <span style={styles.totalValue}>${Number(pedido.total).toLocaleString()}</span>
+            <span style={styles.totalValue}>${Number(pedido.total || 0).toLocaleString()}</span>
           </div>
           <div style={styles.row}>
             <span style={styles.label}>Método de pago</span>

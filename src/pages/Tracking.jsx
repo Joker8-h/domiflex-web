@@ -197,7 +197,7 @@ export default function Tracking() {
           <div style={styles.detailDivider} />
           <div style={styles.detailRow}>
             <span style={styles.detailLabel}>Total</span>
-            <span style={styles.detailTotal}>${Number(pedido.total).toLocaleString()}</span>
+            <span style={styles.detailTotal}>${Number(pedido.total || 0).toLocaleString()}</span>
           </div>
           <div style={styles.detailRow}>
             <span style={styles.detailLabel}>Pago</span>
