@@ -140,6 +140,8 @@ const styles = {
   logoLink: {
     display: "flex",
     alignItems: "center",
+    minHeight: "44px",
+    minWidth: "44px",
   },
   logo: {
     height: "40px",

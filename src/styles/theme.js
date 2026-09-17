@@ -11,7 +11,7 @@ const theme = {
     accentLight: '#69F0AE',
     textPrimary: '#FFFFFF',
     textSecondary: '#8B949E',
-    textMuted: '#6E7681',
+    textMuted: '#9AA4B2',
     border: '#21262D',
     borderLight: '#30363D',
     danger: '#FF5252',
