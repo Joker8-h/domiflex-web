@@ -1,6 +1,5 @@
-// DomiFlex Design Tokens — sistema canónico (Fase 1).
-// theme.js queda como compatibilidad; el código nuevo importa desde aquí.
-// Identidad conservada: verde #00E676 sobre #0D1117 + logo DOMIFLEX.
+// DomiFlex Design Tokens — sistema canónico (Fase 1 + mock Montserrat).
+// Montserrat 400-800, verde #00E676 sobre #0D1117, logo DOMIFLEX neón.
 
 export const colors = {
   bgPrimary: "#0D1117",
