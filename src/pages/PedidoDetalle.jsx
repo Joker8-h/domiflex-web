@@ -23,7 +23,15 @@ export default function PedidoDetalle() {
       setError(null);
       try {
         const data = await api.get(`/pedidos/${pedidoId}`, { signal: controller.signal });
-        if (!controller.signal.aborted) setPedido(data);
+        if (controller.signal.aborted) return;
+        if (data?.error) {
+          setError(data.error);
+          setPedido(null);
+        } else if (!data?.idPedido) {
+          setPedido(null);
+        } else {
+          setPedido(data);
+        }
       } catch (err) {
         if (!controller.signal.aborted) {
           console.error("Error:", err);

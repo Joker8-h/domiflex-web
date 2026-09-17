@@ -26,6 +26,11 @@ export default function Tracking() {
     try {
       const data = await api.get(`/pedidos/${pedidoId}`, { signal });
       if (signal?.aborted) return;
+      if (data?.error || !data?.idPedido) {
+        setPedido(null);
+        setError(data?.error || "Pedido no encontrado");
+        return;
+      }
       setPedido(data);
       setError(null);
     } catch (err) {
