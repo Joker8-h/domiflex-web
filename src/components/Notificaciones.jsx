@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TriangleAlert, Banknote, Mail, Clock, Trash, Check, Bell, Car } from "lucide-react";
+import { TriangleAlert, Banknote, Mail, Clock, Trash, Check, Bell, Car, CircleAlert } from "lucide-react";
 import { Badge, ListGroup, Button, Spinner, Modal } from "react-bootstrap";
 
 
@@ -149,7 +149,7 @@ function Notificaciones() {
 
   const getIcono = (tipo) => {
     const iconos = {
-      SISTEMA: { icon: FaExclamationCircle, color: '#6366f1', bg: '#EEF2FF' },
+      SISTEMA: { icon: CircleAlert, color: '#6366f1', bg: '#EEF2FF' },
       PEDIDO: { icon: Car, color: '#10b981', bg: '#E7F7F0' },
       PAGO: { icon: Banknote, color: '#f59e0b', bg: '#FEF3C7' },
       MENSAJE: { icon: Mail, color: '#3b82f6', bg: '#E8F0FE' }
@@ -353,7 +353,7 @@ function Notificaciones() {
                 className="text-decoration-none p-1"
                 style={{ color: '#6b7280', fontSize: '0.75rem' }}
               >
-                <CheckDouble size={12} className="me-1" />
+                <Check size={12} className="me-1" />
                 Leer todo
               </Button>
             )}

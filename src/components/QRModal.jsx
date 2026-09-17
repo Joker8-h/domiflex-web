@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
-import { Download, Mail, QrCode, Printer, Clock, User } from "lucide-react";
+import { Download, Mail, QrCode, Printer, Clock, User, ShieldCheck } from "lucide-react";
 import { Modal, Button, Alert, Badge } from 'react-bootstrap';
 import QRCode from 'react-qr-code';
 
@@ -428,7 +428,7 @@ const QRModal = ({
                 }}
               >
                 <div className="d-flex align-items-center mb-2">
-                  <FaShieldAlt className="me-2" size={20} style={{ color: colores.primary }} />
+                  <ShieldCheck className="me-2" size={20} style={{ color: colores.primary }} />
                   <strong style={{ color: colores.primary }}>Información de Seguridad</strong>
                 </div>
                 <ul className="mb-0 ps-3" style={{ color: '#856404' }}>

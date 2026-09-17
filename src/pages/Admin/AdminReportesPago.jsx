@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TriangleAlert, Banknote, CircleX } from "lucide-react";
+import { TriangleAlert, Banknote, CircleX, Mail, Funnel, Calendar, Eye, CircleCheck } from "lucide-react";
 import { Container, Modal, Form, Card, Row, Col, Spinner } from 'react-bootstrap';
 
 import { useAuth } from '../../pages/context/AuthContext';
@@ -316,7 +316,7 @@ function AdminReportesPago() {
                     >
                         <span>
                             {procesando ? <Spinner size="sm" style={{ marginRight: '0.25rem' }} /> :
-                                <BsEnvelopeFill style={{ marginRight: '0.25rem' }} />}
+                                <Mail style={{ marginRight: '0.25rem' }} />}
                         </span>
                         <span>Enviar Recordatorios</span>
                     </CustomButton>
@@ -343,7 +343,7 @@ function AdminReportesPago() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', alignItems: 'end' }}>
                     <div>
                         <label style={{ fontSize: '0.875rem', color: '#6c757d', display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.25rem' }}>
-                            <BsFunnelFill /> Estado
+                            <Funnel /> Estado
                         </label>
                         <select
                             value={filtroEstado}
@@ -363,7 +363,7 @@ function AdminReportesPago() {
                     </div>
                     <div>
                         <label style={{ fontSize: '0.875rem', color: '#6c757d', display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.25rem' }}>
-                            <BsCalendar3 /> Mes
+                            <Calendar /> Mes
                         </label>
                         <input
                             type="month"
@@ -500,7 +500,7 @@ function AdminReportesPago() {
                                                 onClick={() => { setReporteSeleccionado(reporte); setShowModal(true); }}
                                                 style={{ marginRight: '0.25rem' }}
                                             >
-                                                <BsEyeFill /> Ver
+                                                <Eye /> Ver
                                             </CustomButton>
                                             {reporte.estado === 'PENDIENTE' && (
                                                 <>
@@ -511,14 +511,14 @@ function AdminReportesPago() {
                                                         disabled={procesando}
                                                         style={{ marginRight: '0.25rem' }}
                                                     >
-                                                        <BsCheckCircleFill />
+                                                        <CircleCheck />
                                                     </CustomButton>
                                                     <CustomButton
                                                         size="sm"
                                                         variant="danger"
                                                         onClick={() => { setReporteSeleccionado(reporte); setShowRechazarModal(true); }}
                                                     >
-                                                        <CircleXFill />
+                                                        <CircleX />
                                                     </CustomButton>
                                                 </>
                                             )}
@@ -617,14 +617,14 @@ function AdminReportesPago() {
                                         onClick={() => aprobarReporte(reporteSeleccionado.idReporte)}
                                         disabled={procesando}
                                     >
-                                        <span>{procesando ? <Spinner size="sm" style={{ marginRight: '0.25rem' }} /> : <BsCheckCircleFill style={{ marginRight: '0.25rem' }} />}</span>
+                                        <span>{procesando ? <Spinner size="sm" style={{ marginRight: '0.25rem' }} /> : <CircleCheck style={{ marginRight: '0.25rem' }} />}</span>
                                         <span>Aprobar</span>
                                     </CustomButton>
                                     <CustomButton
                                         variant="danger"
                                         onClick={() => setShowRechazarModal(true)}
                                     >
-                                        <CircleXFill style={{ marginRight: '0.25rem' }} /> Rechazar
+                                        <CircleX style={{ marginRight: '0.25rem' }} /> Rechazar
                                     </CustomButton>
                                 </>
                             )}

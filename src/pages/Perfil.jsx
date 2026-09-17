@@ -7,11 +7,14 @@ import ProfileMenuItem from "../components/ProfileMenuItem";
 
 export default function Perfil() {
   const navigate = useNavigate();
-  const usuario = JSON.parse(localStorage.getItem("domiflex_usuario") || "{}");
+  let usuario = {};
+  try { usuario = JSON.parse(localStorage.getItem("domiflex_usuario") || "{}"); } catch { usuario = {}; }
 
   const handleLogout = () => {
     localStorage.removeItem("domiflex_token");
     localStorage.removeItem("domiflex_usuario");
+    localStorage.removeItem("app_token");
+    localStorage.removeItem("app_usuario");
     navigate("/login");
   };
 

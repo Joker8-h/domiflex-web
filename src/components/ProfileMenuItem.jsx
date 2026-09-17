@@ -1,5 +1,5 @@
 import React from "react";
-import {  } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import theme from "../styles/theme";
 
 export default function ProfileMenuItem({ icon: Icon, label, onClick, danger = false }) {
@@ -19,7 +19,7 @@ export default function ProfileMenuItem({ icon: Icon, label, onClick, danger = f
           {label}
         </span>
       </div>
-      <FaChevronRight size={14} color={theme.colors.textMuted} />
+      <ChevronRight size={14} color={theme.colors.textMuted} />
     </div>
   );
 }

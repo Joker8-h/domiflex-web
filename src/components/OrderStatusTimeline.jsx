@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleCheck, Check } from "lucide-react";
+import { CircleCheck, Check, Circle } from "lucide-react";
 import theme from "../styles/theme";
 
 const states = [
@@ -26,10 +26,10 @@ export default function OrderStatusTimeline({ currentStatus }) {
                 <CircleCheck size={20} color={theme.colors.accent} />
               ) : isCurrent ? (
                 <div style={styles.currentDot}>
-                  <FaCircle size={12} color={theme.colors.accent} />
+                  <Circle size={12} color={theme.colors.accent} fill={theme.colors.accent} />
                 </div>
               ) : (
-                <FaCircle size={12} color={theme.colors.border} />
+                <Circle size={12} color={theme.colors.border} />
               )}
               {index < states.length - 1 && (
                 <div

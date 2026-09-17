@@ -18,12 +18,17 @@ export default function Notificaciones() {
   const fetchNotificaciones = async () => {
     try {
       const token = localStorage.getItem("domiflex_token");
-      const usuario = JSON.parse(localStorage.getItem("domiflex_usuario"));
-      if (!usuario?.idUsuarios) return;
+      const raw = localStorage.getItem("domiflex_usuario");
+      let usuario = null;
+      try { usuario = raw ? JSON.parse(raw) : null; } catch { usuario = null; }
+      if (!usuario?.idUsuarios || !token) { setLoading(false); return; }
       const res = await fetch(`${API_URL}/notificaciones/usuario/${usuario.idUsuarios}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) setNotificaciones(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setNotificaciones(Array.isArray(data) ? data : data.notificaciones || []);
+      }
     } catch (err) {
       console.error("Error:", err);
     } finally {
