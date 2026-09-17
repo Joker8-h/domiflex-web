@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { Container, Row, Col, Card, Form, Button, Alert, Modal } from "react-bootstrap";
-import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from '/logo-domiflex.jpg';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import { Mail, EyeOff, QrCode, Camera, Lock, Eye } from "lucide-react";
@@ -258,7 +258,7 @@ function Login() {
                                                     width: '100%',
                                                     outline: 'none',
                                                     transition: theme.transitions.fast,
-                                                    fontFamily: "'Inter', sans-serif"
+                                                    fontFamily: "'Montserrat', sans-serif"
                                                 }}
                                                 onFocus={(e) => {
                                                     e.target.style.borderColor = theme.colors.accent;
@@ -303,7 +303,7 @@ function Login() {
                                                     width: '100%',
                                                     outline: 'none',
                                                     transition: theme.transitions.fast,
-                                                    fontFamily: "'Inter', sans-serif"
+                                                    fontFamily: "'Montserrat', sans-serif"
                                                 }}
                                                 onFocus={(e) => {
                                                     e.target.style.borderColor = theme.colors.accent;
@@ -374,7 +374,7 @@ function Login() {
                                             transition: theme.transitions.fast,
                                             cursor: loading ? 'not-allowed' : 'pointer',
                                             opacity: loading ? 0.7 : 1,
-                                            fontFamily: "'Inter', sans-serif"
+                                            fontFamily: "'Montserrat', sans-serif"
                                         }}
                                     >
                                         {loading ? 'Iniciando...' : 'Iniciar Sesión'}

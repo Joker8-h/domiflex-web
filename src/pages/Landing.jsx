@@ -53,14 +53,17 @@ export default function Landing() {
       </div>
 
       {/* Features */}
-      <div style={styles.featuresSection}>
+      <section aria-labelledby="beneficios-title" style={styles.featuresSection}>
+        <h2 id="beneficios-title" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+          ¿Por qué elegir DomiFlex?
+        </h2>
         <div style={styles.featuresGrid}>
           {features.map((f, i) => {
             const Icon = f.icon;
             return (
               <div key={i} style={styles.featureCard}>
                 <div style={styles.featureIcon}>
-                  <Icon size={28} color={theme.colors.accent} />
+                  <Icon size={28} color={theme.colors.accent} aria-hidden="true" />
                 </div>
                 <h3 style={styles.featureTitle}>{f.title}</h3>
                 <p style={styles.featureDesc}>{f.desc}</p>
@@ -68,7 +71,7 @@ export default function Landing() {
             );
           })}
         </div>
-      </div>
+      </section>
 
       {/* How it works */}
       <div style={styles.howSection}>
@@ -77,19 +80,19 @@ export default function Landing() {
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>1</div>
             <Store size={32} color={theme.colors.accent} />
-            <h4 style={styles.stepTitle}>Elige tu negocio</h4>
+            <h3 style={styles.stepTitle}>Elige tu negocio</h3>
             <p style={styles.stepDesc}>Restaurantes, farmacias, supermercados y más</p>
           </div>
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>2</div>
             <CreditCard size={32} color={theme.colors.accent} />
-            <h4 style={styles.stepTitle}>Haz tu pedido</h4>
+            <h3 style={styles.stepTitle}>Haz tu pedido</h3>
             <p style={styles.stepDesc}>Selecciona productos y paga en efectivo</p>
           </div>
           <div style={styles.stepCard}>
             <div style={styles.stepNumber}>3</div>
             <Bike size={32} color={theme.colors.accent} />
-            <h4 style={styles.stepTitle}>Recibe en casa</h4>
+            <h3 style={styles.stepTitle}>Recibe en casa</h3>
             <p style={styles.stepDesc}>Sigue tu pedido en tiempo real</p>
           </div>
         </div>
@@ -117,7 +120,7 @@ const styles = {
     minHeight: "100vh",
     backgroundColor: theme.colors.bgPrimary,
     color: theme.colors.textPrimary,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   hero: {
     position: "relative",

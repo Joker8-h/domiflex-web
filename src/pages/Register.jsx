@@ -5,7 +5,7 @@ import { CircleCheck, ArrowRight, ArrowLeft, Mail, EyeOff, Camera, Video, Phone,
 import toast, { Toaster } from 'react-hot-toast';
 import NavbarCustom from '../components/Navbar'
 import { API_URL } from '../config';
-import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from '/logo-domiflex.jpg';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import theme from '../styles/theme';
 
@@ -355,7 +355,7 @@ function Register() {
         width: '100%',
         outline: 'none',
         transition: theme.transitions.fast,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
     };
 
     const btnPrimary = {
@@ -369,7 +369,7 @@ function Register() {
         fontSize: fs.md,
         cursor: 'pointer',
         transition: theme.transitions.fast,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
     };
 
     const btnSecondary = {
@@ -383,7 +383,7 @@ function Register() {
         fontSize: fs.md,
         cursor: 'pointer',
         transition: theme.transitions.fast,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
     };
 
     const labelStyle = {
@@ -401,7 +401,7 @@ function Register() {
                 minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
             }}>
                 <Toaster
                     position="top-right"
@@ -429,14 +429,14 @@ function Register() {
                                 padding: '32px',
                             }}>
                                 <div style={{ textAlign: 'center', marginBottom: sp.lg }}>
-                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
-                                    <h5 style={{
+                                    <img src={LogoDomiFlex} alt="DomiFlex — Delivery, rapidez y flexibilidad" style={{ width: '150px' }} />
+                                    <h1 style={{
                                         fontWeight: theme.fontWeight.bold,
                                         marginTop: sp.md,
                                         marginBottom: sp.xs,
                                         color: s.textPrimary,
                                         fontSize: fs.lg,
-                                    }}>Crea tu cuenta</h5>
+                                    }}>Crea tu cuenta</h1>
                                     <div style={{
                                         height: '5px',
                                         borderRadius: br.lg,
@@ -478,11 +478,17 @@ function Register() {
                                                 Ingresa tu correo para recibir un código de verificación.
                                             </p>
                                             <Form.Group style={{ marginBottom: sp.lg }}>
+                                                <label htmlFor="register-email" style={{ display: 'block', fontSize: fs.sm, fontWeight: theme.fontWeight.medium, color: s.textSecondary, marginBottom: '6px' }}>
+                                                    Correo electrónico
+                                                </label>
                                                 <Form.Control
+                                                    id="register-email"
                                                     type="email"
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="Correo Electrónico"
+                                                    placeholder="tucorreo@ejemplo.com"
+                                                    autoComplete="email"
+                                                    inputMode="email"
                                                     required
                                                     style={inputStyle}
                                                     onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
@@ -501,8 +507,14 @@ function Register() {
                                                 Ingresa el código enviado a <strong style={{ color: s.textPrimary }}>{email}</strong>
                                             </p>
                                             <Form.Group style={{ marginBottom: sp.lg }}>
+                                                <label htmlFor="register-otp" style={{ display: 'block', fontSize: fs.sm, fontWeight: theme.fontWeight.medium, color: s.textSecondary, marginBottom: '6px', textAlign: 'left' }}>
+                                                    Código de 6 dígitos
+                                                </label>
                                                 <Form.Control
+                                                    id="register-otp"
                                                     type="text"
+                                                    inputMode="numeric"
+                                                    autoComplete="one-time-code"
                                                     maxLength="6"
                                                     value={otp}
                                                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
@@ -617,7 +629,7 @@ function Register() {
                                                     opacity: cameraActive ? 0.6 : 1,
                                                     marginBottom: sp.md,
                                                     transition: theme.transitions.fast,
-                                                    fontFamily: "'Inter', sans-serif",
+                                                    fontFamily: "'Montserrat', sans-serif",
                                                 }}
                                             >
                                                 <Video style={{ marginRight: '8px' }} /> Tomar Foto
@@ -812,7 +824,7 @@ function Register() {
                         color: s.textSecondary,
                     }}>
                         <div style={{
-                            fontFamily: "'Inter', sans-serif",
+                            fontFamily: "'Montserrat', sans-serif",
                             fontSize: fs.sm,
                             whiteSpace: 'pre-wrap',
                             lineHeight: '1.6',
@@ -848,3 +860,4 @@ function Register() {
 }
 
 export default Register;
+

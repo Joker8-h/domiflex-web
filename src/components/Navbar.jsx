@@ -168,8 +168,8 @@ const styles = {
     gap: "12px",
   },
   iconBtn: {
-    width: "40px",
-    height: "40px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     backgroundColor: theme.colors.accent,
     color: "#000",
@@ -185,8 +185,8 @@ const styles = {
     gap: "12px",
   },
   bellBtn: {
-    width: "36px",
-    height: "36px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     backgroundColor: theme.colors.bgCard,
     color: theme.colors.textPrimary,
