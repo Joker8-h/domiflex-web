@@ -632,11 +632,14 @@ function AdminUsuarios() {
                                     </div>
                                 ) : (
                                     <>
-                                        <div className="table-responsive">
+                                        <div className="table-responsive" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                                             <Table hover variant="dark" className="align-middle mb-0">
                                                 <thead style={{
-                                                    backgroundColor: 'rgba(248, 249, 250, 0.9)',
-                                                    borderBottom: '2px solid #62d8d9'
+                                                    position: 'sticky',
+                                                    top: 0,
+                                                    zIndex: 1,
+                                                    backgroundColor: '#0D1117',
+                                                    borderBottom: '2px solid #00E676'
                                                 }}>
                                                     <tr>
                                                         <th className="py-3 px-4" style={{ color: '#113d69' }}>ID</th>

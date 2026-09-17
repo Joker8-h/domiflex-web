@@ -137,10 +137,14 @@ function Login() {
                         <img
                             src={EscenaHomeBase}
                             alt="DomiFlex Home"
+                            width="550"
+                            height="366"
+                            loading="lazy"
                             style={{
                                 width: '100%',
                                 maxWidth: '550px',
                                 height: 'auto',
+                                aspectRatio: '550 / 366',
                                 filter: 'drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.4))'
                             }}
                         />

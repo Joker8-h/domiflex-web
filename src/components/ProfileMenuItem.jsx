@@ -4,7 +4,18 @@ import theme from "../styles/theme";
 
 export default function ProfileMenuItem({ icon: Icon, label, onClick, danger = false }) {
   return (
-    <div style={styles.container} onClick={onClick}>
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={label}
+      style={styles.container}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}>
       <div style={styles.left}>
         <div style={{
           ...styles.iconContainer,
@@ -30,6 +41,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "14px 16px",
+    minHeight: "48px",
     cursor: "pointer",
     transition: theme.transitions.fast,
     borderBottom: `1px solid ${theme.colors.border}`,

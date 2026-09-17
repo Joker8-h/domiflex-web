@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap';
-import { FaApple, FaGooglePlay } from 'react-icons/fa';
+import { Smartphone, Play } from "lucide-react";
 import qrDescarga from '../pages/Imagenes/qr_descarga.png';
 
 const AppDownloadBanner = () => {
-    const brandColor = "#56bca7";
+    const brandColor = "#00E676";
     
     return (
         <section className="py-5" style={{ background: `linear-gradient(135deg, ${brandColor} 0%, #3a9382 100%)`, borderRadius: '40px', margin: '40px 20px', overflow: 'hidden' }}>

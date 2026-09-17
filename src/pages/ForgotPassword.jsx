@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
-import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import LogoDomiFlex from '/logo-domiflex.jpg';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import { ArrowLeft, Mail } from "lucide-react";
@@ -69,7 +69,7 @@ function ForgotPassword() {
                     </Col>
 
                     <Col xs={12} md={5} lg={5} xl={4}>
-                        <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+                        <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)', fontFamily: "'Montserrat', sans-serif" }}>
                             <Card.Body className="p-4 p-md-5">
                                 <div className="text-center mb-4">
                                     <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
@@ -82,25 +82,34 @@ function ForgotPassword() {
 
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-4">
+                                        <label htmlFor="forgot-email" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#9AA4B2', marginBottom: '6px', fontFamily: "'Montserrat', sans-serif" }}>
+                                            Correo electrónico
+                                        </label>
                                         <div className="position-relative">
-                                            <Mail className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
+                                            <Mail className="position-absolute start-0 top-50 translate-middle-y ms-3" style={{ color: '#9AA4B2' }} size={18} aria-hidden="true" />
                                             <Form.Control
-                                                type="email" 
-                                                placeholder="Correo electrónico" 
+                                                id="forgot-email"
+                                                type="email"
+                                                placeholder="tucorreo@ejemplo.com"
+                                                autoComplete="email"
+                                                inputMode="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)} 
                                                 required
                                                 disabled={loading || !!message}
+                                                aria-describedby="forgot-help"
                                                 style={{ 
                                                     borderRadius: '12px', 
                                                     paddingLeft: '45px', 
                                                     backgroundColor: '#f8fafb', 
                                                     border: '1px solid #eee',
                                                     paddingTop: '0.8rem',
-                                                    paddingBottom: '0.8rem'
+                                                    paddingBottom: '0.8rem',
+                                                    fontFamily: "'Montserrat', sans-serif"
                                                 }}
                                             />
                                         </div>
+                                        <div id="forgot-help" style={{ fontSize: '12px', color: '#9AA4B2', marginTop: '6px' }}>Te enviaremos un enlace para restablecer tu contraseña.</div>
                                     </Form.Group>
 
                                     <Button 
