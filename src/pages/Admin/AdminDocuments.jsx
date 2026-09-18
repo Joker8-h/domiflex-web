@@ -344,14 +344,11 @@ function AdminDocumentos() {
 
             const data = await response.json();
 
-            if (!Array.isArray(data)) {
-                throw new Error("La respuesta del servidor no es válida");
-            }
-
-            setUsuarios(data);
+            setUsuarios(Array.isArray(data) ? data : (Array.isArray(data?.usuarios) ? data.usuarios : []));
         } catch (error) {
             console.error("Error al traer usuarios:", error);
             setError("Error al cargar la información de usuarios");
+            setUsuarios([]);
         }
     }
 
@@ -377,11 +374,7 @@ function AdminDocumentos() {
 
             const data = await response.json();
 
-            if (!Array.isArray(data)) {
-                throw new Error("La respuesta del servidor no es válida");
-            }
-
-            setDocumentos(data);
+            setDocumentos(Array.isArray(data) ? data : []);
 
         } catch (error) {
             console.error("Error al traer documentos:", error);
