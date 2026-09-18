@@ -341,7 +341,7 @@ const QRModal = ({
                       fontSize: '0.85rem'
                     }}
                   >
-                    <UserTag className="me-1" />
+                    <User size={14} className="me-1" />
                     {getRolNombre(usuario?.idRol)}
                   </Badge>
                   

@@ -72,7 +72,7 @@ function Notificaciones() {
   const marcarComoLeida = async (idNotificacion) => {
     try {
       const respuesta = await fetch(
-        `${API_URL}/notificaciones/${idNotificacion}/leer`,
+        `${API_URL}/notificaciones/${idNotificacion}/leida`,
         {
           method: 'PATCH',
           headers: {

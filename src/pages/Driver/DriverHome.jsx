@@ -2517,7 +2517,7 @@ const DriverHome = () => {
                                             <img
                                                 src={vehiculoPrincipal.fotoVehiculo.startsWith('http')
                                                     ? vehiculoPrincipal.fotoVehiculo
-                                                    : `https://backendmovi-c657-production.up.railway.app${vehiculoPrincipal.fotoVehiculo}`}
+                                                    : `${API_BASE_URL}${vehiculoPrincipal.fotoVehiculo}`}
                                                 alt="Vehículo"
                                                 style={{
                                                     width: '60px',
