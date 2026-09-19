@@ -335,19 +335,19 @@ const styles = {
   },
   marqueeTrack: {
     display: "inline-flex",
-    gap: "32px",
     whiteSpace: "nowrap",
-    animation: "df-marquee 22s linear infinite",
-    paddingLeft: "32px",
+    animation: "df-marquee 45s linear infinite",
+    willChange: "transform",
   },
   marqueeItem: {
     fontSize: "14px",
     fontWeight: 600,
     color: theme.colors.textSecondary,
+    paddingRight: "48px",
   },
   marqueeSep: {
     color: theme.colors.accent,
-    marginLeft: "32px",
+    marginLeft: "48px",
   },
   popSection: {
     padding: "clamp(48px, 8vw, 80px) 16px",
