@@ -58,6 +58,11 @@ div[data-rht-toaster] {
   }
 }
 
+/* El marquee se detiene al pasar el cursor/tocar */
+.df-marquee-paused:hover {
+  animation-play-state: paused;
+}
+
 /* Micro-interacciones: press + lift, solo transform/opacity (compositor) */
 .df-press {
   transition: transform 180ms cubic-bezier(0.2, 0, 0, 1), opacity 180ms cubic-bezier(0.2, 0, 0, 1);

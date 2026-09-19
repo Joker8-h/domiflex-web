@@ -83,7 +83,7 @@ export default function Landing() {
 
       {/* Marquee categorías */}
       <div style={styles.marquee} aria-hidden="true">
-        <div style={styles.marqueeTrack}>
+        <div style={styles.marqueeTrack} className="df-marquee-paused">
           {[...categories, ...categories].map((cat, i) => (
             <span key={i} style={styles.marqueeItem}>
               {cat.icon} {cat.label} <span style={styles.marqueeSep}>•</span>
@@ -336,7 +336,7 @@ const styles = {
   marqueeTrack: {
     display: "inline-flex",
     whiteSpace: "nowrap",
-    animation: "df-marquee 45s linear infinite",
+    animation: "df-marquee 60s linear infinite",
     willChange: "transform",
   },
   marqueeItem: {
