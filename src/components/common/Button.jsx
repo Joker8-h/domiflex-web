@@ -45,7 +45,7 @@ export default function Button({
     fontWeight: theme.fontWeight.semibold,
     cursor: disabled ? "not-allowed" : "pointer",
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
     opacity: disabled ? 0.5 : 1,
     display: "inline-flex",
     alignItems: "center",

@@ -384,6 +384,6 @@ const styles = {
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.semibold,
     cursor: "pointer",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
 };

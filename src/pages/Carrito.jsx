@@ -317,7 +317,7 @@ const styles = {
     minHeight: "48px",
     color: theme.colors.textPrimary,
     fontSize: theme.fontSize.md,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
     width: "100%",
   },
   locBtn: {
@@ -334,7 +334,7 @@ const styles = {
     fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.semibold,
     cursor: "pointer",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   couponSection: {
     display: "flex",
@@ -357,7 +357,7 @@ const styles = {
     minHeight: "48px",
     color: theme.colors.textPrimary,
     fontSize: theme.fontSize.md,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   couponBtn: {
     backgroundColor: theme.colors.bgCard,
@@ -369,7 +369,7 @@ const styles = {
     fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.semibold,
     cursor: "pointer",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   summary: {
     backgroundColor: theme.colors.bgCard,

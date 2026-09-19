@@ -59,7 +59,7 @@ const styles = {
     cursor: "pointer",
     whiteSpace: "nowrap",
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
     fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.medium,
     flexShrink: 0,

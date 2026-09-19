@@ -75,7 +75,7 @@ a:hover {
 }
 
 button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 img {
@@ -84,7 +84,7 @@ img {
 }
 
 input, textarea, select {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 input::placeholder,

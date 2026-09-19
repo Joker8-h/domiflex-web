@@ -88,7 +88,7 @@ export const commonStyles = {
     minHeight: '100vh',
     backgroundColor: theme.colors.bgPrimary,
     color: theme.colors.textPrimary,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   card: {
     backgroundColor: theme.colors.bgCard,
@@ -112,7 +112,7 @@ export const commonStyles = {
     fontWeight: theme.fontWeight.semibold,
     cursor: 'pointer',
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   buttonOutline: {
     backgroundColor: 'transparent',
@@ -124,7 +124,7 @@ export const commonStyles = {
     fontWeight: theme.fontWeight.semibold,
     cursor: 'pointer',
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   input: {
     backgroundColor: theme.colors.bgInput,
@@ -136,7 +136,7 @@ export const commonStyles = {
     width: '100%',
     outline: 'none',
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   inputFocus: {
     borderColor: theme.colors.accent,

@@ -40,7 +40,7 @@ export default function Avatar({
     color: theme.colors.accent,
     fontSize: `${size * 0.35}px`,
     fontWeight: theme.fontWeight.bold,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   };
 
   return (

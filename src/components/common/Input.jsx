@@ -43,7 +43,7 @@ export default function Input({
     padding: "12px 0",
     fontSize: theme.fontSize.md,
     outline: "none",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
     width: "100%",
   };
 

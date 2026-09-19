@@ -156,7 +156,7 @@ const styles = {
     fontWeight: theme.fontWeight.medium,
     cursor: "pointer",
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   content: {
     padding: "0 16px",

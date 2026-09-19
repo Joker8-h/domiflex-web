@@ -385,7 +385,7 @@ const styles = {
     cursor: "pointer",
     whiteSpace: "nowrap",
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   productos: {
     padding: "0 16px",
@@ -465,7 +465,7 @@ const styles = {
     boxShadow: theme.shadows.button,
     zIndex: theme.zIndex.fixed,
     fontWeight: theme.fontWeight.bold,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   cartCount: {
     minWidth: "28px",

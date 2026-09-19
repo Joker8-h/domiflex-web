@@ -73,7 +73,7 @@ const styles = {
     minWidth: "64px",
     position: "relative",
     transition: theme.transitions.fast,
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   label: {
     fontSize: theme.fontSize.xs,

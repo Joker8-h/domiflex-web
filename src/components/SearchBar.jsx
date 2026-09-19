@@ -63,7 +63,7 @@ const styles = {
     color: theme.colors.textPrimary,
     fontSize: theme.fontSize.md,
     outline: "none",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Montserrat', sans-serif",
   },
   clearBtn: {
     background: "none",
