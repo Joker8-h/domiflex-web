@@ -113,41 +113,48 @@ export default function Carrito() {
     );
   };
 
-  const handleCheckout = async () => {
+  const datosPedido = () => ({
+    negocioId: negocio.id,
+    nombreRecogida: negocio.nombre,
+    dirRecogida: negocio.direccion,
+    latRecogida: negocio.latitud,
+    lngRecogida: negocio.longitud,
+    nombreEntrega: nombreEntrega.trim() || "Mi casa",
+    dirEntrega: dirEntrega.trim(),
+    latEntrega: coords.lat,
+    lngEntrega: coords.lng,
+    detallePedido: `Pedido desde ${negocio.nombre}`,
+    tipoPago: "EFECTIVO",
+    items: cart.map((item) => ({
+      menuItemId: item.id,
+      cantidad: item.cantidad,
+      precio: item.precio,
+    })),
+  });
+
+  const listoParaPedir = () => {
     setFormError(null);
-    if (cart.length === 0) return;
+    if (cart.length === 0) return false;
     if (!negocio?.latitud || !negocio?.longitud) {
       setFormError("Este negocio no tiene ubicación registrada. Elige otro negocio.");
-      return;
+      return false;
     }
     if (!dirEntrega.trim()) {
       setFormError("Escribe tu dirección de entrega.");
-      return;
+      return false;
     }
     if (!coords) {
       setFormError("Comparte tu ubicación con el botón de abajo para calcular el domicilio.");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const handleCheckout = async () => {
+    if (!listoParaPedir()) return;
     setPlacing(true);
     try {
-      const pedido = await api.post("/pedidos", {
-        negocioId: negocio.id,
-        nombreRecogida: negocio.nombre,
-        dirRecogida: negocio.direccion,
-        latRecogida: negocio.latitud,
-        lngRecogida: negocio.longitud,
-        nombreEntrega: nombreEntrega.trim() || "Mi casa",
-        dirEntrega: dirEntrega.trim(),
-        latEntrega: coords.lat,
-        lngEntrega: coords.lng,
-        detallePedido: `Pedido desde ${negocio.nombre}`,
-        tipoPago: "EFECTIVO",
-        items: cart.map((item) => ({
-          menuItemId: item.id,
-          cantidad: item.cantidad,
-          precio: item.precio,
-        })),
-      });
+      const pedido = await api.post("/pedidos", datosPedido());
       clearCart();
       setCart([]);
       toast.success(`Pedido #${pedido.idPedido} confirmado. Pago en efectivo: $${Number(pedido.total).toLocaleString()}`);
@@ -155,6 +162,34 @@ export default function Carrito() {
     } catch (err) {
       setFormError(err.message || "No se pudo crear el pedido.");
     } finally {
+      setPlacing(false);
+    }
+  };
+
+  const handleOnline = async () => {
+    if (!listoParaPedir()) return;
+    setPlacing(true);
+    try {
+      const pedido = await api.post("/pedidos", datosPedido());
+      clearCart();
+      setCart([]);
+      try {
+        const checkout = await api.post("/pagos/wompi/checkout", { idPedido: pedido.idPedido });
+        const query = [
+          `public-key=${encodeURIComponent(checkout.publicKey)}`,
+          `currency=${encodeURIComponent(checkout.currency)}`,
+          `amount-in-cents=${encodeURIComponent(checkout.amountInCents)}`,
+          `reference=${encodeURIComponent(checkout.reference)}`,
+          `signature:integrity=${encodeURIComponent(checkout.signature)}`,
+          `redirect-url=${encodeURIComponent(checkout.redirectUrl)}`,
+        ].join("&");
+        window.location.href = `https://checkout.wompi.co/p/?${query}`;
+      } catch (err) {
+        toast.error(err.message || "El pedido quedó en efectivo.");
+        navigate(`/tracking/${pedido.idPedido}`);
+      }
+    } catch (err) {
+      setFormError(err.message || "No se pudo crear el pedido.");
       setPlacing(false);
     }
   };
@@ -283,8 +318,11 @@ export default function Carrito() {
             )}
 
             <Button fullWidth onClick={handleCheckout} disabled={placing || quoting}>
-              {placing ? "Confirmando pedido…" : `Confirmar pedido — $${total.toLocaleString()}`}
+              {placing ? "Confirmando pedido…" : `Pagar en efectivo — $${total.toLocaleString()}`}
             </Button>
+            <button type="button" style={styles.onlineBtn} onClick={handleOnline} disabled={placing || quoting}>
+              Pagar en línea (Nequi, PSE o tarjeta)
+            </button>
           </>
         )}
       </div>
@@ -469,6 +507,18 @@ const styles = {
     margin: "4px 0 0",
     fontSize: theme.fontSize.sm,
     color: theme.colors.textSecondary,
+  },
+  onlineBtn: {
+    width: "100%",
+    marginTop: "10px",
+    padding: "14px 16px",
+    borderRadius: theme.borderRadius.sm,
+    border: `1px solid ${theme.colors.border}`,
+    backgroundColor: "transparent",
+    color: theme.colors.textPrimary,
+    fontSize: theme.fontSize.sm,
+    fontWeight: theme.fontWeight.bold,
+    cursor: "pointer",
   },
   formError: {
     backgroundColor: "rgba(255, 82, 82, 0.1)",
