@@ -7,6 +7,7 @@ import { SkeletonCard } from "../components/ui/Skeleton";
 import ErrorState from "../components/ui/ErrorState";
 import EmptyState from "../components/ui/EmptyState";
 import { useIsMobile } from "../hooks/useMediaQuery";
+import { loadCart, saveCart } from "../lib/cartStorage";
 
 export default function RestauranteDetalle() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ export default function RestauranteDetalle() {
   const [productos, setProductos] = useState([]);
   const [selectedCategoria, setSelectedCategoria] = useState(null);
   const [cart, setCart] = useState([]);
+  const [cartReady, setCartReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
@@ -45,6 +47,20 @@ export default function RestauranteDetalle() {
     fetchNegocio();
     return () => controller.abort();
   }, [id, retryKey]);
+
+  useEffect(() => {
+    const saved = loadCart();
+    if (saved.negocio && String(saved.negocio.id) === String(id)) {
+      setCart(saved.cart);
+    }
+    setCartReady(true);
+  }, [id]);
+
+  useEffect(() => {
+    if (!cartReady || !negocio) return;
+    if (cart.length === 0) return;
+    saveCart(cart, negocio);
+  }, [cart, negocio, cartReady]);
 
   const addToCart = (producto) => {
     setCart((prev) => {

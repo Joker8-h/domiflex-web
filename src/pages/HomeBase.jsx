@@ -214,6 +214,22 @@ function HomeBase() {
               <p style={{ fontSize: '1.2rem', color: textSecondary, maxWidth: '600px', margin: '0 auto' }}>
                 Conectamos clientes y repartidores de forma rápida, segura y confiable.
               </p>
+              <Link
+                to="/restaurantes"
+                style={{
+                  display: 'inline-block',
+                  marginTop: '1.5rem',
+                  backgroundColor: accent,
+                  color: '#0D1117',
+                  fontWeight: 800,
+                  padding: '14px 28px',
+                  borderRadius: '12px',
+                  textDecoration: 'none',
+                  minHeight: '48px',
+                }}
+              >
+                Pedir ahora
+              </Link>
             </Col>
           </Row>
         </Container>

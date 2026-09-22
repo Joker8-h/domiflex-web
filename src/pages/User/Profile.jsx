@@ -81,7 +81,8 @@ const CustomButton = ({ variant, onClick, children, disabled, style, className }
                     ...baseStyle,
                     backgroundColor: '#62d8d9',
                     color: '#ffffff',
-                    borderColor: '#62d8d9'
+                    borderColor: '#62d8d9',
+                    width: 'auto',
                 };
             case 'outline-secondary':
                 return {
@@ -96,6 +97,14 @@ const CustomButton = ({ variant, onClick, children, disabled, style, className }
                     backgroundColor: '#113d69',
                     color: '#ffffff',
                     borderColor: '#113d69'
+                };
+            case 'outline-danger':
+                return {
+                    ...baseStyle,
+                    backgroundColor: 'transparent',
+                    color: '#FF5252',
+                    borderColor: '#FF5252',
+                    width: 'auto',
                 };
             default:
                 return baseStyle;
@@ -167,7 +176,7 @@ const CustomListItem = ({ children, style }) => {
 };
 
 function Profile() {
-  const { usuario, token, setUsuario } = useAuth();
+  const { usuario, token, setUsuario, logout } = useAuth();
   const navigate = useNavigate();
 
   // Colores exactos del DriverProfile
@@ -720,13 +729,21 @@ function Profile() {
                     </div>
 
                     {/* Botón de volver */}
-                    <CustomButton
-                      variant="success"
-                      onClick={() => navigate('/user-home')}
-                    >
-                      <History style={{ marginRight: '0.5rem' }} />
-                      Volver al Inicio
-                    </CustomButton>
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                      <CustomButton
+                        variant="success"
+                        onClick={() => navigate('/restaurantes')}
+                      >
+                        <History style={{ marginRight: '0.5rem' }} />
+                        Volver a restaurantes
+                      </CustomButton>
+                      <CustomButton
+                        variant="outline-danger"
+                        onClick={() => { logout(); navigate('/login'); }}
+                      >
+                        Cerrar sesión
+                      </CustomButton>
+                    </div>
                   </div>
                 </div>
               </div>

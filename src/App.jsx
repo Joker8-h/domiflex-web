@@ -22,10 +22,10 @@ const Carrito = lazy(() => import("./pages/Carrito"));
 const Tracking = lazy(() => import("./pages/Tracking"));
 const PedidoDetalle = lazy(() => import("./pages/PedidoDetalle"));
 const NotificacionesPage = lazy(() => import("./pages/Notificaciones"));
-const Perfil = lazy(() => import("./pages/Perfil"));
 const UserHome = lazy(() => import("./pages/User/UserHome"));
 const Profile = lazy(() => import("./pages/User/Profile"));
 const Documents = lazy(() => import("./pages/Documents"));
+const ComercioHome = lazy(() => import("./pages/Comercio/ComercioHome"));
 
 // Driver pages
 const DriverHome = lazy(() => import("./pages/Driver/DriverHome"));
@@ -138,12 +138,15 @@ function App() {
             <Route path="/pedido/:pedidoId" element={<ProtectedRoute><PedidoDetalle /></ProtectedRoute>} />
             <Route path="/mis-pedidos" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
             <Route path="/notificaciones" element={<ProtectedRoute><NotificacionesPage /></ProtectedRoute>} />
-            <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+            <Route path="/perfil" element={<Navigate to="/profile" replace />} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/documentacion" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
 
             {/* Client - Legacy redirects */}
-            <Route path="/cliente-home" element={<Navigate to="/home" replace />} />
+            <Route path="/cliente-home" element={<Navigate to="/restaurantes" replace />} />
+            <Route path="/comercio" element={
+              <ProtectedRoute allowedRoles={[ROLES.COMERCIO, ROLES.ADMIN]}><ComercioHome /></ProtectedRoute>
+            } />
 
             {/* Driver */}
             <Route path="/repartidor-home" element={
@@ -215,7 +218,6 @@ function App() {
             } />
 
             {/* Legacy redirects */}
-            <Route path="/perfil" element={<Navigate to="/profile" replace />} />
             <Route path="/qr-activation" element={<Navigate to="/login" replace />} />
             <Route path="/user-home" element={<Navigate to="/cliente-home" replace />} />
             <Route path="/driver-home" element={<Navigate to="/repartidor-home" replace />} />
@@ -254,7 +256,8 @@ function ProtectedRoute({ children, allowedRoles }) {
   if (!hasPermission) {
     if (rolNombre === "ADMIN" || rolId === 1) return <Navigate to="/dashboard/home" replace />;
     if (rolNombre === "REPARTIDOR" || rolId === 2) return <Navigate to="/repartidor-home" replace />;
-    if (rolNombre === "CLIENTE" || rolNombre === "COMERCIO" || rolId === 3 || rolId === 4) return <Navigate to="/home" replace />;
+    if (rolNombre === "CLIENTE" || rolId === 3) return <Navigate to="/restaurantes" replace />;
+    if (rolNombre === "COMERCIO" || rolId === 4) return <Navigate to="/comercio" replace />;
     return <Navigate to="/login" replace />;
   }
 

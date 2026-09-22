@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, ArrowLeft, MessageCircle, Phone } from "lucide-react";
+import { ArrowLeft, MessageCircle, Phone } from "lucide-react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import theme from "../styles/theme";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
 import Avatar from "../components/common/Avatar";
@@ -11,6 +14,43 @@ import { api } from "../api/client";
 import { useSocket } from "./context/SocketContext";
 
 const POLL_MS = 15000;
+const POPAYAN = [2.4448, -76.6147];
+
+const pinIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+const driverIcon = L.divIcon({
+  className: "",
+  html: `<div style="width:18px;height:18px;border-radius:50%;background:#00E676;border:3px solid #0D1117;box-shadow:0 0 0 4px rgba(0,230,118,.35)"></div>`,
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
+});
+
+function FitBounds({ points }) {
+  const map = useMap();
+  useEffect(() => {
+    if (points.length === 0) return;
+    if (points.length === 1) {
+      map.setView(points[0], 15);
+      return;
+    }
+    map.fitBounds(points, { padding: [28, 28] });
+  }, [map, points]);
+  return null;
+}
+
+function toPoint(lat, lng) {
+  const la = Number(lat);
+  const ln = Number(lng);
+  if (!Number.isFinite(la) || !Number.isFinite(ln)) return null;
+  return [la, ln];
+}
 
 export default function Tracking() {
   const { pedidoId } = useParams();
@@ -20,6 +60,9 @@ export default function Tracking() {
   const [error, setError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
   const [live, setLive] = useState(false);
+  const [driverPos, setDriverPos] = useState(null);
+  const [pago, setPago] = useState(null);
+  const [confirmandoPago, setConfirmandoPago] = useState(false);
   const socketApi = useSocket();
 
   const fetchPedido = useCallback(async (signal) => {
@@ -56,13 +99,18 @@ export default function Tracking() {
         joinPedido(pedidoId);
         setLive(true);
         const onUpdate = () => fetchPedido(controller.signal);
+        const onLocation = (data) => {
+          if (String(data?.idPedido) !== String(pedidoId)) return;
+          if (data.lat == null || data.lng == null) return;
+          setDriverPos([Number(data.lat), Number(data.lng)]);
+        };
         socket.on("pedido_actualizado", onUpdate);
         socket.on("pedido_estado", onUpdate);
-        socket.on("location_updated", onUpdate);
+        socket.on("location_updated", onLocation);
         cleanupSocket = () => {
           socket.off("pedido_actualizado", onUpdate);
           socket.off("pedido_estado", onUpdate);
-          socket.off("location_updated", onUpdate);
+          socket.off("location_updated", onLocation);
           if (leavePedido) leavePedido(pedidoId);
         };
       }
@@ -76,6 +124,22 @@ export default function Tracking() {
       if (cleanupSocket) cleanupSocket();
     };
   }, [pedidoId, retryKey, fetchPedido, socketApi]);
+
+  useEffect(() => {
+    if (pedido?.estado !== "ENTREGADO") {
+      setPago(null);
+      return undefined;
+    }
+    let cancelado = false;
+    api.get(`/pagos/pedido/${pedidoId}`)
+      .then((lista) => {
+        if (!cancelado) setPago(Array.isArray(lista) ? lista[0] || null : null);
+      })
+      .catch(() => {
+        if (!cancelado) setPago(null);
+      });
+    return () => { cancelado = true; };
+  }, [pedido?.estado, pedidoId]);
 
   if (loading) {
     return (
@@ -142,6 +206,13 @@ export default function Tracking() {
     CANCELADO: "Cancelado",
   };
 
+  const puntos = [
+    toPoint(pedido.latRecogida, pedido.lngRecogida),
+    toPoint(pedido.latEntrega, pedido.lngEntrega),
+    driverPos,
+  ].filter(Boolean);
+  const centro = puntos[0] || POPAYAN;
+
   return (
     <div style={styles.page}>
       <div style={styles.header}>
@@ -152,10 +223,29 @@ export default function Tracking() {
         <span style={styles.liveBadge} aria-live="polite">{live ? "En vivo" : "Actualizando"}</span>
       </div>
 
-      {/* Mapa placeholder */}
-      <div style={styles.mapPlaceholder}>
-        <MapPin size={48} color={theme.colors.accent} aria-hidden="true" />
-        <p style={styles.mapText}>Mapa de seguimiento</p>
+      <div style={styles.mapWrap}>
+        <MapContainer center={centro} zoom={14} style={{ width: "100%", height: "100%" }} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; OpenStreetMap'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <FitBounds points={puntos.length ? puntos : [centro]} />
+          {toPoint(pedido.latRecogida, pedido.lngRecogida) && (
+            <Marker position={toPoint(pedido.latRecogida, pedido.lngRecogida)} icon={pinIcon}>
+              <Popup>Recogida{pedido.negocio?.nombre ? `: ${pedido.negocio.nombre}` : ""}</Popup>
+            </Marker>
+          )}
+          {toPoint(pedido.latEntrega, pedido.lngEntrega) && (
+            <Marker position={toPoint(pedido.latEntrega, pedido.lngEntrega)} icon={pinIcon}>
+              <Popup>Entrega: {pedido.dirEntrega || "Tu dirección"}</Popup>
+            </Marker>
+          )}
+          {driverPos && (
+            <Marker position={driverPos} icon={driverIcon}>
+              <Popup>Domiciliario</Popup>
+            </Marker>
+          )}
+        </MapContainer>
       </div>
 
       <div style={styles.content}>
@@ -206,9 +296,36 @@ export default function Tracking() {
           </div>
           <div style={styles.detailRow}>
             <span style={styles.detailLabel}>Pago</span>
-            <span style={styles.detailText}>Efectivo</span>
+            <span style={styles.detailText}>
+              {pago?.estado === "COMPLETADO"
+                ? "Efectivo confirmado"
+                : pago?.confirmacionCliente
+                  ? "Efectivo enviado. Falta el domiciliario."
+                  : "Efectivo"}
+            </span>
           </div>
         </div>
+
+        {pedido.estado === "ENTREGADO" && pago && !pago.confirmacionCliente && (
+          <button
+            type="button"
+            style={styles.payBtn}
+            disabled={confirmandoPago}
+            onClick={async () => {
+              setConfirmandoPago(true);
+              try {
+                const actualizado = await api.put(`/pagos/confirmarCliente/${pago.idPago}`);
+                setPago(actualizado);
+              } catch (err) {
+                setError(err.message || "No se pudo confirmar el pago.");
+              } finally {
+                setConfirmandoPago(false);
+              }
+            }}
+          >
+            {confirmandoPago ? "Confirmando…" : "Ya pagué en efectivo"}
+          </button>
+        )}
 
         <button type="button" style={styles.detailsBtn} onClick={() => navigate(`/pedido/${pedidoId}`)}>
           Ver detalles completos
@@ -260,20 +377,11 @@ const styles = {
     fontSize: theme.fontSize.xs,
     fontWeight: theme.fontWeight.semibold,
   },
-  mapPlaceholder: {
+  mapWrap: {
     width: "100%",
-    height: "250px",
+    height: "280px",
     backgroundColor: theme.colors.bgCard,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
     borderBottom: `1px solid ${theme.colors.border}`,
-  },
-  mapText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.fontSize.sm,
   },
   content: {
     padding: "16px",
@@ -372,6 +480,18 @@ const styles = {
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.bold,
     color: theme.colors.accent,
+  },
+  payBtn: {
+    width: "100%",
+    padding: "14px",
+    minHeight: "48px",
+    border: "none",
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.accent,
+    color: "#0D1117",
+    fontWeight: theme.fontWeight.bold,
+    cursor: "pointer",
+    fontFamily: "'Montserrat', sans-serif",
   },
   detailsBtn: {
     width: "100%",

@@ -73,8 +73,10 @@ function QRScanner({ show, onHide }) {
                         navigate('/dashboard/home');
                     } else if (rolId === 2) {
                         navigate('/repartidor-home');
-                    } else if (rolId === 3 || rolId === 4) {
-                        navigate('/cliente-home');
+                    } else if (rolId === 3) {
+                        navigate('/restaurantes');
+                    } else if (rolId === 4) {
+                        navigate('/comercio');
                     }
                 }, 500);
 

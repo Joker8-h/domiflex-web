@@ -567,14 +567,6 @@ const UserHome = () => {
             });
             const data = await resp.json();
             if (data?.error || (!resp.ok && !data?.idPedido)) throw new Error(data?.error || 'No se pudo crear el pedido');
-            // Pago en efectivo asociado al pedido
-            try {
-                await fetch(`${API_URL}/pagos`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ idPedido: data.idPedido, monto: total, tipoPago: 'EFECTIVO' })
-                });
-            } catch (e) { console.warn('No se pudo registrar el pago en efectivo:', e); }
             setTodosLosPedidos(prev => [data, ...prev]);
             setPedidosRecientes(prev => [data, ...prev].slice(0, 3));
             setShowCrearPedido(false);
@@ -610,19 +602,37 @@ const UserHome = () => {
     const pagarEfectivo = async (pedido) => {
         try {
             setAccionando(true);
-            const resp = await fetch(`${API_URL}/pagos`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idPedido: pedido.idPedido, monto: Number(pedido.total || 0), tipoPago: 'EFECTIVO' })
+            const listaResp = await fetch(`${API_URL}/pagos/pedido/${pedido.idPedido}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const lista = await listaResp.json();
+            const pago = Array.isArray(lista) ? lista[0] : null;
+            if (!pago?.idPago) throw new Error("Este pedido no tiene un pago pendiente");
+            if (pago.confirmacionCliente) {
+                toast.success("El efectivo ya estaba confirmado");
+                return;
+            }
+            const resp = await fetch(`${API_URL}/pagos/confirmarCliente/${pago.idPago}`, {
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}` }
             });
             const data = await resp.json();
-            if (data?.error) throw new Error(data.error);
-            toast.success('Pago en efectivo registrado');
+            if (!resp.ok || data?.error) throw new Error(data?.error || "No se pudo confirmar el pago");
+            toast.success("Pago en efectivo confirmado");
         } catch (error) {
-            toast.error(error.message || 'No se pudo registrar el pago');
+            toast.error(error.message || "No se pudo confirmar el pago");
         } finally {
             setAccionando(false);
         }
+    };
+
+    const abrirPedido = (pedido) => {
+        if (pedido.negocioId || pedido.negocio) {
+            navigate(`/tracking/${pedido.idPedido}`);
+            return;
+        }
+        setPedidoSeleccionado(pedido);
+        setShowDetallePedido(true);
     };
 
     const cargarParadas = async (idPedido) => {
@@ -817,10 +827,10 @@ const UserHome = () => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <Bike size={22} style={{ color: accentColor, marginRight: '0.5rem' }} />
-                                    <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Nuevo domicilio</h5>
+                                    <h5 style={{ margin: 0, fontWeight: 'bold', color: brandColor }}>Envío sin menú</h5>
                                 </div>
                                 <AccionButton variant={showCrearPedido ? 'outline-secondary' : 'primary'} onClick={() => setShowCrearPedido(v => !v)}>
-                                    {showCrearPedido ? <><X style={{ marginRight: '0.5rem' }} /> Cerrar</> : <><Send style={{ marginRight: '0.5rem' }} /> Pedir domicilio</>}
+                                    {showCrearPedido ? <><X style={{ marginRight: '0.5rem' }} /> Cerrar</> : <><Send style={{ marginRight: '0.5rem' }} /> Crear envío</>}
                                 </AccionButton>
                             </div>
                             {showCrearPedido && (
@@ -1079,10 +1089,7 @@ const UserHome = () => {
                                                 borderBottom: '1px solid #F3F4F6',
                                                 cursor: 'pointer'
                                             }}
-                                            onClick={() => {
-                                                setPedidoSeleccionado(pedido);
-                                                setShowDetallePedido(true);
-                                            }}
+                                            onClick={() => abrirPedido(pedido)}
                                         >
                                             <div style={{
                                                 display: 'grid',
@@ -1095,7 +1102,7 @@ const UserHome = () => {
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <p style={{ marginBottom: 0, fontWeight: 'bold', color: brandColor }}>
-                                                        A {pedido.ruta?.nombre || pedido.destino || "Destino"}
+                                                        {pedido.negocio?.nombre || pedido.ruta?.nombre || pedido.dirEntrega || "Destino"}
                                                     </p>
                                                     <small style={{ color: '#6c757d' }}>
                                                         {formatearFecha(pedido.fechaHoraSalida)}
@@ -1261,9 +1268,8 @@ const UserHome = () => {
                                                 cursor: 'pointer'
                                             }}
                                             onClick={() => {
-                                                setPedidoSeleccionado(pedido);
-                                                setShowDetallePedido(true);
                                                 setShowPedidosModal(false);
+                                                abrirPedido(pedido);
                                             }}
                                         >
                                             <div style={{
@@ -1469,9 +1475,14 @@ const UserHome = () => {
                                             Cancelar pedido
                                         </AccionButton>
                                     )}
-                                    <AccionButton variant="outline-primary" onClick={() => pagarEfectivo(pedidoSeleccionado)} disabled={accionando}>
-                                        <Banknote style={{ marginRight: '0.5rem' }} /> Pagar en efectivo
+                                    <AccionButton variant="outline-primary" onClick={() => navigate(`/tracking/${pedidoSeleccionado.idPedido}`)}>
+                                        Ver seguimiento
                                     </AccionButton>
+                                    {pedidoSeleccionado.estado === 'ENTREGADO' && (
+                                        <AccionButton variant="outline-primary" onClick={() => pagarEfectivo(pedidoSeleccionado)} disabled={accionando}>
+                                            <Banknote style={{ marginRight: '0.5rem' }} /> Ya pagué en efectivo
+                                        </AccionButton>
+                                    )}
                                     {pedidoSeleccionado.idRepartidor && (
                                         <AccionButton variant="outline-primary" onClick={() => iniciarChat(pedidoSeleccionado)}>
                                             Chatear con repartidor

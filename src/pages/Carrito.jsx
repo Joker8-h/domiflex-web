@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navigation, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
@@ -8,20 +8,37 @@ import CartItem from "../components/CartItem";
 import EmptyState from "../components/ui/EmptyState";
 import { api } from "../api/client";
 import { useIsMobile } from "../hooks/useMediaQuery";
+import { loadCart, saveCart, clearCart } from "../lib/cartStorage";
 
 export default function Carrito() {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
-  const { cart: initialCart = [], negocio = null } = location.state || {};
+  const stored = loadCart();
+  const incomingCart = location.state?.cart;
+  const incomingNegocio = location.state?.negocio ?? null;
 
-  const [cart, setCart] = useState(initialCart);
+  const [cart, setCart] = useState(incomingCart?.length ? incomingCart : stored.cart);
+  const [negocio, setNegocio] = useState(incomingNegocio || stored.negocio);
   const [nombreEntrega, setNombreEntrega] = useState("");
   const [dirEntrega, setDirEntrega] = useState("");
   const [coords, setCoords] = useState(null);
   const [locating, setLocating] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [formError, setFormError] = useState(null);
+  const [quote, setQuote] = useState(null);
+  const [quoting, setQuoting] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.cart?.length) {
+      setCart(location.state.cart);
+      setNegocio(location.state.negocio || null);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    saveCart(cart, negocio);
+  }, [cart, negocio]);
 
   const updateQuantity = (id, qty) => {
     if (qty <= 0) {
@@ -38,11 +55,43 @@ export default function Carrito() {
   };
 
   const subtotal = useMemo(
-    () => cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0),
+    () => cart.reduce((sum, item) => sum + Number(item.precio || 0) * item.cantidad, 0),
     [cart]
   );
-  const domicilio = negocio?.costoEnvio || 2000;
-  const total = subtotal + domicilio;
+  const domicilioLocal = Number(negocio?.costoEnvio ?? 2000);
+  const domicilio = quote ? Number(quote.envio) : domicilioLocal;
+  const total = quote ? Number(quote.total) : subtotal + domicilioLocal;
+
+  useEffect(() => {
+    if (!coords || cart.length === 0 || !negocio?.latitud || !negocio?.longitud) {
+      setQuote(null);
+      return;
+    }
+    const controller = new AbortController();
+    const run = async () => {
+      setQuoting(true);
+      try {
+        const data = await api.post("/pedidos/cotizar", {
+          negocioId: negocio.id,
+          latRecogida: negocio.latitud,
+          lngRecogida: negocio.longitud,
+          latEntrega: coords.lat,
+          lngEntrega: coords.lng,
+          items: cart.map((item) => ({ menuItemId: item.id, cantidad: item.cantidad })),
+        }, { signal: controller.signal });
+        if (!controller.signal.aborted) setQuote(data);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          setQuote(null);
+          setFormError(err.message || "No se pudo calcular el total.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setQuoting(false);
+      }
+    };
+    run();
+    return () => controller.abort();
+  }, [coords, cart, negocio]);
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
@@ -99,6 +148,8 @@ export default function Carrito() {
           precio: item.precio,
         })),
       });
+      clearCart();
+      setCart([]);
       toast.success(`Pedido #${pedido.idPedido} confirmado. Pago en efectivo: $${Number(pedido.total).toLocaleString()}`);
       navigate(`/tracking/${pedido.idPedido}`);
     } catch (err) {
@@ -209,20 +260,29 @@ export default function Carrito() {
               </div>
               <div style={styles.summaryRow}>
                 <span style={styles.summaryLabel}>Domicilio</span>
-                <span style={styles.summaryValue}>${domicilio.toLocaleString()}</span>
+                <span style={styles.summaryValue}>
+                  {quoting ? "Calculando…" : `$${domicilio.toLocaleString()}`}
+                </span>
               </div>
               <div style={styles.summaryDivider} />
               <div style={styles.summaryRow}>
                 <span style={styles.summaryTotalLabel}>Total (efectivo)</span>
-                <span style={styles.summaryTotalValue}>${total.toLocaleString()}</span>
+                <span style={styles.summaryTotalValue}>
+                  {quoting ? "…" : `$${total.toLocaleString()}`}
+                </span>
               </div>
+              <p style={styles.quoteNote}>
+                {quote
+                  ? "Total confirmado con los precios del menú."
+                  : "Comparte tu ubicación para confirmar el total del servidor."}
+              </p>
             </div>
 
             {formError && (
               <p role="alert" style={styles.formError}>{formError}</p>
             )}
 
-            <Button fullWidth onClick={handleCheckout} disabled={placing}>
+            <Button fullWidth onClick={handleCheckout} disabled={placing || quoting}>
               {placing ? "Confirmando pedido…" : `Confirmar pedido — $${total.toLocaleString()}`}
             </Button>
           </>
@@ -404,6 +464,11 @@ const styles = {
     fontSize: theme.fontSize.lg,
     fontWeight: theme.fontWeight.bold,
     color: theme.colors.accent,
+  },
+  quoteNote: {
+    margin: "4px 0 0",
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textSecondary,
   },
   formError: {
     backgroundColor: "rgba(255, 82, 82, 0.1)",

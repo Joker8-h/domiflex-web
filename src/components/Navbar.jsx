@@ -57,7 +57,7 @@ export default function NavbarCustom({ transparent }) {
               <Menu size={18} aria-hidden="true" />
             </button>
           )}
-          <Link to={token ? "/home" : "/"} style={styles.logoLink} aria-label="DomiFlex inicio">
+          <Link to={token ? "/restaurantes" : "/"} style={styles.logoLink} aria-label="DomiFlex inicio">
             <img src={Logo} alt="DomiFlex" style={styles.logo} />
           </Link>
 

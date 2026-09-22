@@ -8,7 +8,7 @@ const LINKS = [
   { to: "/restaurantes", label: "Explorar", Icon: Search },
   { to: "/mis-pedidos", label: "Mis pedidos", Icon: ClipboardList },
   { to: "/notificaciones", label: "Notificaciones", Icon: Bell },
-  { to: "/perfil", label: "Perfil", Icon: User },
+  { to: "/profile", label: "Perfil", Icon: User },
 ];
 
 // Drawer lateral móvil con focus-trap básico y cierre con ESC.

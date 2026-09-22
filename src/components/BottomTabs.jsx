@@ -2,17 +2,21 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipboardList, Search, House, User } from "lucide-react";
 import theme from "../styles/theme";
-
-const tabs = [
-  { id: "inicio", label: "Inicio", icon: House, path: "/home" },
-  { id: "buscar", label: "Buscar", icon: Search, path: "/restaurantes" },
-  { id: "pedidos", label: "Pedidos", icon: ClipboardList, path: "/mis-pedidos" },
-  { id: "perfil", label: "Perfil", icon: User, path: "/perfil" },
-];
+import { useAuth } from "../pages/context/AuthContext";
 
 export default function BottomTabs() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { usuario } = useAuth();
+  const rol = (typeof usuario?.rol === "string" ? usuario.rol : usuario?.rol?.nombre || "").toUpperCase();
+  const esComercio = rol === "COMERCIO" || Number(usuario?.idRol) === 4;
+
+  const tabs = [
+    { id: "inicio", label: "Inicio", icon: House, path: esComercio ? "/comercio" : "/home" },
+    { id: "buscar", label: "Buscar", icon: Search, path: "/restaurantes" },
+    { id: "pedidos", label: "Pedidos", icon: ClipboardList, path: "/mis-pedidos" },
+    { id: "perfil", label: "Perfil", icon: User, path: "/profile" },
+  ];
 
   const isActive = (path) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");

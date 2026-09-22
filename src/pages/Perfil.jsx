@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import { CircleHelp, ClipboardList, MapPin, CreditCard, LogOut, ArrowLeft, Settings } from "lucide-react";
 import theme from "../styles/theme";
 import Avatar from "../components/common/Avatar";
@@ -7,14 +8,14 @@ import ProfileMenuItem from "../components/ProfileMenuItem";
 
 export default function Perfil() {
   const navigate = useNavigate();
-  let usuario = {};
-  try { usuario = JSON.parse(localStorage.getItem("domiflex_usuario") || "{}"); } catch { usuario = {}; }
+  const { logout, usuario: authUser } = useAuth();
+  let usuario = authUser || {};
+  if (!usuario?.email) {
+    try { usuario = JSON.parse(localStorage.getItem("domiflex_usuario") || "{}"); } catch { usuario = {}; }
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem("domiflex_token");
-    localStorage.removeItem("domiflex_usuario");
-    localStorage.removeItem("app_token");
-    localStorage.removeItem("app_usuario");
+    logout();
     navigate("/login");
   };
 

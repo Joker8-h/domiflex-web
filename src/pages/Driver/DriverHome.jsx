@@ -361,6 +361,7 @@ const DriverHome = () => {
     const [cargandoDisponibles, setCargandoDisponibles] = useState(false);
     const [asignandoId, setAsignandoId] = useState(null);
     const [accionPedidoId, setAccionPedidoId] = useState(null);
+    const [pagoPedido, setPagoPedido] = useState(null);
     const [paradasPedido, setParadasPedido] = useState([]);
 
     const [comisionInfo, setComisionInfo] = useState(null);
@@ -872,6 +873,28 @@ const DriverHome = () => {
 
     useEffect(() => { cargarDisponibles(); }, [cargarDisponibles]);
 
+    const pedidoEnCurso = [...todosLosPedidos, ...pedidosRecientes].find((p) =>
+        ["ASIGNADO", "RECOGIENDO", "EN_CAMINO"].includes(p.estado)
+    );
+
+    useEffect(() => {
+        if (!pedidoEnCurso || !socket || !navigator.geolocation) return undefined;
+        const idPedido = pedidoEnCurso.idPedido;
+        const watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+                socket.emit("repartidor_location_update", {
+                    idPedido,
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    rumbo: pos.coords.heading,
+                });
+            },
+            () => {},
+            { enableHighAccuracy: true, maximumAge: 8000, timeout: 20000 }
+        );
+        return () => navigator.geolocation.clearWatch(watchId);
+    }, [pedidoEnCurso?.idPedido, socket]);
+
     const refrescarPedidoEnListas = (actualizado) => {
         setTodosLosPedidos(prev => prev.map(p => p.idPedido === actualizado.idPedido ? { ...p, ...actualizado } : p));
         setPedidosRecientes(prev => prev.map(p => p.idPedido === actualizado.idPedido ? { ...p, ...actualizado } : p));
@@ -912,6 +935,42 @@ const DriverHome = () => {
             toast.success(`Pedido #${pedido.idPedido} → ${siguiente.replace('_', ' ')}`);
         } catch (e) { toast.error(e.message || 'No se pudo actualizar el estado'); }
         finally { setAccionPedidoId(null); }
+    };
+
+    useEffect(() => {
+        if (!token || pedidoSeleccionado?.estado !== "ENTREGADO") {
+            setPagoPedido(null);
+            return undefined;
+        }
+        let cancelado = false;
+        fetch(`${API_URL}/pagos/pedido/${pedidoSeleccionado.idPedido}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                if (!cancelado) setPagoPedido(Array.isArray(data) ? data[0] || null : null);
+            })
+            .catch(() => { if (!cancelado) setPagoPedido(null); });
+        return () => { cancelado = true; };
+    }, [pedidoSeleccionado?.idPedido, pedidoSeleccionado?.estado, token]);
+
+    const confirmarEfectivoRep = async () => {
+        if (!pagoPedido?.idPago) return;
+        try {
+            setAccionPedidoId(pagoPedido.idPedido);
+            const resp = await fetch(`${API_URL}/pagos/confirmarRepartidor/${pagoPedido.idPago}`, {
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await resp.json();
+            if (!resp.ok || data?.error) throw new Error(data?.error || "No se pudo confirmar el efectivo");
+            setPagoPedido(data);
+            toast.success("Efectivo recibido");
+        } catch (e) {
+            toast.error(e.message || "No se pudo confirmar el efectivo");
+        } finally {
+            setAccionPedidoId(null);
+        }
     };
 
     const cancelarPedidoRep = async (idPedido) => {
@@ -2409,6 +2468,19 @@ const DriverHome = () => {
                                         <AccionButton variant="outline-primary" onClick={() => iniciarChatRep(pedidoSeleccionado)}>
                                             Chatear con cliente
                                         </AccionButton>
+                                        {pedidoSeleccionado.estado === 'ENTREGADO' && pagoPedido && (
+                                            <AccionButton
+                                                variant="primary"
+                                                onClick={confirmarEfectivoRep}
+                                                disabled={!pagoPedido.confirmacionCliente || pagoPedido.confirmacionRepartidor || accionPedidoId === pagoPedido.idPedido}
+                                            >
+                                                {pagoPedido.confirmacionRepartidor
+                                                    ? 'Efectivo confirmado'
+                                                    : pagoPedido.confirmacionCliente
+                                                        ? 'Recibí el efectivo'
+                                                        : 'Esperando al cliente'}
+                                            </AccionButton>
+                                        )}
                                         {pedidoSeleccionado.estado !== 'ENTREGADO' && pedidoSeleccionado.estado !== 'CANCELADO' && (
                                             <AccionButton
                                                 variant="outline-secondary"
