@@ -5,7 +5,7 @@ import { TriangleAlert, CircleCheck, Calendar, ArrowLeft, FileImage, Camera, IdC
 import { useAuth } from "./context/AuthContext";
 import { API_URL } from "../config";
 import Navbar from '../components/Navbar';
-import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import toast, { Toaster } from 'react-hot-toast';
@@ -14,8 +14,8 @@ import toast, { Toaster } from 'react-hot-toast';
 const customStyles = `
   .custom-tomar-foto-btn {
     border-radius: 12px !important;
-    border-color: #62d8d9 !important;
-    color: #62d8d9 !important;
+    border-color: #00E576 !important;
+    color: #00E576 !important;
     font-weight: 500 !important;
     transition: all 0.3s ease !important;
     width: 100% !important;
@@ -24,8 +24,8 @@ const customStyles = `
   }
   
   .custom-tomar-foto-btn:hover {
-    background-color: #62d8d9 !important;
-    border-color: #62d8d9 !important;
+    background-color: #00E576 !important;
+    border-color: #00E576 !important;
     color: white !important;
   }
   
@@ -330,7 +330,7 @@ function Documents() {
             <Col md={6} className="d-none d-md-flex justify-content-center p-4">
               <img
                 src={EscenaHomeBase}
-                alt="DomiFlex Home"
+                alt="Rapitipica Home"
                 style={{ width: '100%', maxWidth: '500px', height: 'auto', filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' }}
               />
             </Col>
@@ -340,10 +340,10 @@ function Documents() {
                 <Card.Body className="p-4 p-md-5">
 
                   <div className="text-center mb-4">
-                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '120px' }} />
+                    <RapitipicaLogo size={32} showTagline={false} />
                   </div>
 
-                  <h3 className="text-center mb-4" style={{ color: '#62d8d9', fontWeight: '600' }}>
+                  <h3 className="text-center mb-4" style={{ color: '#00E576', fontWeight: '600' }}>
                     <IdCard className="me-2" />
                     Registro de Licencia de Conducir
                   </h3>
@@ -483,7 +483,7 @@ function Documents() {
                         type="submit"
                         className="flex-fill py-3 border-0"
                         style={{
-                          background: frontalComprimida ? '#62d8d9' : '#6c757d',
+                          background: frontalComprimida ? '#00E576' : '#6c757d',
                           borderRadius: '12px',
                           fontWeight: 'bold',
                           fontSize: '1rem'

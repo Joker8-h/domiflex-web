@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
-import LogoDomiFlex from './Imagenes/BANNER COMPLETO CON TRANSPARENCIA.png';
+import { Container, Row, Col, Card, Form } from "react-bootstrap";
+import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
-import FondoPantalla from './Imagenes/AutoresContacto.png';
-import { EyeOff, Lock, Eye } from "lucide-react";
+import { EyeOff, Lock, Eye, CheckCircle2, ChevronRight, ArrowLeft } from "lucide-react";
 import NavbarCustom from '../components/Navbar';
 import { API_URL } from '../config';
+import tokens from '../design/tokens';
 
-function ResetPassword() {
+export default function ResetPassword() {
     const { token } = useParams();
     const navigate = useNavigate();
     
@@ -56,7 +56,7 @@ function ResetPassword() {
             
             if (respuesta.ok) {
                 setSuccess(true);
-                setTimeout(() => navigate("/login"), 3000);
+                setTimeout(() => navigate("/login"), 2500);
             } else {
                 setError(data.error || "El enlace es inválido o ha expirado.");
             }
@@ -69,122 +69,215 @@ function ResetPassword() {
 
     return (
         <div style={{
-            backgroundImage: `url(${FondoPantalla})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundColor: tokens.colors.bgPrimary,
             minHeight: '100vh',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            color: tokens.colors.textPrimary,
+            fontFamily: tokens.typography.fontFamily,
         }}>
             <NavbarCustom />
 
-            <Container className="d-flex flex-column justify-content-center flex-grow-1 py-4">
+            <Container className="d-flex flex-column justify-content-center flex-grow-1 py-5">
                 <Row className="justify-content-center align-items-center g-0">
                     
                     <Col md={7} lg={6} className="d-none d-md-flex justify-content-center p-4">
                         <img
                             src={EscenaHomeBase}
-                            alt="DomiFlex Reset"
+                            alt="Rapitipica Reset"
                             style={{ 
                                 width: '100%', 
-                                maxWidth: '550px', 
+                                maxWidth: '500px', 
                                 height: 'auto', 
-                                filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' 
+                                filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))' 
                             }}
                         />
                     </Col>
 
                     <Col xs={12} md={5} lg={5} xl={4}>
-                        <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+                        <Card style={{
+                            backgroundColor: tokens.colors.bgCard,
+                            border: `1px solid ${tokens.colors.border}`,
+                            borderRadius: tokens.borderRadius.lg,
+                            boxShadow: tokens.shadows.card,
+                        }}>
                             <Card.Body className="p-4 p-md-5">
                                 <div className="text-center mb-4">
-                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
-                                    <h4 className="mt-3 fw-bold" style={{ color: '#333' }}>Nueva Contraseña</h4>
-                                    <p className="text-muted small">Ingresa tu nueva contraseña para acceder</p>
+                                    <RapitipicaLogo size={36} showTagline={true} />
+                                    <h2 className="mt-3 fw-bold" style={{ color: tokens.colors.textPrimary, fontSize: tokens.fontSize.xl }}>
+                                        Nueva Contraseña
+                                    </h2>
+                                    <p style={{ color: tokens.colors.textSecondary, fontSize: tokens.fontSize.xs }}>
+                                        Ingresa y confirma tu nueva contraseña de acceso.
+                                    </p>
                                 </div>
 
-                                {error && <Alert variant="danger" className="py-2 small">{error}</Alert>}
+                                {error && (
+                                    <div role="alert" style={{
+                                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                                        border: '1px solid #EF4444',
+                                        borderRadius: tokens.borderRadius.sm,
+                                        padding: '10px 14px',
+                                        color: '#FCA5A5',
+                                        fontSize: tokens.fontSize.xs,
+                                        marginBottom: '16px',
+                                    }}>
+                                        {error}
+                                    </div>
+                                )}
+
                                 {success && (
-                                    <Alert variant="success" className="py-2 small">
-                                        Contraseña actualizada. Redirigiendo al login...
-                                    </Alert>
+                                    <div role="status" style={{
+                                        backgroundColor: 'rgba(0, 229, 118, 0.15)',
+                                        border: `1px solid ${tokens.colors.accent}`,
+                                        borderRadius: tokens.borderRadius.sm,
+                                        padding: '10px 14px',
+                                        color: tokens.colors.accent,
+                                        fontSize: tokens.fontSize.xs,
+                                        marginBottom: '16px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                    }}>
+                                        <CheckCircle2 size={18} />
+                                        <span>¡Contraseña actualizada! Redirigiendo al login...</span>
+                                    </div>
                                 )}
 
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-3">
-                                        <div className="position-relative">
-                                            <Lock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
-                                            <Form.Control
+                                        <label htmlFor="reset-pass" style={{
+                                            display: 'block',
+                                            fontSize: tokens.fontSize.xs,
+                                            fontWeight: 600,
+                                            color: tokens.colors.textSecondary,
+                                            marginBottom: '6px'
+                                        }}>
+                                            Nueva Contraseña
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <Lock style={{
+                                                position: 'absolute',
+                                                left: '14px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: tokens.colors.textMuted,
+                                                zIndex: 1,
+                                            }} size={18} />
+                                            <input
+                                                id="reset-pass"
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="Nueva contraseña" 
                                                 value={password}
-                                                onChange={(e) => setPassword(e.target.value)} 
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="••••••••"
                                                 required
-                                                disabled={loading || success}
-                                                style={{ 
-                                                    borderRadius: '12px', 
-                                                    paddingLeft: '45px', 
-                                                    backgroundColor: '#f8fafb', 
-                                                    border: '1px solid #eee',
-                                                    paddingTop: '0.8rem',
-                                                    paddingBottom: '0.8rem'
+                                                style={{
+                                                    width: '100%',
+                                                    backgroundColor: tokens.colors.bgPrimary,
+                                                    border: `1px solid ${tokens.colors.border}`,
+                                                    borderRadius: tokens.borderRadius.sm,
+                                                    padding: '12px 42px 12px 42px',
+                                                    color: tokens.colors.textPrimary,
+                                                    fontSize: tokens.fontSize.sm,
+                                                    outline: 'none',
                                                 }}
                                             />
-                                            <span 
-                                                className="position-absolute end-0 top-50 translate-middle-y me-3" 
-                                                style={{ cursor: 'pointer' }} 
+                                            <button
+                                                type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '12px',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: tokens.colors.textMuted,
+                                                    cursor: 'pointer',
+                                                    padding: 0,
+                                                }}
                                             >
-                                                {showPassword ? <EyeOff color="#8899a6" /> : <Eye color="#8899a6" />}
-                                            </span>
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
                                         </div>
                                     </Form.Group>
 
                                     <Form.Group className="mb-4">
-                                        <div className="position-relative">
-                                            <Lock className="position-absolute start-0 top-50 translate-middle-y ms-3 text-muted" />
-                                            <Form.Control
+                                        <label htmlFor="reset-confirm" style={{
+                                            display: 'block',
+                                            fontSize: tokens.fontSize.xs,
+                                            fontWeight: 600,
+                                            color: tokens.colors.textSecondary,
+                                            marginBottom: '6px'
+                                        }}>
+                                            Confirmar Contraseña
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <Lock style={{
+                                                position: 'absolute',
+                                                left: '14px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: tokens.colors.textMuted,
+                                                zIndex: 1,
+                                            }} size={18} />
+                                            <input
+                                                id="reset-confirm"
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="Confirmar contraseña" 
                                                 value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)} 
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                placeholder="••••••••"
                                                 required
-                                                disabled={loading || success}
-                                                style={{ 
-                                                    borderRadius: '12px', 
-                                                    paddingLeft: '45px', 
-                                                    backgroundColor: '#f8fafb', 
-                                                    border: '1px solid #eee',
-                                                    paddingTop: '0.8rem',
-                                                    paddingBottom: '0.8rem'
+                                                style={{
+                                                    width: '100%',
+                                                    backgroundColor: tokens.colors.bgPrimary,
+                                                    border: `1px solid ${tokens.colors.border}`,
+                                                    borderRadius: tokens.borderRadius.sm,
+                                                    padding: '12px 14px 12px 42px',
+                                                    color: tokens.colors.textPrimary,
+                                                    fontSize: tokens.fontSize.sm,
+                                                    outline: 'none',
                                                 }}
                                             />
                                         </div>
                                     </Form.Group>
 
-                                    <Button 
-                                        type="submit" 
-                                        className="w-100 py-3 border-0" 
-                                        style={{ 
-                                            background: loading ? '#6c757d' : '#62d8d9',
-                                            borderRadius: '12px', 
-                                            fontWeight: 'bold', 
-                                            fontSize: '1rem',
-                                            transition: 'all 0.3s ease',
-                                            opacity: (loading || success) ? 0.6 : 1,
-                                        }} 
+                                    <button
+                                        type="submit"
                                         disabled={loading || success}
+                                        style={{
+                                            width: '100%',
+                                            padding: '14px',
+                                            backgroundColor: tokens.colors.accent,
+                                            color: '#0B1F44',
+                                            border: 'none',
+                                            borderRadius: tokens.borderRadius.full,
+                                            fontWeight: tokens.fontWeight.bold,
+                                            fontSize: tokens.fontSize.sm,
+                                            cursor: 'pointer',
+                                            boxShadow: tokens.shadows.glow,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '8px',
+                                        }}
                                     >
-                                        {loading ? 'Procesando...' : 'Restablecer Contraseña'}
-                                    </Button>
+                                        {loading ? "Actualizando…" : "Restablecer Contraseña"}
+                                        <ChevronRight size={18} />
+                                    </button>
 
-                                    {!success && (
-                                        <div className="text-center mt-4">
-                                            <Link to="/login" className="text-decoration-none small text-muted">
-                                                Cancelar y volver
-                                            </Link>
-                                        </div>
-                                    )}
+                                    <div className="text-center mt-4">
+                                        <Link to="/login" style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            color: tokens.colors.textSecondary,
+                                            fontSize: tokens.fontSize.xs,
+                                            textDecoration: 'none',
+                                        }}>
+                                            <ArrowLeft size={14} /> Volver a iniciar sesión
+                                        </Link>
+                                    </div>
                                 </Form>
                             </Card.Body>
                         </Card>
@@ -194,5 +287,3 @@ function ResetPassword() {
         </div>
     );
 }
-
-export default ResetPassword;

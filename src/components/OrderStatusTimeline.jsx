@@ -1,99 +1,130 @@
 import React from "react";
-import { CircleCheck, Check, Circle } from "lucide-react";
-import theme from "../styles/theme";
+import { Check, Clock, Bike, CheckCircle2, ShoppingBag } from "lucide-react";
+import tokens from "../design/tokens";
 
-const states = [
-  { key: "CREADO", label: "Pedido confirmado" },
-  { key: "ASIGNADO", label: "Repartidor asignado" },
-  { key: "RECOGIENDO", label: "En recogida" },
-  { key: "EN_CAMINO", label: "En camino" },
-  { key: "ENTREGADO", label: "Entregado" },
+const STEPS = [
+  { key: "CREADO", label: "Confirmado", icon: ShoppingBag },
+  { key: "ASIGNADO", label: "Asignado", icon: Clock },
+  { key: "RECOGIENDO", label: "Preparando", icon: Clock },
+  { key: "EN_CAMINO", label: "En camino", icon: Bike },
+  { key: "ENTREGADO", label: "Entregado", icon: CheckCircle2 },
 ];
 
 export default function OrderStatusTimeline({ currentStatus }) {
-  const currentIndex = states.findIndex((s) => s.key === currentStatus);
+  const currentIndex = STEPS.findIndex((s) => s.key === currentStatus);
+  const activeIdx = currentIndex === -1 ? 0 : currentIndex;
 
   return (
-    <div style={styles.container}>
-      {states.map((state, index) => {
-        const isCompleted = index < currentIndex;
-        const isCurrent = index === currentIndex;
+    <div style={styles.wrapper}>
+      <div style={styles.stepperContainer}>
+        {/* Progress Background Line */}
+        <div style={styles.lineBg} />
+        {/* Active Progress Line */}
+        <div
+          style={{
+            ...styles.lineActive,
+            width: `${(activeIdx / (STEPS.length - 1)) * 100}%`,
+          }}
+        />
 
-        return (
-          <div key={state.key} style={styles.step}>
-            <div style={styles.iconContainer}>
-              {isCompleted ? (
-                <CircleCheck size={20} color={theme.colors.accent} />
-              ) : isCurrent ? (
-                <div style={styles.currentDot}>
-                  <Circle size={12} color={theme.colors.accent} fill={theme.colors.accent} />
-                </div>
-              ) : (
-                <Circle size={12} color={theme.colors.border} />
-              )}
-              {index < states.length - 1 && (
-                <div
-                  style={{
-                    ...styles.line,
-                    backgroundColor: isCompleted ? theme.colors.accent : theme.colors.border,
-                  }}
-                />
-              )}
+        {/* Step Nodes */}
+        {STEPS.map((step, index) => {
+          const isDone = index < activeIdx;
+          const isCurrent = index === activeIdx;
+          const isPending = index > activeIdx;
+          const Icon = step.icon;
+
+          return (
+            <div key={step.key} style={styles.stepCol}>
+              <div
+                style={{
+                  ...styles.nodeCircle,
+                  backgroundColor: isDone || isCurrent ? tokens.colors.accent : tokens.colors.bgPrimary,
+                  borderColor: isDone || isCurrent ? tokens.colors.accent : tokens.colors.border,
+                  boxShadow: isCurrent ? tokens.shadows.glow : "none",
+                  color: isDone || isCurrent ? "#0B1F44" : tokens.colors.textMuted,
+                }}
+              >
+                {isDone ? (
+                  <Check size={16} strokeWidth={3} />
+                ) : (
+                  <Icon size={16} strokeWidth={isCurrent ? 2.5 : 1.8} />
+                )}
+              </div>
+              <span
+                style={{
+                  ...styles.stepLabel,
+                  color: isCurrent
+                    ? tokens.colors.accent
+                    : isDone
+                    ? tokens.colors.textPrimary
+                    : tokens.colors.textMuted,
+                  fontWeight: isCurrent ? 700 : 500,
+                }}
+              >
+                {step.label}
+              </span>
             </div>
-            <span
-              style={{
-                ...styles.label,
-                color: isCurrent
-                  ? theme.colors.accent
-                  : isCompleted
-                  ? theme.colors.textPrimary
-                  : theme.colors.textMuted,
-                fontWeight: isCurrent ? theme.fontWeight.bold : theme.fontWeight.normal,
-              }}
-            >
-              {state.label}
-            </span>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0",
-    padding: "8px 0",
+  wrapper: {
+    width: "100%",
+    padding: "16px 0",
   },
-  step: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "12px",
+  stepperContainer: {
     position: "relative",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
   },
-  iconContainer: {
+  lineBg: {
+    position: "absolute",
+    top: "18px",
+    left: "20px",
+    right: "20px",
+    height: "3px",
+    backgroundColor: tokens.colors.border,
+    zIndex: 1,
+  },
+  lineActive: {
+    position: "absolute",
+    top: "18px",
+    left: "20px",
+    height: "3px",
+    backgroundColor: tokens.colors.accent,
+    boxShadow: "0 0 8px rgba(0, 229, 118, 0.6)",
+    transition: "width 0.4s ease",
+    zIndex: 2,
+  },
+  stepCol: {
+    position: "relative",
+    zIndex: 3,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    position: "relative",
+    gap: "8px",
+    width: "70px",
   },
-  currentDot: {
+  nodeCircle: {
+    width: "36px",
+    height: "36px",
+    borderRadius: "50%",
+    border: "2px solid",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    animation: "pulse 1.5s infinite",
+    transition: "all 0.3s ease",
   },
-  line: {
-    width: "2px",
-    height: "24px",
-    marginTop: "4px",
-    transition: theme.transitions.normal,
-  },
-  label: {
-    fontSize: theme.fontSize.sm,
-    paddingBottom: "12px",
-    transition: theme.transitions.fast,
+  stepLabel: {
+    fontSize: tokens.fontSize.xs,
+    textAlign: "center",
+    lineHeight: 1.2,
   },
 };

@@ -433,7 +433,7 @@ function HomeBase() {
                 <div style={{ position: 'absolute', bottom: '-80px', left: '-80px', width: '250px', height: '250px', background: `${accent}1A`, borderRadius: '50%' }}></div>
                 
                 <div className="text-center mb-5" style={{ position: 'relative', zIndex: 2 }}>
-                  <h2 className="fw-bold" style={{ color: textPrimary, fontSize: '3rem', letterSpacing: '-1px' }}>Equipo DomiFlex</h2>
+                  <h2 className="fw-bold" style={{ color: textPrimary, fontSize: '3rem', letterSpacing: '-1px' }}>Equipo Rapitipica</h2>
                   <p style={{ fontSize: '1.2rem', color: textSecondary }}>Los cerebros detrás de tu nueva forma de pedir domicilios</p>
                 </div>
                 <Row className="justify-content-center g-4" style={{ position: 'relative', zIndex: 2 }}>
@@ -648,7 +648,7 @@ function HomeBase() {
           >
             Registrarse Ahora
           </Button>
-          <p className="mt-5 small" style={{ color: textSecondary }}>© 2026 DomiFlex.</p>
+          <p className="mt-5 small" style={{ color: textSecondary }}>© 2026 Rapitipica.</p>
         </Container>
       </footer>
     </div>

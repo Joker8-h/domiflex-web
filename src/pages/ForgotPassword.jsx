@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
-import LogoDomiFlex from '/logo-domiflex.jpg';
+import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
-import FondoPantalla from './Imagenes/AutoresContacto.png';
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, Mail, ChevronRight } from "lucide-react";
 import NavbarCustom from '../components/Navbar';
 import { API_URL } from '../config';
+import tokens from '../design/tokens';
+import theme from '../styles/theme';
 
-function ForgotPassword() {
+export default function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -43,95 +44,153 @@ function ForgotPassword() {
 
     return (
         <div style={{
-            backgroundImage: `url(${FondoPantalla})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundColor: tokens.colors.bgPrimary,
             minHeight: '100vh',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            color: tokens.colors.textPrimary,
+            fontFamily: tokens.typography.fontFamily,
         }}>
             <NavbarCustom />
 
-            <Container className="d-flex flex-column justify-content-center flex-grow-1 py-4">
+            <Container className="d-flex flex-column justify-content-center flex-grow-1 py-5">
                 <Row className="justify-content-center align-items-center g-0">
                     
                     <Col md={7} lg={6} className="d-none d-md-flex justify-content-center p-4">
                         <img
                             src={EscenaHomeBase}
-                            alt="DomiFlex Recovery"
+                            alt="Rapitipica Recovery"
                             style={{ 
                                 width: '100%', 
-                                maxWidth: '550px', 
+                                maxWidth: '500px', 
                                 height: 'auto', 
-                                filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.2))' 
+                                filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))' 
                             }}
                         />
                     </Col>
 
                     <Col xs={12} md={5} lg={5} xl={4}>
-                        <Card className="shadow-lg border-0" style={{ borderRadius: '25px', backgroundColor: 'rgba(255, 255, 255, 0.95)', fontFamily: "'Montserrat', sans-serif" }}>
+                        <Card style={{
+                            backgroundColor: tokens.colors.bgCard,
+                            border: `1px solid ${tokens.colors.border}`,
+                            borderRadius: tokens.borderRadius.lg,
+                            boxShadow: tokens.shadows.card,
+                        }}>
                             <Card.Body className="p-4 p-md-5">
                                 <div className="text-center mb-4">
-                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
-                                    <h4 className="mt-3 fw-bold" style={{ color: '#333' }}>Recuperar Contraseña</h4>
-                                    <p className="text-muted small">Ingresa tu correo para recibir las instrucciones</p>
+                                    <RapitipicaLogo size={36} showTagline={true} />
+                                    <h2 className="mt-3 fw-bold" style={{ color: tokens.colors.textPrimary, fontSize: tokens.fontSize.xl }}>
+                                        Recuperar Contraseña
+                                    </h2>
+                                    <p style={{ color: tokens.colors.textSecondary, fontSize: tokens.fontSize.xs }}>
+                                        Ingresa tu correo registrado para recibir las instrucciones de acceso.
+                                    </p>
                                 </div>
 
-                                {error && <Alert variant="danger" className="py-2 small">{error}</Alert>}
-                                {message && <Alert variant="success" className="py-2 small">{message}</Alert>}
+                                {error && (
+                                    <div role="alert" style={{
+                                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                                        border: '1px solid #EF4444',
+                                        borderRadius: tokens.borderRadius.sm,
+                                        padding: '10px 14px',
+                                        color: '#FCA5A5',
+                                        fontSize: tokens.fontSize.xs,
+                                        marginBottom: '16px',
+                                    }}>
+                                        {error}
+                                    </div>
+                                )}
+
+                                {message && (
+                                    <div role="status" style={{
+                                        backgroundColor: 'rgba(0, 229, 118, 0.15)',
+                                        border: `1px solid ${tokens.colors.accent}`,
+                                        borderRadius: tokens.borderRadius.sm,
+                                        padding: '10px 14px',
+                                        color: tokens.colors.accent,
+                                        fontSize: tokens.fontSize.xs,
+                                        marginBottom: '16px',
+                                    }}>
+                                        {message}
+                                    </div>
+                                )}
 
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-4">
-                                        <label htmlFor="forgot-email" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#9AA4B2', marginBottom: '6px', fontFamily: "'Montserrat', sans-serif" }}>
+                                        <label htmlFor="forgot-email" style={{
+                                            display: 'block',
+                                            fontSize: tokens.fontSize.xs,
+                                            fontWeight: 600,
+                                            color: tokens.colors.textSecondary,
+                                            marginBottom: '6px'
+                                        }}>
                                             Correo electrónico
                                         </label>
-                                        <div className="position-relative">
-                                            <Mail className="position-absolute start-0 top-50 translate-middle-y ms-3" style={{ color: '#9AA4B2' }} size={18} aria-hidden="true" />
-                                            <Form.Control
+                                        <div style={{ position: 'relative' }}>
+                                            <Mail style={{
+                                                position: 'absolute',
+                                                left: '14px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: tokens.colors.textMuted,
+                                                zIndex: 1,
+                                            }} size={18} />
+                                            <input
                                                 id="forgot-email"
                                                 type="email"
-                                                placeholder="tucorreo@ejemplo.com"
-                                                autoComplete="email"
-                                                inputMode="email"
                                                 value={email}
-                                                onChange={(e) => setEmail(e.target.value)} 
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="ejemplo@correo.com"
                                                 required
-                                                disabled={loading || !!message}
-                                                aria-describedby="forgot-help"
-                                                style={{ 
-                                                    borderRadius: '12px', 
-                                                    paddingLeft: '45px', 
-                                                    backgroundColor: '#f8fafb', 
-                                                    border: '1px solid #eee',
-                                                    paddingTop: '0.8rem',
-                                                    paddingBottom: '0.8rem',
-                                                    fontFamily: "'Montserrat', sans-serif"
+                                                style={{
+                                                    width: '100%',
+                                                    backgroundColor: tokens.colors.bgPrimary,
+                                                    border: `1px solid ${tokens.colors.border}`,
+                                                    borderRadius: tokens.borderRadius.sm,
+                                                    padding: '12px 14px 12px 42px',
+                                                    color: tokens.colors.textPrimary,
+                                                    fontSize: tokens.fontSize.sm,
+                                                    outline: 'none',
                                                 }}
                                             />
                                         </div>
-                                        <div id="forgot-help" style={{ fontSize: '12px', color: '#9AA4B2', marginTop: '6px' }}>Te enviaremos un enlace para restablecer tu contraseña.</div>
                                     </Form.Group>
 
-                                    <Button 
-                                        type="submit" 
-                                        className="w-100 py-3 border-0 mb-3" 
-                                        style={{ 
-                                            background: loading ? '#6c757d' : '#62d8d9',
-                                            borderRadius: '12px', 
-                                            fontWeight: 'bold', 
-                                            fontSize: '1rem',
-                                            transition: 'all 0.3s ease',
-                                            opacity: (loading || !!message) ? 0.6 : 1,
-                                        }} 
-                                        disabled={loading || !!message}
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        style={{
+                                            width: '100%',
+                                            padding: '14px',
+                                            backgroundColor: tokens.colors.accent,
+                                            color: '#0B1F44',
+                                            border: 'none',
+                                            borderRadius: tokens.borderRadius.full,
+                                            fontWeight: tokens.fontWeight.bold,
+                                            fontSize: tokens.fontSize.sm,
+                                            cursor: 'pointer',
+                                            boxShadow: tokens.shadows.glow,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '8px',
+                                        }}
                                     >
-                                        {loading ? 'Enviando...' : 'Enviar enlace'}
-                                    </Button>
+                                        {loading ? "Enviando instrucciones…" : "Enviar instrucciones"}
+                                        <ChevronRight size={18} />
+                                    </button>
 
-                                    <div className="text-center mt-3">
-                                        <Link to="/login" className="text-decoration-none small fw-bold" style={{ color: '#62d8d9' }}>
-                                            <ArrowLeft className="me-2" />
-                                            Volver al inicio de sesión
+                                    <div className="text-center mt-4">
+                                        <Link to="/login" style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            color: tokens.colors.textSecondary,
+                                            fontSize: tokens.fontSize.xs,
+                                            textDecoration: 'none',
+                                            transition: 'color 0.2s ease',
+                                        }}>
+                                            <ArrowLeft size={14} /> Volver a iniciar sesión
                                         </Link>
                                     </div>
                                 </Form>
@@ -143,5 +202,3 @@ function ForgotPassword() {
         </div>
     );
 }
-
-export default ForgotPassword;

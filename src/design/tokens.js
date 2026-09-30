@@ -1,27 +1,33 @@
-// DomiFlex Design Tokens — sistema canónico (Fase 1 + mock Montserrat).
-// Montserrat 400-800, verde #00E676 sobre #0D1117, logo DOMIFLEX neón.
-
+// Rapitipica Design Tokens — Paleta Oficial (#0B1F44, #00E576, #F5F7FA, #9CA3AF)
 export const colors = {
-  bgPrimary: "#0D1117",
-  bgSecondary: "#161B22",
-  bgCard: "#161B22",
-  bgCardHover: "#1C2333",
-  bgInput: "#0D1117",
-  bgNavbar: "#0D1117ee",
-  accent: "#00E676",
-  accentDark: "#00C853",
-  accentLight: "#69F0AE",
-  textPrimary: "#FFFFFF",
-  textSecondary: "#9AA4B2", // AA sobre #0D1117 (≈7:1). Antes #8B949E.
-  textMuted: "#9AA4B2", // AA. Antes #6E7681 (≈3.6:1, fallaba).
-  border: "#21262D",
-  borderLight: "#30363D",
-  danger: "#FF6B6B", // AA sobre oscuro. Antes #FF5252.
-  dangerDark: "#D32F2F",
-  warning: "#FFD740",
-  success: "#00E676",
-  info: "#40C4FF",
-  overlay: "rgba(0, 0, 0, 0.6)",
+  bgPrimary: "#0B1F44",       // Azul oscuro principal
+  bgSecondary: "#0F2552",     // Contenedores secundarios
+  bgCard: "#11254E",          // Superficie de tarjetas y modales
+  bgCardHover: "#163265",     // Tarjetas en hover / elementos activos
+  bgInput: "#081836",          // Fondo de inputs
+  bgNavbar: "rgba(11, 31, 68, 0.95)", // Navbar con glassmorphism
+  accent: "#00E576",          // Verde neón primario
+  accentDark: "#00C864",      // Verde neón presionado / hover
+  accentLight: "#4EFA9E",     // Verde neón iluminado
+  textPrimary: "#F5F7FA",     // Blanco textos principales
+  textSecondary: "#9CA3AF",   // Gris claro para subtítulos y detalles
+  textMuted: "#9CA3AF",       // Metadatos y notas
+  border: "#1D3B72",          // Bordes de tarjetas y separadores
+  borderLight: "#254A8D",     // Bordes en foco / hover
+  danger: "#EF4444",          // Rojo de error / cancelar
+  dangerDark: "#DC2626",
+  warning: "#F59E0B",         // Amarillo/Ámbar de alertas y estrellas
+  success: "#00E576",         // Verde de confirmación
+  info: "#38BDF8",            // Azul informativo
+  overlay: "rgba(7, 19, 43, 0.75)",
+  categories: {
+    restaurants: "#FF6B4A",
+    stores: "#10B981",
+    markets: "#3B82F6",
+    drinks: "#8B5CF6",
+    pharmacy: "#06B6D4",
+    pets: "#F59E0B",
+  }
 };
 
 export const fontSize = {

@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ClipboardList, Search, X, House, Bell, User } from "lucide-react";
 import theme from "../../styles/theme";
+import RapitipicaLogo from "../common/RapitipicaLogo";
 
 const LINKS = [
-  { to: "/home", label: "Inicio", Icon: House },
-  { to: "/restaurantes", label: "Explorar", Icon: Search },
+  { to: "/", label: "Inicio", Icon: House },
+  { to: "/restaurantes", label: "Restaurantes", Icon: Search },
   { to: "/mis-pedidos", label: "Mis pedidos", Icon: ClipboardList },
   { to: "/notificaciones", label: "Notificaciones", Icon: Bell },
   { to: "/profile", label: "Perfil", Icon: User },
@@ -59,9 +60,9 @@ export default function MobileDrawer({ open, onClose }) {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-          <span style={{ fontSize: theme.fontSize.lg, fontWeight: theme.fontWeight.bold }}>
-            Domi<span style={{ color: theme.colors.accent }}>Flex</span>
-          </span>
+          <div onClick={onClose}>
+            <RapitipicaLogo size="sm" to="/" />
+          </div>
           <button
             type="button"
             onClick={onClose}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FileText, LayoutGrid, Car, ChevronRight, LayoutDashboard, Repeat, ChevronLeft, Users, ListChecks, Coins, QrCode, LogOut } from "lucide-react";
+import { FileText, LayoutGrid, Car, ChevronRight, LayoutDashboard, Repeat, ChevronLeft, Users, ListChecks, Coins, QrCode, LogOut, Store, Package } from "lucide-react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../pages/context/AuthContext";
 import { useSocket } from "../pages/context/SocketContext";
 import { API_URL } from "../config";
-import Logo from "/logo-domiflex.jpg";
+import RapitipicaLogo from "../components/common/RapitipicaLogo";
 import theme from "../styles/theme";
 
 const STORAGE_KEY = "admin_badge_counts";
@@ -120,6 +120,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
     { icon: <LayoutDashboard />, label: "Dashboard", path: "/dashboard/home", badgeKey: null },
     { icon: <Users />, label: "Clientes", path: "/admin/clientes", badgeKey: "clientes" },
     { icon: <LayoutGrid />, label: "Repartidores", path: "/admin/repartidores", badgeKey: "repartidores" },
+    { icon: <Store />, label: "Comercios", path: "/admin/negocios", badgeKey: null },
+    { icon: <Package />, label: "Pedidos", path: "/admin/pedidos", badgeKey: null },
     { icon: <ListChecks />, label: "Usuarios", path: "/admin/usuarios", badgeKey: "usuarios" },
     { icon: <Car />, label: "Vehículos", path: "/admin/vehiculos", badgeKey: null },
     { icon: <FileText />, label: "Documentos", path: "/admin/documentos", badgeKey: "documentos" },
@@ -178,7 +180,9 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           minHeight: '91px',
           backgroundColor: theme.colors.bgPrimary
         }}>
-          <img src={Logo} alt="Logo DomiFlex" style={{ width: '100px', height: 'auto' }} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <RapitipicaLogo size={28} showTagline={false} />
+          </div>
           <button className="btn btn-link p-0" onClick={OpenSidebar} style={{ color: theme.colors.textSecondary }}>
             <ChevronLeft size={15} />
           </button>

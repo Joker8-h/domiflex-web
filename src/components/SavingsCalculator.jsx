@@ -61,7 +61,7 @@ const SavingsCalculator = () => {
                                 Calcula tu <span style={{ color: secondaryColor }}>costo de envío</span>
                             </h2>
                             <p className="text-muted mb-5" style={{ fontSize: '1.1rem' }}>
-                                Ajusta la distancia y mira el costo estimado de tu domicilio con DomiFlex: base $2000 + $800/km.
+                                Ajusta la distancia y mira el costo estimado de tu domicilio con Rapitipica: base $2000 + $800/km.
                             </p>
 
                             <Form.Group className="mb-4">
@@ -115,7 +115,7 @@ const SavingsCalculator = () => {
                     
                     <Col lg={6}>
                         <div className="bg-white p-4 rounded-4 shadow-sm border" style={{ minHeight: "420px" }}>
-                            <h5 className="text-center mb-4 fw-bold" style={{ color: brandColor }}>Costo de Envío DomiFlex (Pesos COP)</h5>
+                            <h5 className="text-center mb-4 fw-bold" style={{ color: brandColor }}>Costo de Envío Rapitipica (Pesos COP)</h5>
                             <div style={{ width: '100%', height: '320px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={datos} margin={{ top: 20, right: 30, left: 50, bottom: 5 }}>

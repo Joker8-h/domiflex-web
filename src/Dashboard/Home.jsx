@@ -398,7 +398,7 @@ function Home() {
                         </div>
                         <div style={{ flex: 1, textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
                             <h2 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: colores.azulFuerte }}>¡Bienvenido de nuevo, {usuario?.nombre || 'Administrador'}!</h2>
-                            <p style={{ color: theme.colors.textSecondary, margin: 0 }}>Gestión global de la plataforma DomiFlex</p>
+                            <p style={{ color: theme.colors.textSecondary, margin: 0 }}>Gestión global de la plataforma Rapitipica</p>
                         </div>
                         <div style={{ marginTop: window.innerWidth < 768 ? '1rem' : 0, display: 'flex', gap: '0.5rem' }}>
                             <CustomBadge

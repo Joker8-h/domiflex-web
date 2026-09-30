@@ -73,7 +73,7 @@ const AppDownloadBanner = () => {
                                         fluid 
                                         style={{ width: '85%', borderRadius: '10px' }} 
                                     />
-                                    <p className="mt-4 text-muted small fw-bold">DOMIFLEX MOBILE</p>
+                                    <p className="mt-4 text-muted small fw-bold">RAPITIPICA MOBILE</p>
                                 </div>
                                 
                                 {/* Reflection Effect */}

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Phone, CheckCircle, Clock, ShoppingBag } from "lucide-react";
 import theme from "../../styles/theme";
+import tokens from "../../design/tokens";
 import { api } from "../../api/client";
 import { Button } from "../../components/common";
 import EmptyState from "../../components/ui/EmptyState";
 import ErrorState from "../../components/ui/ErrorState";
+import { useSocket } from "../context/SocketContext";
 
 const inputStyle = {
   backgroundColor: theme.colors.bgInput,
@@ -25,6 +28,7 @@ export default function ComercioHome() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [actualizandoPedidoId, setActualizandoPedidoId] = useState(null);
   const [producto, setProducto] = useState({ nombre: "", precio: "", categoria: "Platos", imagen: "" });
   const [local, setLocal] = useState({
     nombre: "",
@@ -34,6 +38,8 @@ export default function ComercioHome() {
     latitud: "",
     longitud: "",
   });
+
+  const { socket } = useSocket() || {};
 
   const cargar = useCallback(async () => {
     setLoading(true);
@@ -60,6 +66,31 @@ export default function ComercioHome() {
   }, [negocioId]);
 
   useEffect(() => { cargar(); }, [cargar]);
+
+  // Escucha de nuevos pedidos en cocina por WebSockets en tiempo real
+  useEffect(() => {
+    if (!socket) return;
+
+    const onNuevoPedido = (data) => {
+      toast.success(`🍳 ¡Nuevo pedido #${data?.idPedido || ""} recibido! Revisa la cocina.`, {
+        duration: 7000,
+        position: "top-right",
+      });
+      cargar();
+    };
+
+    const onPedidoActualizado = () => {
+      cargar();
+    };
+
+    socket.on("nuevo_pedido_comercio", onNuevoPedido);
+    socket.on("pedido_actualizado", onPedidoActualizado);
+
+    return () => {
+      socket.off("nuevo_pedido_comercio", onNuevoPedido);
+      socket.off("pedido_actualizado", onPedidoActualizado);
+    };
+  }, [socket, cargar]);
 
   const usarUbicacion = () => {
     if (!navigator.geolocation) {
@@ -147,13 +178,26 @@ export default function ComercioHome() {
     );
   }
 
+  const cambiarEstadoPedido = async (idPedido, nuevoEstado) => {
+    try {
+      setActualizandoPedidoId(idPedido);
+      await api.post(`/pedidos/${idPedido}/estado`, { estado: nuevoEstado });
+      toast.success(`Pedido #${idPedido} actualizado a ${nuevoEstado}`);
+      await cargar();
+    } catch (err) {
+      toast.error(err.message || "No se pudo actualizar el estado del pedido.");
+    } finally {
+      setActualizandoPedidoId(null);
+    }
+  };
+
   const negocio = negocios.find((n) => n.id === negocioId) || negocios[0];
 
   return (
     <div style={styles.page}>
       <header style={styles.header}>
         <h1 style={styles.title}>Mi local</h1>
-        <p style={styles.muted}>Menú, precios y pedidos de tu negocio.</p>
+        <p style={styles.muted}>Menú, precios y pedidos de tu negocio en Popayán.</p>
       </header>
 
       {negocios.length === 0 ? (
@@ -205,18 +249,104 @@ export default function ComercioHome() {
           </section>
 
           <section style={styles.card}>
-            <h2 style={styles.cardTitle}>Pedidos del local</h2>
-            {pedidos.length === 0 && <EmptyState icon="📦" title="Aún no hay pedidos" description="Cuando un cliente pida, aparecerá aquí." />}
-            {pedidos.map((pedido) => (
-              <div key={pedido.idPedido} style={styles.row}>
-                <div>
-                  <strong>#{pedido.idPedido} · {pedido.estado}</strong>
-                  <p style={styles.muted}>
-                    {pedido.cliente?.nombre || "Cliente"} · ${Number(pedido.total || 0).toLocaleString()} · {pedido.dirEntrega || "Sin dirección"}
-                  </p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h2 style={styles.cardTitle}>Pedidos del local ({pedidos.length})</h2>
+              <button type="button" style={styles.refreshBtn} onClick={cargar}>
+                Actualizar
+              </button>
+            </div>
+            {pedidos.length === 0 && (
+              <EmptyState icon="📦" title="Aún no hay pedidos" description="Cuando un cliente pida, aparecerá aquí en tiempo real." />
+            )}
+            {pedidos.map((pedido) => {
+              const estadoColor =
+                pedido.estado === "CREADO" ? "#FFC107" :
+                pedido.estado === "ASIGNADO" ? "#2196F3" :
+                pedido.estado === "RECOGIENDO" ? "#9C27B0" :
+                pedido.estado === "EN_CAMINO" ? "#00BCD4" :
+                pedido.estado === "ENTREGADO" ? theme.colors.accent : theme.colors.danger;
+
+              return (
+                <div key={pedido.idPedido} style={styles.pedidoCard}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <strong style={{ fontSize: theme.fontSize.md }}>Pedido #{pedido.idPedido}</strong>
+                        <span
+                          style={{
+                            backgroundColor: `${estadoColor}20`,
+                            color: estadoColor,
+                            border: `1px solid ${estadoColor}`,
+                            borderRadius: "12px",
+                            padding: "2px 8px",
+                            fontSize: "11px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {pedido.estado}
+                        </span>
+                      </div>
+                      <p style={styles.muted}>
+                        Cliente: {pedido.cliente?.nombre || "Cliente DomiFlex"} · Entrega: {pedido.dirEntrega || "Popayán"}
+                      </p>
+                    </div>
+                    <strong style={{ color: theme.colors.accent, fontSize: theme.fontSize.md }}>
+                      ${Number(pedido.total || 0).toLocaleString()}
+                    </strong>
+                  </div>
+
+                  {/* Desglose de productos */}
+                  {pedido.items && pedido.items.length > 0 && (
+                    <div style={styles.itemsList}>
+                      <span style={{ fontSize: "12px", color: theme.colors.textSecondary, fontWeight: 600, marginBottom: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                        <ShoppingBag size={14} /> Contenido del pedido:
+                      </span>
+                      {pedido.items.map((it, idx) => (
+                        <div key={it.id || idx} style={styles.itemRow}>
+                          <span>{it.cantidad}x {it.menuItem?.nombre || it.producto?.nombre || "Ítem de menú"}</span>
+                          <span>${((it.precio || 0) * it.cantidad).toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Acciones de pedido */}
+                  <div style={styles.pedidoActions}>
+                    {pedido.cliente?.telefono && (
+                      <button
+                        type="button"
+                        style={styles.actionBtnSecondary}
+                        onClick={() => window.open(`tel:${pedido.cliente.telefono}`, "_self")}
+                      >
+                        <Phone size={14} /> Llamar cliente ({pedido.cliente.telefono})
+                      </button>
+                    )}
+
+                    {pedido.estado === "CREADO" && (
+                      <button
+                        type="button"
+                        disabled={actualizandoPedidoId === pedido.idPedido}
+                        style={styles.actionBtnPrimary}
+                        onClick={() => cambiarEstadoPedido(pedido.idPedido, "RECOGIENDO")}
+                      >
+                        <Clock size={14} /> {actualizandoPedidoId === pedido.idPedido ? "Guardando…" : "En preparación (Listo para recoger)"}
+                      </button>
+                    )}
+
+                    {pedido.estado === "ASIGNADO" && (
+                      <button
+                        type="button"
+                        disabled={actualizandoPedidoId === pedido.idPedido}
+                        style={styles.actionBtnPrimary}
+                        onClick={() => cambiarEstadoPedido(pedido.idPedido, "RECOGIENDO")}
+                      >
+                        <CheckCircle size={14} /> {actualizandoPedidoId === pedido.idPedido ? "Guardando…" : "Marcar listo para repartidor"}
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </section>
         </>
       )}
@@ -276,5 +406,75 @@ const styles = {
     cursor: "pointer",
     fontFamily: "'Montserrat', sans-serif",
     fontWeight: 600,
+  },
+  refreshBtn: {
+    backgroundColor: "transparent",
+    border: `1px solid ${theme.colors.border}`,
+    color: theme.colors.accent,
+    borderRadius: theme.borderRadius.sm,
+    padding: "6px 12px",
+    cursor: "pointer",
+    fontSize: theme.fontSize.xs,
+    fontWeight: 600,
+  },
+  pedidoCard: {
+    backgroundColor: "#161B22",
+    border: `1px solid ${theme.colors.border}`,
+    borderRadius: theme.borderRadius.sm,
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  itemsList: {
+    backgroundColor: "#0D1117",
+    padding: "10px",
+    borderRadius: theme.borderRadius.sm,
+    border: `1px solid ${theme.colors.border}`,
+    display: "flex",
+    flexDirection: "column",
+    gap: "6px",
+  },
+  itemRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textPrimary,
+  },
+  pedidoActions: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    marginTop: "4px",
+  },
+  actionBtnPrimary: {
+    minHeight: "40px",
+    padding: "8px 14px",
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.accent,
+    color: "#0D1117",
+    border: "none",
+    fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    cursor: "pointer",
+    fontSize: theme.fontSize.sm,
+    fontFamily: "'Montserrat', sans-serif",
+  },
+  actionBtnSecondary: {
+    minHeight: "40px",
+    padding: "8px 14px",
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: "transparent",
+    color: theme.colors.textPrimary,
+    border: `1px solid ${theme.colors.border}`,
+    fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    cursor: "pointer",
+    fontSize: theme.fontSize.sm,
+    fontFamily: "'Montserrat', sans-serif",
   },
 };

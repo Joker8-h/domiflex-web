@@ -13,16 +13,16 @@ import fondo from "../Imagenes/AutoresContacto.png";
 // Componentes personalizados
 const CustomBadge = ({ estado, children }) => {
     const estilos = {
-        APROBADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        VÁLIDO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        VALIDO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        PENDIENTE: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        REVISION: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        RECHAZADO: { backgroundColor: '#113d69', color: '#ffffff' },
-        VENCIDO: { backgroundColor: '#113d69', color: '#ffffff' }
+        APROBADO: { backgroundColor: '#00E576', color: '#ffffff' },
+        VÁLIDO: { backgroundColor: '#00E576', color: '#ffffff' },
+        VALIDO: { backgroundColor: '#00E576', color: '#ffffff' },
+        PENDIENTE: { backgroundColor: '#cccbd2af', color: '#0B1F44' },
+        REVISION: { backgroundColor: '#cccbd2af', color: '#0B1F44' },
+        RECHAZADO: { backgroundColor: '#0B1F44', color: '#ffffff' },
+        VENCIDO: { backgroundColor: '#0B1F44', color: '#ffffff' }
     };
 
-    const estilo = estilos[estado?.toUpperCase()] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado?.toUpperCase()] || { backgroundColor: '#cccbd2af', color: '#0B1F44' };
 
     return (
         <span style={{
@@ -58,44 +58,44 @@ const CustomButton = ({ variant, onClick, children, disabled, style, className }
             case 'primary':
                 return {
                     ...baseStyle,
-                    backgroundColor: '#62d8d9',
+                    backgroundColor: '#00E576',
                     color: '#ffffff',
-                    borderColor: '#62d8d9'
+                    borderColor: '#00E576'
                 };
             case 'outline-primary':
                 return {
                     ...baseStyle,
                     backgroundColor: 'transparent',
-                    color: '#62d8d9',
-                    borderColor: '#62d8d9'
+                    color: '#00E576',
+                    borderColor: '#00E576'
                 };
             case 'outline-success':
                 return {
                     ...baseStyle,
                     backgroundColor: 'transparent',
-                    color: '#62d8d9',
-                    borderColor: '#62d8d9'
+                    color: '#00E576',
+                    borderColor: '#00E576'
                 };
             case 'success':
                 return {
                     ...baseStyle,
-                    backgroundColor: '#62d8d9',
+                    backgroundColor: '#00E576',
                     color: '#ffffff',
-                    borderColor: '#62d8d9'
+                    borderColor: '#00E576'
                 };
             case 'outline-secondary':
                 return {
                     ...baseStyle,
                     backgroundColor: 'transparent',
-                    color: '#113d69',
-                    borderColor: '#113d69'
+                    color: '#0B1F44',
+                    borderColor: '#0B1F44'
                 };
             case 'secondary':
                 return {
                     ...baseStyle,
-                    backgroundColor: '#113d69',
+                    backgroundColor: '#0B1F44',
                     color: '#ffffff',
-                    borderColor: '#113d69'
+                    borderColor: '#0B1F44'
                 };
             default:
                 return baseStyle;
@@ -136,7 +136,7 @@ const StatsCard = ({ icon, title, value, iconBgColor, iconColor }) => {
                 </div>
                 <div>
                     <h6 style={{ color: '#6c757d', marginBottom: '0.25rem', fontSize: '0.875rem' }}>{title}</h6>
-                    <h3 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>{value}</h3>
+                    <h3 style={{ fontWeight: 'bold', margin: 0, color: '#0B1F44' }}>{value}</h3>
                 </div>
             </div>
         </div>
@@ -419,8 +419,8 @@ function DriverProfile() {
     const fullStars = Math.floor(promedio);
     const hasHalfStar = promedio % 1 >= 0.5;
     for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) stars.push(<Star key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px' }} />);
-      else if (i === fullStars + 1 && hasHalfStar) stars.push(<Star key={i} style={{ color: '#62d8d9', fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
+      if (i <= fullStars) stars.push(<Star key={i} style={{ color: '#00E576', fontSize: '14px', marginRight: '2px' }} />);
+      else if (i === fullStars + 1 && hasHalfStar) stars.push(<Star key={i} style={{ color: '#00E576', fontSize: '14px', marginRight: '2px', opacity: 0.5 }} />);
       else stars.push(<Star key={i} style={{ color: '#e9ecef', fontSize: '14px', marginRight: '2px' }} />);
     }
     return <div style={{ display: 'flex' }}>{stars}</div>;
@@ -461,7 +461,7 @@ function DriverProfile() {
                   borderBottom: '1px solid #e9ecef',
                   backgroundColor: '#ffffff'
                 }}>
-                  <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Mi Perfil de Repartidor</h2>
+                  <h2 style={{ fontWeight: 'bold', margin: 0, color: '#0B1F44' }}>Mi Perfil de Repartidor</h2>
                 </div>
 
                 <div style={{
@@ -488,22 +488,22 @@ function DriverProfile() {
                             borderRadius: '50%', 
                             objectFit: 'cover',
                             boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)',
-                            border: `3px solid #62d8d9`,
+                            border: `3px solid #00E576`,
                             maxWidth: '100%'
                           }} 
                         />
                       ) : (
-                        <CircleUserRound size={150} color="#62d8d9" style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
+                        <CircleUserRound size={150} color="#00E576" style={{ boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.075)', borderRadius: '50%', backgroundColor: 'white', padding: '0.25rem', maxWidth: '100%', width: '150px', height: '150px' }} />
                       )}
                     </div>
 
-                    <h3 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: '#113d69', fontSize: window.innerWidth < 576 ? '1.25rem' : '1.5rem' }}>{nombre || usuario?.nombre}</h3>
+                    <h3 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: '#0B1F44', fontSize: window.innerWidth < 576 ? '1.25rem' : '1.5rem' }}>{nombre || usuario?.nombre}</h3>
                     
                     <div style={{ 
                       display: 'inline-flex', 
                       alignItems: 'center', 
                       gap: '0.5rem',
-                      backgroundColor: '#62d8d9',
+                      backgroundColor: '#00E576',
                       color: '#ffffff',
                       padding: '0.25rem 1rem',
                       borderRadius: '2rem',
@@ -530,13 +530,13 @@ function DriverProfile() {
                     
                     <div style={{ textAlign: 'left', padding: '0 1rem' }}>
                       <p style={{ fontSize: '0.75rem', color: '#6c757d', marginBottom: '0.25rem' }}>PEDIDOS ENTREGADOS</p>
-                      <p style={{ fontWeight: 'bold', color: '#113d69', margin: 0 }}>{totalPedidos} servicios</p>
+                      <p style={{ fontWeight: 'bold', color: '#0B1F44', margin: 0 }}>{totalPedidos} servicios</p>
                     </div>
                   </div>
 
                   {/* Columna derecha */}
                   <div style={{ padding: '1.5rem', backgroundColor: '#ffffff' }}>
-                    <h4 style={{ fontWeight: 'bold', marginBottom: '1rem', color: '#113d69' }}>Información de Cuenta</h4>
+                    <h4 style={{ fontWeight: 'bold', marginBottom: '1rem', color: '#0B1F44' }}>Información de Cuenta</h4>
                     
                     <div style={{
                       display: 'grid',
@@ -545,7 +545,7 @@ function DriverProfile() {
                       marginBottom: '1.5rem'
                     }}>
                       <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>NOMBRE COMPLETO</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>NOMBRE COMPLETO</label>
                         <input
                           type="text"
                           value={nombre}
@@ -560,7 +560,7 @@ function DriverProfile() {
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>TELÉFONO</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>TELÉFONO</label>
                         <input
                           type="text"
                           value={telefono}
@@ -583,7 +583,7 @@ function DriverProfile() {
                       marginBottom: '1.5rem'
                     }}>
                       <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>NOMBRE EMERGENCIA</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>NOMBRE EMERGENCIA</label>
                         <input
                           type="text"
                           value={nombreEmergencia}
@@ -598,7 +598,7 @@ function DriverProfile() {
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>NÚMERO EMERGENCIA</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>NÚMERO EMERGENCIA</label>
                         <input
                           type="text"
                           value={numeroEmergencia}
@@ -614,7 +614,7 @@ function DriverProfile() {
                       </div>
                     </div>
 
-                    <h4 style={{ fontWeight: 'bold', marginTop: '1.5rem', marginBottom: '1rem', color: '#113d69' }}>Credenciales y Vehículo</h4>
+                    <h4 style={{ fontWeight: 'bold', marginTop: '1.5rem', marginBottom: '1rem', color: '#0B1F44' }}>Credenciales y Vehículo</h4>
                     
                     <div style={{
                       display: 'grid',
@@ -631,8 +631,8 @@ function DriverProfile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                          <IdCard style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
-                          <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>LICENCIA DE CONDUCIR</span>
+                          <IdCard style={{ marginRight: '0.5rem', color: '#00E576' }} />
+                          <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#0B1F44' }}>LICENCIA DE CONDUCIR</span>
                         </div>
 
                         {cargandoDocumentos ? (
@@ -641,15 +641,15 @@ function DriverProfile() {
                           <CustomListGroup>
                             <CustomListItem>
                               <span style={{ color: '#6c757d', fontSize: '0.75rem' }}>Número:</span>
-                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#113d69' }}>{licencia.numeroDocumento || 'No disponible'}</span>
+                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#0B1F44' }}>{licencia.numeroDocumento || 'No disponible'}</span>
                             </CustomListItem>
                             <CustomListItem>
                               <span style={{ color: '#6c757d', fontSize: '0.75rem' }}>Expedición:</span>
-                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#113d69' }}>{formatearFechaExpedicion(licencia.fechaExpedicion)}</span>
+                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#0B1F44' }}>{formatearFechaExpedicion(licencia.fechaExpedicion)}</span>
                             </CustomListItem>
                             <CustomListItem>
                               <span style={{ color: '#6c757d', fontSize: '0.75rem' }}>Subida:</span>
-                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#113d69' }}>{formatearFechaSubida(licencia.fechaSubida)}</span>
+                              <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#0B1F44' }}>{formatearFechaSubida(licencia.fechaSubida)}</span>
                             </CustomListItem>
                             <CustomListItem>
                               <span style={{ color: '#6c757d', fontSize: '0.75rem' }}>Estado:</span>
@@ -660,7 +660,7 @@ function DriverProfile() {
                             {licencia.observaciones && (
                               <div style={{ marginTop: '0.5rem' }}>
                                 <small style={{ color: '#6c757d', display: 'block' }}>Observaciones:</small>
-                                <small style={{ color: '#113d69' }}>{licencia.observaciones}</small>
+                                <small style={{ color: '#0B1F44' }}>{licencia.observaciones}</small>
                               </div>
                             )}
                           </CustomListGroup>
@@ -680,8 +680,8 @@ function DriverProfile() {
                         height: '100%'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                          <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} />
-                          <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#113d69' }}>VEHÍCULO</span>
+                          <Car style={{ marginRight: '0.5rem', color: '#00E576' }} />
+                          <span style={{ fontWeight: 'bold', fontSize: '0.875rem', color: '#0B1F44' }}>VEHÍCULO</span>
                         </div>
                         
                         {cargandoVehiculo ? (
@@ -689,18 +689,18 @@ function DriverProfile() {
                         ) : vehiculo ? (
                           <>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-                              Placa: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.placa || 'No registrada'}</span>
+                              Placa: <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>{vehiculo.placa || 'No registrada'}</span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-                              Modelo: <span style={{ fontWeight: 'bold', color: '#113d69' }}>
+                              Modelo: <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>
                                 {vehiculo.marca || ''} {vehiculo.modelo || ''}
                               </span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-                              Tipo: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.tipo || 'No registrado'}</span>
+                              Tipo: <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>{vehiculo.tipo || 'No registrado'}</span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-                              Capacidad: <span style={{ fontWeight: 'bold', color: '#113d69' }}>{vehiculo.capacidad || 'N/A'} kg</span>
+                              Capacidad: <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>{vehiculo.capacidad || 'N/A'} kg</span>
                             </p>
                             <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                               <span style={{ color: '#6c757d' }}>Estado:</span>

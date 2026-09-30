@@ -4,7 +4,7 @@ import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Logo from "/logo-domiflex.jpg";
+import RapitipicaLogo from "../components/common/RapitipicaLogo";
 import Notificaciones from "../components/Notificaciones";
 import { useSocket } from "../pages/context/SocketContext";
 
@@ -102,7 +102,7 @@ function Header() {
   };
 
   const getUserEmail = () => {
-    if (!usuario?.email) return "admin@domiflex.com";
+    if (!usuario?.email) return "admin@rapitipica.com";
     return usuario.email;
   };
 
@@ -119,16 +119,8 @@ function Header() {
       <div className="container-fluid px-4">
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center">
-            <div className="text-center mb-2">
-              <img
-                src={Logo}
-                alt="Logo DomiFlexx"
-                style={{
-                  width: '100px',
-                  height: 'auto',
-                  marginLeft: '20px'
-                }}
-              />
+            <div className="text-center">
+              <RapitipicaLogo size="sm" to="/dashboard/home" />
             </div>
           </div>
 

@@ -17,16 +17,16 @@ body,
 
 body {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background-color: #0d1117;
-  color: #ffffff;
+  background-color: #0B1F44;
+  color: #F5F7FA;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Foco visible accesible (WCAG 2.4.11) — nunca outline:none sin reemplazo */
+/* Foco visible accesible (WCAG 2.4.11) */
 :focus-visible {
-  outline: 2px solid #00e676;
+  outline: 2px solid #00E576;
   outline-offset: 2px;
 }
 
@@ -118,12 +118,110 @@ textarea::placeholder {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d1117;
+  background: #081836;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #30363d;
+  background: #1D3B72;
   border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #254A8D;
+}
+
+/* Rapitipica Utility Classes */
+.bg-rapitipica-dark {
+  background-color: #0B1F44 !important;
+}
+
+.bg-rapitipica-card {
+  background-color: #11254E !important;
+  border: 1px solid #1D3B72 !important;
+}
+
+.bg-rapitipica-card-hover:hover {
+  background-color: #163265 !important;
+  border-color: #254A8D !important;
+}
+
+.text-rapitipica-green {
+  color: #00E576 !important;
+}
+
+.text-rapitipica-muted {
+  color: #9CA3AF !important;
+}
+
+.btn-rapitipica {
+  background-color: #00E576;
+  color: #0B1F44;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: none;
+  padding: 10px 22px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 229, 118, 0.3);
+}
+
+.btn-rapitipica:hover {
+  background-color: #00C864;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 229, 118, 0.45);
+}
+
+.btn-rapitipica:active {
+  transform: translateY(0);
+}
+
+.btn-rapitipica-outline {
+  background-color: transparent;
+  color: #00E576;
+  border: 2px solid #00E576;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-rapitipica-outline:hover {
+  background-color: rgba(0, 229, 118, 0.12);
+  transform: translateY(-1px);
+}
+
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #1D3B72;
+  background-color: #11254E;
+  color: #F5F7FA;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-badge.active,
+.pill-badge:hover {
+  background-color: #00E576;
+  color: #0B1F44;
+  border-color: #00E576;
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {

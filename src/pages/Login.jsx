@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { Container, Row, Col, Card, Form, Button, Alert, Modal } from "react-bootstrap";
-import LogoDomiFlex from '/logo-domiflex.jpg';
+import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import FondoPantalla from './Imagenes/AutoresContacto.png';
 import { Mail, EyeOff, QrCode, Camera, Lock, Eye } from "lucide-react";
@@ -138,7 +138,7 @@ function Login() {
                     <Col md={7} lg={6} className="d-none d-md-flex justify-content-center p-4">
                         <img
                             src={EscenaHomeBase}
-                            alt="DomiFlex Home"
+                            alt="Rapitipica Home"
                             width="550"
                             height="366"
                             loading="lazy"
@@ -162,7 +162,7 @@ function Login() {
                             <Card.Body className="p-4 p-md-5">
 
                                 <div className="text-center mb-4">
-                                    <img src={LogoDomiFlex} alt="Logo" style={{ width: '150px' }} />
+                                    <RapitipicaLogo size={36} showTagline={true} />
                                 </div>
 
                                 <div className="d-flex gap-2 mb-4">

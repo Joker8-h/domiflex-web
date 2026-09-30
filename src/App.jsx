@@ -42,6 +42,8 @@ const AdminVehiculos = lazy(() => import("./pages/Admin/AdminVehiculos"));
 const AdminDocumentos = lazy(() => import("./pages/Admin/AdminDocuments"));
 const AdminVehicleRequests = lazy(() => import("./pages/Admin/AdminVehicleRequests"));
 const AdminReportesPago = lazy(() => import("./pages/Admin/AdminReportesPago"));
+const AdminNegocios = lazy(() => import("./pages/Admin/AdminNegocios"));
+const AdminPedidos = lazy(() => import("./pages/Admin/AdminPedidos"));
 
 function RouteLoader() {
   return (
@@ -213,6 +215,20 @@ function App() {
               <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
                   <AdminReportesPago />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/negocios" element={
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
+                  <AdminNegocios />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/pedidos" element={
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DashboardLayout openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}>
+                  <AdminPedidos />
                 </DashboardLayout>
               </ProtectedRoute>
             } />

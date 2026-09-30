@@ -16,15 +16,15 @@ import toast from "react-hot-toast";
 
 const EstadoPedidoBadge = ({ estado }) => {
     const estilos = {
-        ENTREGADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        EN_CAMINO: { backgroundColor: '#113d69', color: '#ffffff' },
-        RECOGIENDO: { backgroundColor: '#113d69', color: '#ffffff' },
-        ASIGNADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
-        CANCELADO: { backgroundColor: '#cccbd2af', color: '#113d69' },
-        CREADO: { backgroundColor: '#cccbd2af', color: '#113d69' }
+        ENTREGADO: { backgroundColor: '#00E576', color: '#ffffff' },
+        EN_CAMINO: { backgroundColor: '#0B1F44', color: '#ffffff' },
+        RECOGIENDO: { backgroundColor: '#0B1F44', color: '#ffffff' },
+        ASIGNADO: { backgroundColor: '#00E576', color: '#ffffff' },
+        CANCELADO: { backgroundColor: '#cccbd2af', color: '#0B1F44' },
+        CREADO: { backgroundColor: '#cccbd2af', color: '#0B1F44' }
     };
 
-    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#0B1F44' };
 
     const getTexto = () => {
         switch(estado) {
@@ -54,12 +54,12 @@ const EstadoPedidoBadge = ({ estado }) => {
 
 const DocumentoBadge = ({ estado }) => {
     const estilos = {
-        APROBADO: { backgroundColor: '#62d8d9', color: '#ffffff' },
+        APROBADO: { backgroundColor: '#00E576', color: '#ffffff' },
         RECHAZADO: { backgroundColor: '#dc3545', color: '#ffffff' },
-        PENDIENTE: { backgroundColor: '#ffc107', color: '#113d69' }
+        PENDIENTE: { backgroundColor: '#ffc107', color: '#0B1F44' }
     };
 
-    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#113d69' };
+    const estilo = estilos[estado] || { backgroundColor: '#cccbd2af', color: '#0B1F44' };
 
     return (
         <span style={{
@@ -92,7 +92,7 @@ const StatsCard = ({ icon, title, value, color, bgColor }) => {
                 </div>
                 <div>
                     <h6 className="text-muted mb-0 small">{title}</h6>
-                    <h4 className="fw-bold mb-0" style={{ color: '#113d69' }}>{value}</h4>
+                    <h4 className="fw-bold mb-0" style={{ color: '#0B1F44' }}>{value}</h4>
                 </div>
             </Card.Body>
         </Card>
@@ -104,8 +104,8 @@ const StatsBadge = ({ children, bgColor, color, isWhite = false }) => {
         return (
             <span style={{
                 backgroundColor: '#ffffff',
-                color: '#62d8d9',
-                border: '1px solid #62d8d9',
+                color: '#00E576',
+                border: '1px solid #00E576',
                 padding: '0.5rem 1rem',
                 borderRadius: '0.375rem',
                 fontSize: '0.9rem',
@@ -137,26 +137,26 @@ const AccionButton = ({ variant, onClick, children, disabled, style }) => {
         if (variant === 'outline-primary') {
             return {
                 backgroundColor: 'transparent',
-                color: '#62d8d9',
-                borderColor: '#62d8d9'
+                color: '#00E576',
+                borderColor: '#00E576'
             };
         } else if (variant === 'primary') {
             return {
-                backgroundColor: '#62d8d9',
+                backgroundColor: '#00E576',
                 color: '#ffffff',
-                borderColor: '#62d8d9'
+                borderColor: '#00E576'
             };
         } else if (variant === 'outline-secondary') {
             return {
                 backgroundColor: 'transparent',
-                color: '#113d69',
-                borderColor: '#113d69'
+                color: '#0B1F44',
+                borderColor: '#0B1F44'
             };
         } else if (variant === 'secondary') {
             return {
-                backgroundColor: '#113d69',
+                backgroundColor: '#0B1F44',
                 color: '#ffffff',
-                borderColor: '#113d69'
+                borderColor: '#0B1F44'
             };
         }
         return {};
@@ -190,8 +190,8 @@ const PeriodoBadge = ({ periodo, actual, onClick, children }) => {
             onClick={onClick}
             style={{
                 cursor: 'pointer',
-                backgroundColor: isActive ? '#62d8d9' : 'transparent',
-                color: isActive ? '#ffffff' : '#113d69',
+                backgroundColor: isActive ? '#00E576' : 'transparent',
+                color: isActive ? '#ffffff' : '#0B1F44',
                 padding: '0.5rem 1rem',
                 borderRadius: '0.375rem',
                 fontSize: '0.9rem',
@@ -227,13 +227,13 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
                 width: size,
                 height: size,
                 borderRadius: '12px',
-                backgroundColor: '#62d8d915',
+                backgroundColor: '#00E57615',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default'
             }} onClick={onClick}>
-                <Car size={size * 0.4} color="#62d8d9" />
+                <Car size={size * 0.4} color="#00E576" />
             </div>
         );
     }
@@ -245,7 +245,7 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
                 height: size,
                 borderRadius: '12px',
                 overflow: 'hidden',
-                border: `2px solid #62d8d9`,
+                border: `2px solid #00E576`,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                 cursor: onClick ? 'pointer' : 'default'
             }} onClick={onClick}>
@@ -270,23 +270,23 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
             width: size,
             height: size,
             borderRadius: '12px',
-            backgroundColor: '#62d8d915',
+            backgroundColor: '#00E57615',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
             fontSize: size * 0.2,
             fontWeight: 'bold',
-            color: '#62d8d9',
+            color: '#00E576',
             cursor: onClick ? 'pointer' : 'default'
         }} onClick={onClick}>
             {vehiculo.marca && vehiculo.modelo ? (
                 <>
                     <span>{vehiculo.marca.charAt(0)}{vehiculo.modelo.charAt(0)}</span>
-                    <Car size={size * 0.3} color="#62d8d9" style={{ marginTop: 2 }} />
+                    <Car size={size * 0.3} color="#00E576" style={{ marginTop: 2 }} />
                 </>
             ) : (
-                <Car size={size * 0.4} color="#62d8d9" />
+                <Car size={size * 0.4} color="#00E576" />
             )}
         </div>
     );
@@ -1066,8 +1066,8 @@ const DriverHome = () => {
         fontWeight: "bold",
         zIndex: 2,
         transition: "all 0.3s ease",
-        background: currentStep >= stepNumber ? "#62d8d9" : "#fff",
-        color: currentStep >= stepNumber ? "#fff" : "#113d69",
+        background: currentStep >= stepNumber ? "#00E576" : "#fff",
+        color: currentStep >= stepNumber ? "#fff" : "#0B1F44",
         border: "none",
         boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
     });
@@ -1137,13 +1137,13 @@ const DriverHome = () => {
                     }}>
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                <h2 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Panel de Repartidor</h2>
+                                <h2 style={{ fontWeight: 'bold', margin: 0, color: '#0B1F44' }}>Panel de Repartidor</h2>
                                 <button
                                     onClick={repetirTutorial}
                                     style={{
                                         background: 'none',
                                         border: 'none',
-                                        color: '#62d8d9',
+                                        color: '#00E576',
                                         fontWeight: 'bold',
                                         textDecoration: 'none',
                                         cursor: 'pointer',
@@ -1169,7 +1169,7 @@ const DriverHome = () => {
                                 '@media (minWidth: 768px)': { display: 'block' }
                             }}>
                                 <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 'bold', color: '#6c757d', display: 'block' }}>Ganancias {periodo}</span>
-                                <h3 style={{ fontWeight: 'bold', margin: 0, color: '#62d8d9' }}>${totalGananciasBackend.toLocaleString()}</h3>
+                                <h3 style={{ fontWeight: 'bold', margin: 0, color: '#00E576' }}>${totalGananciasBackend.toLocaleString()}</h3>
                             </div>
                             <div style={{
                                 backgroundColor: '#f8f9fa',
@@ -1200,29 +1200,29 @@ const DriverHome = () => {
                         icon={<Wallet size={20} />}
                         title="Ganancias"
                         value={`$${totalGananciasBackend.toLocaleString()}`}
-                        color="#62d8d9"
-                        bgColor="#62d8d915"
+                        color="#00E576"
+                        bgColor="#00E57615"
                     />
                     <StatsCard
                         icon={<Clock size={20} />}
                         title="Tiempo en Línea"
                         value={`${statsAvanzadas.tiempoEnLinea.totalHoras}h`}
-                        color="#113d69"
-                        bgColor="#113d6915"
+                        color="#0B1F44"
+                        bgColor="#0B1F4415"
                     />
                     <StatsCard
                         icon={<CircleCheck size={20} />}
                         title="Pedidos Entregados"
                         value={statsAvanzadas.resumenPedidos.total}
-                        color="#62d8d9"
-                        bgColor="#62d8d915"
+                        color="#00E576"
+                        bgColor="#00E57615"
                     />
                     <StatsCard
                         icon={<Route size={20} />}
                         title="Ruta Principal"
                         value={statsAvanzadas.rutasFrecuentes[0]?.name || 'N/A'}
-                        color="#113d69"
-                        bgColor="#113d6915"
+                        color="#0B1F44"
+                        bgColor="#0B1F4415"
                     />
                 </div>
 
@@ -1235,23 +1235,23 @@ const DriverHome = () => {
                     <div style={{ ...cardStyle, height: '100%' }}>
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#62d8d9' }}>Ganancias</h5>
-                                <StatsBadge bgColor="#f8f9fa" color="#113d69">Tendencia {periodo}</StatsBadge>
+                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#00E576' }}>Ganancias</h5>
+                                <StatsBadge bgColor="#f8f9fa" color="#0B1F44">Tendencia {periodo}</StatsBadge>
                             </div>
                             <div style={{ height: '250px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart data={statsAvanzadas.ganancias.historial}>
                                         <defs>
                                             <linearGradient id="colorGanancias" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#113d69" stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor="#113d69" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#0B1F44" stopOpacity={0.8} />
+                                                <stop offset="95%" stopColor="#0B1F44" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                                        <Area type="monotone" dataKey="value" stroke="#113d69" fillOpacity={1} fill="url(#colorGanancias)" name="Ganancias ($)" />
+                                        <Area type="monotone" dataKey="value" stroke="#0B1F44" fillOpacity={1} fill="url(#colorGanancias)" name="Ganancias ($)" />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             </div>
@@ -1261,8 +1261,8 @@ const DriverHome = () => {
                     <div style={{ ...cardStyle, height: '100%' }}>
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#113d69' }}>Frecuencia</h5>
-                                <StatsBadge bgColor="#f8f9fa" color="#113d69">Pedidos {periodo}</StatsBadge>
+                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#0B1F44' }}>Frecuencia</h5>
+                                <StatsBadge bgColor="#f8f9fa" color="#0B1F44">Pedidos {periodo}</StatsBadge>
                             </div>
                             <div style={{ height: '250px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
@@ -1271,7 +1271,7 @@ const DriverHome = () => {
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <Tooltip cursor={{ fill: 'rgba(84, 199, 184, 0.05)' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                                        <Bar dataKey="value" fill="#62d8d9" radius={[4, 4, 0, 0]} name="Pedidos" barSize={20} />
+                                        <Bar dataKey="value" fill="#00E576" radius={[4, 4, 0, 0]} name="Pedidos" barSize={20} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
@@ -1281,8 +1281,8 @@ const DriverHome = () => {
                     <div style={{ ...cardStyle, height: '100%' }}>
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#62d8d9' }}>Actividad</h5>
-                                <StatsBadge bgColor="#f8f9fa" color="#113d69">Horas {periodo}</StatsBadge>
+                                <h5 style={{ fontWeight: 'bold', margin: 0, color: '#00E576' }}>Actividad</h5>
+                                <StatsBadge bgColor="#f8f9fa" color="#0B1F44">Horas {periodo}</StatsBadge>
                             </div>
                             <div style={{ height: '250px' }}>
                                 <ResponsiveContainer width="100%" height="100%">
@@ -1291,7 +1291,7 @@ const DriverHome = () => {
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fill: '#999', fontSize: 10 }} />
                                         <Tooltip cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                                        <Bar dataKey="value" fill="#113d69" radius={[4, 4, 0, 0]} name="Horas" barSize={20} />
+                                        <Bar dataKey="value" fill="#0B1F44" radius={[4, 4, 0, 0]} name="Horas" barSize={20} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
@@ -1310,31 +1310,31 @@ const DriverHome = () => {
                             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap' }}>
                                 <div style={{
                                     width: '40px', height: '40px', borderRadius: '12px',
-                                    backgroundColor: '#62d8d915', display: 'flex',
+                                    backgroundColor: '#00E57615', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center', marginRight: '12px'
                                 }}>
-                                    <Wallet size={20} style={{ color: '#62d8d9' }} />
+                                    <Wallet size={20} style={{ color: '#00E576' }} />
                                 </div>
-                                <h5 style={{ margin: 0, fontWeight: 'bold', color: '#113d69' }}>Comisión del Mes (10%)</h5>
+                                <h5 style={{ margin: 0, fontWeight: 'bold', color: '#0B1F44' }}>Comisión del Mes (10%)</h5>
                             </div>
 
                             {cargandoComision ? (
-                                <div style={{ textAlign: 'center', padding: '1rem' }}><Spinner size="sm" style={{ color: '#62d8d9' }} /></div>
+                                <div style={{ textAlign: 'center', padding: '1rem' }}><Spinner size="sm" style={{ color: '#00E576' }} /></div>
                             ) : displayComisionEnBaseABackend ? (
                                 <>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: '#f8f9fa', borderRadius: '0.375rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                                         <span style={{ color: '#6c757d' }}>Ingresos del mes</span>
-                                        <span style={{ fontWeight: 'bold', color: '#113d69' }}>${displayComisionEnBaseABackend.totalIngresos?.toLocaleString()} COP</span>
+                                        <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>${displayComisionEnBaseABackend.totalIngresos?.toLocaleString()} COP</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: '#62d8d915', borderRadius: '0.375rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: '#00E57615', borderRadius: '0.375rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                                         <span style={{ fontWeight: '600' }}>Comisión a pagar (10%)</span>
-                                        <span style={{ fontWeight: 'bold', color: '#62d8d9' }}>${displayComisionEnBaseABackend.totalComision?.toLocaleString()} COP</span>
+                                        <span style={{ fontWeight: 'bold', color: '#00E576' }}>${displayComisionEnBaseABackend.totalComision?.toLocaleString()} COP</span>
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: '#f8f9fa', borderRadius: '0.375rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                                         <span style={{ color: '#6c757d' }}>Pedidos entregados</span>
-                                        <span style={{ fontWeight: 'bold', color: '#113d69' }}>{displayComisionEnBaseABackend.pedidosEntregados}</span>
+                                        <span style={{ fontWeight: 'bold', color: '#0B1F44' }}>{displayComisionEnBaseABackend.pedidosEntregados}</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: (displayComisionEnBaseABackend.tieneReportePendiente || displayComisionEnBaseABackend.estadoReporte) ? '#62d8d915' : '#cccbd2af', borderRadius: '0.375rem', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', backgroundColor: (displayComisionEnBaseABackend.tieneReportePendiente || displayComisionEnBaseABackend.estadoReporte) ? '#00E57615' : '#cccbd2af', borderRadius: '0.375rem', flexWrap: 'wrap' }}>
                                         <span>Estado del reporte</span>
                                         <DocumentoBadge estado={displayComisionEnBaseABackend.estadoReporte || 'Sin enviar'} />
                                     </div>
@@ -1350,12 +1350,12 @@ const DriverHome = () => {
                             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap' }}>
                                 <div style={{
                                     width: '40px', height: '40px', borderRadius: '12px',
-                                    backgroundColor: '#113d6915', display: 'flex',
+                                    backgroundColor: '#0B1F4415', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center', marginRight: '12px'
                                 }}>
-                                    <FileText size={20} style={{ color: '#113d69' }} />
+                                    <FileText size={20} style={{ color: '#0B1F44' }} />
                                 </div>
-                                <h5 style={{ margin: 0, fontWeight: 'bold', color: '#62d8d9' }}>Enviar Comprobante de Pago</h5>
+                                <h5 style={{ margin: 0, fontWeight: 'bold', color: '#00E576' }}>Enviar Comprobante de Pago</h5>
                             </div>
 
                             {(displayComisionEnBaseABackend?.tieneReportePendiente || (displayComisionEnBaseABackend?.estadoReporte && displayComisionEnBaseABackend?.estadoReporte !== 'RECHAZADO')) ? (
@@ -1397,9 +1397,9 @@ const DriverHome = () => {
                                                     width: '100%',
                                                     padding: '0.375rem 0.75rem',
                                                     borderRadius: '0.375rem',
-                                                    border: '1px solid #62d8d9',
+                                                    border: '1px solid #00E576',
                                                     fontWeight: 'bold',
-                                                    color: '#113d69'
+                                                    color: '#0B1F44'
                                                 }}
                                             />
                                             <small style={{ color: '#6c757d', fontSize: '0.75rem' }}>Confirma el monto exacto antes de enviar.</small>
@@ -1409,7 +1409,7 @@ const DriverHome = () => {
                                         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
                                             <img
                                                 src={fotoComprobante}
-                                                style={{ maxHeight: '200px', borderRadius: '0.375rem', border: '1px solid #62d8d9', maxWidth: '100%' }}
+                                                style={{ maxHeight: '200px', borderRadius: '0.375rem', border: '1px solid #00E576', maxWidth: '100%' }}
                                                 alt="Comprobante"
                                             />
                                         </div>
@@ -1444,8 +1444,8 @@ const DriverHome = () => {
                                                 fontSize: '0.85rem',
                                                 gap: window.innerWidth < 576 ? '0.25rem' : '0'
                                             }}>
-                                            <span style={{ color: '#113d69' }}>{new Date(reporte.mesCorrespondiente).toLocaleDateString('es-CO', { year: 'numeric', month: 'short' })}</span>
-                                            <span style={{ color: '#62d8d9' }}>${Number(reporte.montoComision).toLocaleString()}</span>
+                                            <span style={{ color: '#0B1F44' }}>{new Date(reporte.mesCorrespondiente).toLocaleDateString('es-CO', { year: 'numeric', month: 'short' })}</span>
+                                            <span style={{ color: '#00E576' }}>${Number(reporte.montoComision).toLocaleString()}</span>
                                             <DocumentoBadge estado={reporte.estado} />
                                         </div>
                                     ))}
@@ -1469,15 +1469,15 @@ const DriverHome = () => {
                                         width: '40px',
                                         height: '40px',
                                         borderRadius: '12px',
-                                        backgroundColor: '#62d8d915',
+                                        backgroundColor: '#00E57615',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         marginRight: '12px'
                                     }}>
-                                        <Car size={20} style={{ color: '#62d8d9' }} />
+                                        <Car size={20} style={{ color: '#00E576' }} />
                                     </div>
-                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Vehículo Activo</h5>
+                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#0B1F44' }}>Vehículo Activo</h5>
                                 </div>
 
                                 {vehiculos.length > 1 && (
@@ -1485,8 +1485,8 @@ const DriverHome = () => {
                                         onClick={verTodosLosVehiculos}
                                         style={{
                                             background: 'none',
-                                            border: `1px solid #62d8d9`,
-                                            color: '#62d8d9',
+                                            border: `1px solid #00E576`,
+                                            color: '#00E576',
                                             borderRadius: '2rem',
                                             padding: '0.25rem 0.75rem',
                                             fontSize: '0.875rem',
@@ -1503,7 +1503,7 @@ const DriverHome = () => {
 
                             {cargandoVehiculo ? (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                    <Spinner animation="border" style={{ color: '#62d8d9' }} />
+                                    <Spinner animation="border" style={{ color: '#00E576' }} />
                                 </div>
                             ) : errorVehiculo ? (
                                 <div style={{ textAlign: 'center', padding: '1.5rem', backgroundColor: '#FEF2F2', borderRadius: '1rem' }}>
@@ -1531,10 +1531,10 @@ const DriverHome = () => {
                                             />
                                         </div>
                                         <div style={{ width: window.innerWidth < 768 ? '100%' : '75%', textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
-                                            <h6 style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#113d69', fontSize: '1.1rem' }}>
+                                            <h6 style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#0B1F44', fontSize: '1.1rem' }}>
                                                 {vehiculoPrincipal.marca} {vehiculoPrincipal.modelo}
                                             </h6>
-                                            <p style={{ marginBottom: '0.25rem', color: '#6c757d', fontSize: '0.875rem' }}>Placa: <span style={{ fontWeight: '600', color: '#62d8d9' }}>{vehiculoPrincipal.placa}</span></p>
+                                            <p style={{ marginBottom: '0.25rem', color: '#6c757d', fontSize: '0.875rem' }}>Placa: <span style={{ fontWeight: '600', color: '#00E576' }}>{vehiculoPrincipal.placa}</span></p>
                                             <p style={{ marginBottom: 0, color: '#6c757d', fontSize: '0.875rem' }}>Capacidad: {vehiculoPrincipal.capacidad} kg · {vehiculoPrincipal.tipo || 'Sin tipo'}</p>
                                             {vehiculoPrincipal.placaValidada && (
                                                 <span style={{
@@ -1542,7 +1542,7 @@ const DriverHome = () => {
                                                     display: 'inline-block',
                                                     padding: '0.25rem 0.75rem',
                                                     borderRadius: '2rem',
-                                                    backgroundColor: '#62d8d9',
+                                                    backgroundColor: '#00E576',
                                                     color: 'white',
                                                     fontSize: '0.75rem',
                                                     fontWeight: '500'
@@ -1580,7 +1580,7 @@ const DriverHome = () => {
                                             background: 'none',
                                             border: 'none',
                                             padding: 0,
-                                            color: '#113d69',
+                                            color: '#0B1F44',
                                             fontWeight: '600',
                                             fontSize: '0.875rem',
                                             textDecoration: 'none',
@@ -1592,7 +1592,7 @@ const DriverHome = () => {
                                         }}
                                     >
                                         Registrar Otro Vehículo
-                                        <ArrowRight size={12} style={{ color: '#62d8d9' }} />
+                                        <ArrowRight size={12} style={{ color: '#00E576' }} />
                                     </button>
                                 </div>
                             )}
@@ -1606,20 +1606,20 @@ const DriverHome = () => {
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '12px',
-                                    backgroundColor: '#113d6915',
+                                    backgroundColor: '#0B1F4415',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     marginRight: '12px'
                                 }}>
-                                    <IdCard size={20} style={{ color: '#113d69' }} />
+                                    <IdCard size={20} style={{ color: '#0B1F44' }} />
                                 </div>
-                                <h5 style={{ margin: 0, fontWeight: '600', color: '#62d8d9' }}>Licencia de Conducir</h5>
+                                <h5 style={{ margin: 0, fontWeight: '600', color: '#00E576' }}>Licencia de Conducir</h5>
                             </div>
 
                             {cargandoDocumentos ? (
                                 <div style={{ textAlign: 'center', padding: '1rem' }}>
-                                    <Spinner animation="border" size="sm" style={{ color: '#62d8d9' }} />
+                                    <Spinner animation="border" size="sm" style={{ color: '#00E576' }} />
                                     <p style={{ marginTop: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>Cargando documentos...</p>
                                 </div>
                             ) : errorDocumentos ? (
@@ -1631,15 +1631,15 @@ const DriverHome = () => {
                                     <div style={{ marginBottom: 'auto' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                             <span style={{ color: '#6c757d', fontSize: '0.875rem' }}>Número</span>
-                                            <span style={{ fontWeight: '600', color: '#113d69' }}>{licencia.numeroDocumento || 'Sin número'}</span>
+                                            <span style={{ fontWeight: '600', color: '#0B1F44' }}>{licencia.numeroDocumento || 'Sin número'}</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                             <span style={{ color: '#6c757d', fontSize: '0.875rem' }}>Expedición</span>
-                                            <span style={{ fontWeight: '600', color: '#62d8d9' }}>{formatearFechaExpedicion(licencia.fechaExpedicion)}</span>
+                                            <span style={{ fontWeight: '600', color: '#00E576' }}>{formatearFechaExpedicion(licencia.fechaExpedicion)}</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                             <span style={{ color: '#6c757d', fontSize: '0.875rem' }}>Subida</span>
-                                            <span style={{ fontWeight: '600', color: '#113d69' }}>{formatearFechaSubida(licencia.fechaSubida)}</span>
+                                            <span style={{ fontWeight: '600', color: '#0B1F44' }}>{formatearFechaSubida(licencia.fechaSubida)}</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                             <span style={{ color: '#6c757d', fontSize: '0.875rem' }}>Estado</span>
@@ -1706,10 +1706,10 @@ const DriverHome = () => {
                         <div style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: '#62d8d915', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
-                                        <List size={20} style={{ color: '#62d8d9' }} />
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: '#00E57615', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
+                                        <List size={20} style={{ color: '#00E576' }} />
                                     </div>
-                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos disponibles</h5>
+                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#0B1F44' }}>Pedidos disponibles</h5>
                                 </div>
                                 <AccionButton variant="outline-secondary" onClick={cargarDisponibles} disabled={cargandoDisponibles}>
                                     {cargandoDisponibles ? 'Actualizando...' : 'Actualizar'}
@@ -1717,7 +1717,7 @@ const DriverHome = () => {
                             </div>
                             {cargandoDisponibles ? (
                                 <div style={{ textAlign: 'center', padding: '1rem' }}>
-                                    <Spinner animation="border" size="sm" style={{ color: '#62d8d9' }} />
+                                    <Spinner animation="border" size="sm" style={{ color: '#00E576' }} />
                                 </div>
                             ) : pedidosDisponibles.length === 0 ? (
                                 <p style={{ color: '#6c757d', marginBottom: 0 }}>No hay pedidos en estado CREADO por ahora.</p>
@@ -1726,7 +1726,7 @@ const DriverHome = () => {
                                     {pedidosDisponibles.slice(0, 5).map((pedido) => (
                                         <div key={pedido.idPedido} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 0', borderBottom: '1px solid #F3F4F6', gap: '0.5rem', flexWrap: 'wrap' }}>
                                             <div>
-                                                <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
+                                                <p style={{ marginBottom: 0, fontWeight: '600', color: '#0B1F44' }}>Pedido #{pedido.idPedido}</p>
                                                 <small style={{ color: '#6c757d' }}>
                                                     {(pedido.dirRecogida || 'Recogida')} → {(pedido.dirEntrega || pedido.detallePedido || 'Entrega')}
                                                     {pedido.total ? ` · $${Number(pedido.total).toLocaleString()}` : ''}
@@ -1755,22 +1755,22 @@ const DriverHome = () => {
                                         width: '40px',
                                         height: '40px',
                                         borderRadius: '12px',
-                                        backgroundColor: '#62d8d915',
+                                        backgroundColor: '#00E57615',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         marginRight: '12px'
                                     }}>
-                                        <History size={20} style={{ color: '#62d8d9' }} />
+                                        <History size={20} style={{ color: '#00E576' }} />
                                     </div>
-                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#113d69' }}>Pedidos Recientes</h5>
+                                    <h5 style={{ margin: 0, fontWeight: '600', color: '#0B1F44' }}>Pedidos Recientes</h5>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                                    <StatsBadge bgColor="#00E576" color="#ffffff">
                                         {estadisticasPedidos.entregados} Entregados
                                     </StatsBadge>
                                     {estadisticasPedidos.enCamino > 0 && (
-                                        <StatsBadge bgColor="#113d69" color="#ffffff">
+                                        <StatsBadge bgColor="#0B1F44" color="#ffffff">
                                             {estadisticasPedidos.enCamino} En camino
                                         </StatsBadge>
                                     )}
@@ -1779,7 +1779,7 @@ const DriverHome = () => {
 
                             {cargandoPedidos ? (
                                 <div style={{ textAlign: 'center', padding: '1rem' }}>
-                                    <Spinner animation="border" style={{ color: '#62d8d9' }} />
+                                    <Spinner animation="border" style={{ color: '#00E576' }} />
                                     <p style={{ marginTop: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>Cargando pedidos...</p>
                                 </div>
                             ) : errorPedidos ? (
@@ -1839,26 +1839,26 @@ const DriverHome = () => {
                                                                 width: window.innerWidth < 768 ? '40px' : '32px',
                                                                 height: window.innerWidth < 768 ? '40px' : '32px',
                                                                 borderRadius: '10px',
-                                                                backgroundColor: '#62d8d910',
+                                                                backgroundColor: '#00E57610',
                                                                 display: 'flex',
                                                                 alignItems: 'center',
                                                                 justifyContent: 'center',
                                                                 margin: '0 auto'
                                                             }}>
-                                                                <Car size={16} color="#62d8d9" />
+                                                                <Car size={16} color="#00E576" />
                                                             </div>
                                                         )}
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                        <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
+                                                        <p style={{ marginBottom: 0, fontWeight: '600', color: '#0B1F44' }}>Pedido #{pedido.idPedido}</p>
                                                         <small style={{ color: '#6c757d' }}>
                                                             {formatearFecha(pedido.fechaHoraSalida)}
                                                         </small>
                                                     </div>
                                                     <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                            <Route size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
-                                                            <small style={{ color: '#113d69' }}>
+                                                            <Route size={12} color="#00E576" style={{ marginRight: '0.25rem' }} />
+                                                            <small style={{ color: '#0B1F44' }}>
                                                                 {pedido.ruta?.nombre || 'Ruta no disponible'}
                                                             </small>
                                                         </div>
@@ -1916,7 +1916,7 @@ const DriverHome = () => {
                         overflow: 'hidden'
                     }} onClick={(e) => e.stopPropagation()}>
                         <div style={{
-                            backgroundColor: '#62d8d9',
+                            backgroundColor: '#00E576',
                             color: 'white',
                             padding: '1rem',
                             borderBottom: 'none'
@@ -1928,7 +1928,7 @@ const DriverHome = () => {
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
                             {vehiculos.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                    <Car size={50} style={{ color: '#62d8d9' }} />
+                                    <Car size={50} style={{ color: '#00E576' }} />
                                     <p style={{ color: '#6c757d', marginTop: '1rem' }}>No tienes vehículos registrados</p>
                                     <AccionButton
                                         variant="primary"
@@ -1950,7 +1950,7 @@ const DriverHome = () => {
                                         <div
                                             key={vehiculo.idVehiculos}
                                             style={{
-                                                border: vehiculo.idVehiculos === vehiculoPrincipal?.idVehiculos ? `2px solid #62d8d9` : `1px solid #113d6920`,
+                                                border: vehiculo.idVehiculos === vehiculoPrincipal?.idVehiculos ? `2px solid #00E576` : `1px solid #0B1F4420`,
                                                 borderRadius: '0.5rem',
                                                 cursor: 'pointer'
                                             }}
@@ -1969,27 +1969,27 @@ const DriverHome = () => {
                                                         onClick={() => handleImageClick(vehiculo)}
                                                     />
                                                     <div style={{ flex: 1, textAlign: window.innerWidth < 576 ? 'center' : 'left' }}>
-                                                        <h6 style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#113d69' }}>
+                                                        <h6 style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#0B1F44' }}>
                                                             {vehiculo.marca} {vehiculo.modelo}
                                                             {vehiculo.idVehiculos === vehiculoPrincipal?.idVehiculos && (
                                                                 <span style={{
                                                                     marginLeft: '0.5rem',
                                                                     padding: '0.25rem 0.5rem',
-                                                                    backgroundColor: '#62d8d9',
+                                                                    backgroundColor: '#00E576',
                                                                     color: 'white',
                                                                     borderRadius: '0.25rem',
                                                                     fontSize: '0.75rem'
                                                                 }}>Activo</span>
                                                             )}
                                                         </h6>
-                                                        <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem', color: '#6c757d' }}>Placa: <span style={{ color: '#62d8d9' }}>{vehiculo.placa}</span></p>
+                                                        <p style={{ marginBottom: '0.25rem', fontSize: '0.875rem', color: '#6c757d' }}>Placa: <span style={{ color: '#00E576' }}>{vehiculo.placa}</span></p>
                                                         <p style={{ marginBottom: 0, fontSize: '0.875rem', color: '#6c757d' }}>Capacidad: {vehiculo.capacidad} kg · {vehiculo.tipo || 'Sin tipo'}</p>
                                                         {vehiculo.placaValidada && (
                                                             <span style={{
                                                                 marginTop: '0.25rem',
                                                                 display: 'inline-block',
                                                                 padding: '0.25rem 0.5rem',
-                                                                backgroundColor: '#62d8d9',
+                                                                backgroundColor: '#00E576',
                                                                 color: 'white',
                                                                 borderRadius: '2rem',
                                                                 fontSize: '0.75rem'
@@ -2045,13 +2045,13 @@ const DriverHome = () => {
                     }} onClick={(e) => e.stopPropagation()}>
                         <div style={{
                             padding: '1rem',
-                            borderBottom: `2px solid #62d8d9`,
+                            borderBottom: `2px solid #00E576`,
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center'
                         }}>
-                            <h5 style={{ margin: 0, color: '#113d69' }}>
-                                <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Foto del Vehículo
+                            <h5 style={{ margin: 0, color: '#0B1F44' }}>
+                                <Car style={{ marginRight: '0.5rem', color: '#00E576' }} /> Foto del Vehículo
                             </h5>
                             <button
                                 onClick={() => setShowPhotoModal(false)}
@@ -2113,7 +2113,7 @@ const DriverHome = () => {
                             padding: '1.5rem 1.5rem 0.5rem',
                             borderBottom: 'none'
                         }}>
-                            <h5 style={{ fontWeight: '600', color: '#62d8d9' }}>
+                            <h5 style={{ fontWeight: '600', color: '#00E576' }}>
                                 <History style={{ marginRight: '0.5rem' }} /> Historial Completo de Pedidos
                             </h5>
                         </div>
@@ -2129,10 +2129,10 @@ const DriverHome = () => {
                                         <span style={{
                                             backgroundColor: 'white',
                                             padding: '0.375rem 0.75rem',
-                                            border: `1px solid #62d8d9`,
+                                            border: `1px solid #00E576`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <Search color="#62d8d9" />
+                                            <Search color="#00E576" />
                                         </span>
                                         <input
                                             placeholder="Buscar por # de pedido o nombre de ruta..."
@@ -2141,7 +2141,7 @@ const DriverHome = () => {
                                             style={{
                                                 flex: 1,
                                                 padding: '0.375rem 0.75rem',
-                                                border: `1px solid #62d8d9`,
+                                                border: `1px solid #00E576`,
                                                 borderLeft: 'none',
                                                 borderRadius: '0 0.375rem 0.375rem 0',
                                                 minWidth: '150px'
@@ -2154,10 +2154,10 @@ const DriverHome = () => {
                                         <span style={{
                                             backgroundColor: 'white',
                                             padding: '0.375rem 0.75rem',
-                                            border: `1px solid #113d69`,
+                                            border: `1px solid #0B1F44`,
                                             borderRadius: '0.375rem 0 0 0.375rem'
                                         }}>
-                                            <Funnel color="#113d69" />
+                                            <Funnel color="#0B1F44" />
                                         </span>
                                         <select
                                             value={filtroEstado}
@@ -2165,7 +2165,7 @@ const DriverHome = () => {
                                             style={{
                                                 flex: 1,
                                                 padding: '0.375rem 0.75rem',
-                                                border: `1px solid #113d69`,
+                                                border: `1px solid #0B1F44`,
                                                 borderLeft: 'none',
                                                 borderRadius: '0 0.375rem 0.375rem 0',
                                                 minWidth: '150px'
@@ -2182,7 +2182,7 @@ const DriverHome = () => {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: window.innerWidth < 768 ? 'left' : 'right' }}>
-                                    <StatsBadge bgColor="#62d8d9" color="#ffffff">
+                                    <StatsBadge bgColor="#00E576" color="#ffffff">
                                         {pedidosFiltrados.length} pedidos
                                     </StatsBadge>
                                 </div>
@@ -2200,7 +2200,7 @@ const DriverHome = () => {
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <History size={24} style={{ color: '#62d8d9' }} />
+                                        <History size={24} style={{ color: '#00E576' }} />
                                     </div>
                                     <p style={{ color: '#6c757d' }}>No se encontraron pedidos con los filtros seleccionados</p>
                                     <button
@@ -2211,7 +2211,7 @@ const DriverHome = () => {
                                         style={{
                                             background: 'none',
                                             border: 'none',
-                                            color: '#62d8d9',
+                                            color: '#00E576',
                                             textDecoration: 'underline',
                                             cursor: 'pointer'
                                         }}
@@ -2252,26 +2252,26 @@ const DriverHome = () => {
                                                             width: '40px',
                                                             height: '40px',
                                                             borderRadius: '12px',
-                                                            backgroundColor: '#62d8d910',
+                                                            backgroundColor: '#00E57610',
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             margin: '0 auto'
                                                         }}>
-                                                            <Car size={20} color="#62d8d9" />
+                                                            <Car size={20} color="#00E576" />
                                                         </div>
                                                     )}
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
-                                                    <p style={{ marginBottom: 0, fontWeight: '600', color: '#113d69' }}>Pedido #{pedido.idPedido}</p>
+                                                    <p style={{ marginBottom: 0, fontWeight: '600', color: '#0B1F44' }}>Pedido #{pedido.idPedido}</p>
                                                     <small style={{ color: '#6c757d' }}>
                                                         {formatearFecha(pedido.fechaHoraSalida)}
                                                     </small>
                                                 </div>
                                                 <div style={{ gridColumn: window.innerWidth < 768 ? 'span 1' : 'auto' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Route size={12} color="#62d8d9" style={{ marginRight: '0.25rem' }} />
-                                                        <small style={{ fontWeight: '600', color: '#113d69' }}>Ruta:</small>
+                                                        <Route size={12} color="#00E576" style={{ marginRight: '0.25rem' }} />
+                                                        <small style={{ fontWeight: '600', color: '#0B1F44' }}>Ruta:</small>
                                                         <span style={{ marginLeft: '0.5rem', color: '#6c757d', fontSize: '0.875rem' }}>{pedido.ruta?.nombre || 'No disponible'}</span>
                                                     </div>
                                                 </div>
@@ -2330,12 +2330,12 @@ const DriverHome = () => {
                         overflow: 'hidden'
                     }} onClick={(e) => e.stopPropagation()}>
                         <div style={{
-                            background: `linear-gradient(135deg, #62d8d920, white)`,
-                            borderBottom: `2px solid #62d8d9`,
+                            background: `linear-gradient(135deg, #00E57620, white)`,
+                            borderBottom: `2px solid #00E576`,
                             padding: '1.5rem'
                         }}>
-                            <h5 style={{ fontWeight: '600', color: '#113d69' }}>
-                                <Car style={{ marginRight: '0.5rem', color: '#62d8d9' }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
+                            <h5 style={{ fontWeight: '600', color: '#0B1F44' }}>
+                                <Car style={{ marginRight: '0.5rem', color: '#00E576' }} /> Detalle del Pedido #{pedidoSeleccionado.idPedido}
                             </h5>
                         </div>
                         <div style={{ padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
@@ -2345,13 +2345,13 @@ const DriverHome = () => {
                                 gap: '1rem',
                                 marginBottom: '1rem'
                             }}>
-                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #62d8d920`, borderRadius: '1rem' }}>
+                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #00E57620`, borderRadius: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
-                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#62d8d9' }}>Información General</h6>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#00E576' }}>Información General</h6>
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Fecha y hora:</span>
-                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{formatearFecha(pedidoSeleccionado.fechaHoraSalida)}</span>
+                                                <span style={{ fontWeight: '600', color: '#0B1F44' }}>{formatearFecha(pedidoSeleccionado.fechaHoraSalida)}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Estado:</span>
@@ -2359,36 +2359,36 @@ const DriverHome = () => {
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Detalle:</span>
-                                                <span style={{ fontWeight: '600', color: '#113d69' }}>{pedidoSeleccionado.detallePedido || pedidoSeleccionado.dirEntrega || 'Domicilio'}</span>
+                                                <span style={{ fontWeight: '600', color: '#0B1F44' }}>{pedidoSeleccionado.detallePedido || pedidoSeleccionado.dirEntrega || 'Domicilio'}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap', gap: '0.25rem' }}>
                                                 <span style={{ color: '#6c757d' }}>Distancia:</span>
-                                                <span style={{ fontWeight: '600', color: '#62d8d9' }}>
+                                                <span style={{ fontWeight: '600', color: '#00E576' }}>
                                                     {pedidoSeleccionado.distanciaKm ? `${Number(pedidoSeleccionado.distanciaKm).toFixed(1)} km` : 'N/A'}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #113d6920`, borderRadius: '1rem' }}>
+                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #0B1F4420`, borderRadius: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
-                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#113d69' }}>Ruta del Pedido</h6>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#0B1F44' }}>Ruta del Pedido</h6>
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             {pedidoSeleccionado.ruta?.nombre && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <Route size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <Route size={14} color="#00E576" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Ruta:</span>
-                                                        <span style={{ fontWeight: '600', display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.nombre}</span>
+                                                        <span style={{ fontWeight: '600', display: 'block', color: '#0B1F44' }}>{pedidoSeleccionado.ruta.nombre}</span>
                                                     </div>
                                                 </div>
                                             )}
                                             {pedidoSeleccionado.ruta?.descripcion && (
                                                 <div style={{ display: 'flex', padding: '0.5rem 0', borderBottom: 'none', flexWrap: 'wrap' }}>
-                                                    <Info size={14} color="#62d8d9" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
+                                                    <Info size={14} color="#00E576" style={{ marginRight: '0.5rem', marginTop: '0.25rem' }} />
                                                     <div>
                                                         <span style={{ color: '#6c757d' }}>Descripción:</span>
-                                                        <span style={{ display: 'block', color: '#113d69' }}>{pedidoSeleccionado.ruta.descripcion}</span>
+                                                        <span style={{ display: 'block', color: '#0B1F44' }}>{pedidoSeleccionado.ruta.descripcion}</span>
                                                     </div>
                                                 </div>
                                             )}
@@ -2398,9 +2398,9 @@ const DriverHome = () => {
                             </div>
 
                             {pedidoSeleccionado.ruta?.paradas && pedidoSeleccionado.ruta.paradas.length > 0 && (
-                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #62d8d920`, borderRadius: '1rem' }}>
+                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #00E57620`, borderRadius: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
-                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#62d8d9' }}>Paradas del Recorrido</h6>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#00E576' }}>Paradas del Recorrido</h6>
                                         <div style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                             {pedidoSeleccionado.ruta.paradas
                                                 .sort((a, b) => a.orden - b.orden)
@@ -2410,7 +2410,7 @@ const DriverHome = () => {
                                                             width: '24px',
                                                             height: '24px',
                                                             borderRadius: '50%',
-                                                            backgroundColor: index === 0 ? '#62d8d9' : index === pedidoSeleccionado.ruta.paradas.length - 1 ? '#113d69' : '#e0e0e0',
+                                                            backgroundColor: index === 0 ? '#00E576' : index === pedidoSeleccionado.ruta.paradas.length - 1 ? '#0B1F44' : '#e0e0e0',
                                                             color: 'white',
                                                             display: 'flex',
                                                             alignItems: 'center',
@@ -2421,12 +2421,12 @@ const DriverHome = () => {
                                                             {index + 1}
                                                         </div>
                                                         <div>
-                                                            <span style={{ fontWeight: '600', color: '#113d69' }}>{parada.nombre || `Parada ${parada.orden}`}</span>
+                                                            <span style={{ fontWeight: '600', color: '#0B1F44' }}>{parada.nombre || `Parada ${parada.orden}`}</span>
                                                             {parada.tipo && (
                                                                 <span style={{
                                                                     marginLeft: '0.5rem',
                                                                     padding: '0.125rem 0.375rem',
-                                                                    backgroundColor: '#62d8d9',
+                                                                    backgroundColor: '#00E576',
                                                                     color: 'white',
                                                                     borderRadius: '0.25rem',
                                                                     fontSize: '10px'
@@ -2442,9 +2442,9 @@ const DriverHome = () => {
                                 </div>
                             )}
                             {/* Recogida / entrega + acciones del repartidor */}
-                            <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #113d6920`, borderRadius: '1rem', marginTop: '1rem' }}>
+                            <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #0B1F4420`, borderRadius: '1rem', marginTop: '1rem' }}>
                                 <div style={{ padding: '1rem' }}>
-                                    <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#113d69' }}>Recogida y entrega</h6>
+                                    <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#0B1F44' }}>Recogida y entrega</h6>
                                     {pedidoSeleccionado.dirRecogida && (
                                         <p style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}><strong>Recogida:</strong> {pedidoSeleccionado.dirRecogida}</p>
                                     )}
@@ -2494,12 +2494,12 @@ const DriverHome = () => {
                                 </div>
                             </div>
                             {paradasPedido.length > 0 && (
-                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #62d8d920`, borderRadius: '1rem', marginTop: '1rem' }}>
+                                <div style={{ backgroundColor: '#F9FAFB', border: `1px solid #00E57620`, borderRadius: '1rem', marginTop: '1rem' }}>
                                     <div style={{ padding: '1rem' }}>
-                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#62d8d9' }}>Paradas multi-entrega del pedido</h6>
+                                        <h6 style={{ fontWeight: 'bold', marginBottom: '0.75rem', color: '#00E576' }}>Paradas multi-entrega del pedido</h6>
                                         {paradasPedido.map((pp) => (
                                             <div key={`${pp.idPedido}-${pp.idParada}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                                <span style={{ fontSize: '0.875rem', color: '#113d69', fontWeight: '600' }}>
+                                                <span style={{ fontSize: '0.875rem', color: '#0B1F44', fontWeight: '600' }}>
                                                     {pp.parada?.nombre || `Parada ${pp.orden ?? ''}`} ({pp.tipo || 'ENTREGA'})
                                                 </span>
                                                 <AccionButton
@@ -2561,15 +2561,15 @@ const DriverHome = () => {
                                         width: '80px',
                                         height: '80px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#62d8d915',
+                                        backgroundColor: '#00E57615',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <Wallet size={40} style={{ color: '#62d8d9' }} />
+                                        <Wallet size={40} style={{ color: '#00E576' }} />
                                     </div>
-                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#113d69' }}>Tus Ganancias</h3>
+                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#0B1F44' }}>Tus Ganancias</h3>
                                     <p style={{ color: '#6c757d' }}>Monitorea tus ingresos diarios de forma transparente.</p>
                                 </div>
                             )}
@@ -2579,7 +2579,7 @@ const DriverHome = () => {
                                         width: '80px',
                                         height: '80px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#62d8d915',
+                                        backgroundColor: '#00E57615',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -2597,7 +2597,7 @@ const DriverHome = () => {
                                                     borderRadius: '50%',
                                                     objectFit: 'cover',
                                                     cursor: 'pointer',
-                                                    border: `2px solid #62d8d9`
+                                                    border: `2px solid #00E576`
                                                 }}
                                                 onClick={() => handleImageClick(vehiculoPrincipal)}
                                                 onError={(e) => {
@@ -2605,10 +2605,10 @@ const DriverHome = () => {
                                                 }}
                                             />
                                         ) : (
-                                            <Car size={40} style={{ color: '#62d8d9' }} />
+                                            <Car size={40} style={{ color: '#00E576' }} />
                                         )}
                                     </div>
-                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#113d69' }}>Vehículo</h3>
+                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#0B1F44' }}>Vehículo</h3>
                                     <p style={{ color: '#6c757d' }}>Seguridad garantizada para ti y tus clientes.</p>
                                 </div>
                             )}
@@ -2618,15 +2618,15 @@ const DriverHome = () => {
                                         width: '80px',
                                         height: '80px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#113d6915',
+                                        backgroundColor: '#0B1F4415',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         margin: '0 auto 1rem'
                                     }}>
-                                        <FileText size={40} style={{ color: '#113d69' }} />
+                                        <FileText size={40} style={{ color: '#0B1F44' }} />
                                     </div>
-                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#62d8d9' }}>Documentación</h3>
+                                    <h3 style={{ fontWeight: '600', marginBottom: '0.75rem', color: '#00E576' }}>Documentación</h3>
                                     <p style={{ color: '#6c757d' }}>¡Casi listo! Solo falta validar tu documentación oficial.</p>
                                 </div>
                             )}
@@ -2688,7 +2688,7 @@ const DriverHome = () => {
                         width: '100%',
                         padding: '1.5rem'
                     }} onClick={(e) => e.stopPropagation()}>
-                        <h5 style={{ fontWeight: 'bold', marginBottom: '0.5rem', color: '#113d69' }}>
+                        <h5 style={{ fontWeight: 'bold', marginBottom: '0.5rem', color: '#0B1F44' }}>
                             Solicitar Cambio de Vehículo
                         </h5>
                         <p style={{ color: '#6c757d', fontSize: '0.875rem', marginBottom: '1rem' }}>
@@ -2710,7 +2710,7 @@ const DriverHome = () => {
 
                         <form onSubmit={enviarSolicitudCambio}>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Marca</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>Marca</label>
                                 <input
                                     type="text"
                                     value={formDataSolicitud.marca}
@@ -2719,13 +2719,13 @@ const DriverHome = () => {
                                     style={{
                                         width: '100%',
                                         padding: '0.375rem 0.75rem',
-                                        border: `1px solid #62d8d9`,
+                                        border: `1px solid #00E576`,
                                         borderRadius: '0.375rem'
                                     }}
                                 />
                             </div>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Modelo</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>Modelo</label>
                                 <input
                                     type="text"
                                     value={formDataSolicitud.modelo}
@@ -2734,13 +2734,13 @@ const DriverHome = () => {
                                     style={{
                                         width: '100%',
                                         padding: '0.375rem 0.75rem',
-                                        border: `1px solid #62d8d9`,
+                                        border: `1px solid #00E576`,
                                         borderRadius: '0.375rem'
                                     }}
                                 />
                             </div>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Placa</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>Placa</label>
                                 <input
                                     type="text"
                                     value={formDataSolicitud.placa}
@@ -2749,13 +2749,13 @@ const DriverHome = () => {
                                     style={{
                                         width: '100%',
                                         padding: '0.375rem 0.75rem',
-                                        border: `1px solid #62d8d9`,
+                                        border: `1px solid #00E576`,
                                         borderRadius: '0.375rem'
                                     }}
                                 />
                             </div>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Tipo de vehículo</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>Tipo de vehículo</label>
                                 <select
                                     value={formDataSolicitud.tipo}
                                     onChange={(e) => setFormDataSolicitud({ ...formDataSolicitud, tipo: e.target.value })}
@@ -2763,7 +2763,7 @@ const DriverHome = () => {
                                     style={{
                                         width: '100%',
                                         padding: '0.375rem 0.75rem',
-                                        border: `1px solid #62d8d9`,
+                                        border: `1px solid #00E576`,
                                         borderRadius: '0.375rem'
                                     }}
                                 >
@@ -2774,7 +2774,7 @@ const DriverHome = () => {
                                 </select>
                             </div>
                             <div style={{ marginBottom: '1.5rem' }}>
-                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#113d69', display: 'block', marginBottom: '0.25rem' }}>Capacidad (kg)</label>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#0B1F44', display: 'block', marginBottom: '0.25rem' }}>Capacidad (kg)</label>
                                 <input
                                     type="number"
                                     value={formDataSolicitud.capacidad}
@@ -2783,7 +2783,7 @@ const DriverHome = () => {
                                     style={{
                                         width: '100%',
                                         padding: '0.375rem 0.75rem',
-                                        border: `1px solid #62d8d9`,
+                                        border: `1px solid #00E576`,
                                         borderRadius: '0.375rem'
                                     }}
                                 />
@@ -2803,7 +2803,7 @@ const DriverHome = () => {
                                     disabled={enviandoSolicitud}
                                     style={{
                                         flex: 1,
-                                        backgroundColor: '#62d8d9',
+                                        backgroundColor: '#00E576',
                                         color: 'white',
                                         border: 'none',
                                         padding: '0.5rem 1rem',

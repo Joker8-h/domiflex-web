@@ -5,7 +5,7 @@ import { CircleCheck, ArrowRight, ArrowLeft, Mail, EyeOff, Camera, Video, Phone,
 import toast, { Toaster } from 'react-hot-toast';
 import NavbarCustom from '../components/Navbar'
 import { API_URL } from '../config';
-import LogoDomiFlex from '/logo-domiflex.jpg';
+import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import theme from '../styles/theme';
 
@@ -429,7 +429,7 @@ function Register() {
                                 padding: '32px',
                             }}>
                                 <div style={{ textAlign: 'center', marginBottom: sp.lg }}>
-                                    <img src={LogoDomiFlex} alt="DomiFlex — Delivery, rapidez y flexibilidad" style={{ width: '150px' }} />
+                                    <RapitipicaLogo size={36} showTagline={true} />
                                     <h1 style={{
                                         fontWeight: theme.fontWeight.bold,
                                         marginTop: sp.md,
@@ -558,7 +558,7 @@ function Register() {
                                                 />
                                             </Form.Group>
                                             <Form.Group style={{ marginBottom: sp.md }}>
-                                                <label style={labelStyle}>Tipo de cuenta DomiFlex</label>
+                                                <label style={labelStyle}>Tipo de cuenta Rapitipica</label>
                                                 <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
                                                     <option value="CLIENTE">CLIENTE — pide domicilios</option>
                                                     <option value="REPARTIDOR">REPARTIDOR — entrega pedidos</option>

@@ -41,7 +41,7 @@ const InteractiveMap = () => {
             <Container>
                 <div className="text-center mb-5">
                     <h2 className="fw-bold" style={{ color: brandColor }}>Pedidos Activos en Tiempo Real</h2>
-                    <p className="text-muted">Mira cómo la comunidad <span style={{ color: accentColor }}>DomiFlex</span> entrega hoy.</p>
+                    <p className="text-muted">Mira cómo la comunidad <span style={{ color: accentColor }}>Rapitipica</span> entrega hoy.</p>
                 </div>
 
                 <div className="position-relative shadow-lg rounded-4 overflow-hidden border" style={{ height: "500px" }}>

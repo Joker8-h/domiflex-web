@@ -3,25 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import theme from "../styles/theme";
 import NotificationItem from "../components/NotificationItem";
-import API_URL from "../config";
+import { API_URL } from "../config";
+import { useAuth } from "./context/AuthContext";
 
 export default function Notificaciones() {
   const navigate = useNavigate();
+  const { token, usuario } = useAuth();
   const [notificaciones, setNotificaciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("todas");
 
   useEffect(() => {
     fetchNotificaciones();
-  }, []);
+  }, [usuario, token]);
 
   const fetchNotificaciones = async () => {
+    if (!usuario?.idUsuarios || !token) {
+      setLoading(false);
+      return;
+    }
     try {
-      const token = localStorage.getItem("domiflex_token");
-      const raw = localStorage.getItem("domiflex_usuario");
-      let usuario = null;
-      try { usuario = raw ? JSON.parse(raw) : null; } catch { usuario = null; }
-      if (!usuario?.idUsuarios || !token) { setLoading(false); return; }
       const res = await fetch(`${API_URL}/notificaciones/usuario/${usuario.idUsuarios}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -37,8 +38,8 @@ export default function Notificaciones() {
   };
 
   const markAsRead = async (id) => {
+    if (!token) return;
     try {
-      const token = localStorage.getItem("domiflex_token");
       await fetch(`${API_URL}/notificaciones/${id}/leida`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
@@ -78,7 +79,8 @@ export default function Notificaciones() {
             style={{
               ...styles.tab,
               backgroundColor: tab === t.id ? theme.colors.accent : theme.colors.bgCard,
-              color: tab === t.id ? "#000" : theme.colors.textPrimary,
+              color: tab === t.id ? "#0B1F44" : theme.colors.textPrimary,
+              fontWeight: tab === t.id ? 700 : 500,
             }}
             onClick={() => setTab(t.id)}
           >

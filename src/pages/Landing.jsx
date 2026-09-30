@@ -1,191 +1,430 @@
-import { Link } from "react-router-dom";
-import { Bike, CreditCard, ShieldCheck, Rocket, Store, Clock, MapPin, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  MapPin,
+  Search,
+  ArrowRight,
+  Zap,
+  Shield,
+  Smile,
+  Star,
+  Clock,
+  Heart,
+  ChevronRight,
+  UtensilsCrossed,
+  Store,
+  ShoppingCart,
+  Wine,
+  Pill,
+  Dog,
+} from "lucide-react";
+import RapitipicaLogo from "../components/common/RapitipicaLogo";
 import theme from "../styles/theme";
 
 const U = "https://images.unsplash.com";
-const Q = "?auto=format&fit=crop&w=800&q=60";
+const Q = "?auto=format&fit=crop&w=800&q=80";
 
 const categories = [
-  { icon: "🍔", label: "Restaurantes" },
-  { icon: "💊", label: "Farmacias" },
-  { icon: "🛒", label: "Supermercados" },
-  { icon: "🏪", label: "Tiendas" },
-  { icon: "📦", label: "Paquetería" },
+  {
+    id: "restaurantes",
+    name: "Restaurantes",
+    desc: "Comida típica, platos, etc.",
+    icon: UtensilsCrossed,
+    color: "#FF6B4A",
+    path: "/restaurantes?cat=Restaurantes",
+  },
+  {
+    id: "tiendas",
+    name: "Tiendas",
+    desc: "Abarrotes, snacks, etc.",
+    icon: Store,
+    color: "#10B981",
+    path: "/restaurantes?cat=Tiendas",
+  },
+  {
+    id: "supermercados",
+    name: "Supermercados",
+    desc: "Mercado, frutas, verduras, etc.",
+    icon: ShoppingCart,
+    color: "#3B82F6",
+    path: "/restaurantes?cat=Supermercados",
+  },
+  {
+    id: "bebidas",
+    name: "Bebidas",
+    desc: "Refrescos, jugos, cervezas, etc.",
+    icon: Wine,
+    color: "#8B5CF6",
+    path: "/restaurantes?cat=Bebidas",
+  },
+  {
+    id: "farmacias",
+    name: "Farmacias",
+    desc: "Medicamentos, cuidado personal, etc.",
+    icon: Pill,
+    color: "#06B6D4",
+    path: "/restaurantes?cat=Farmacias",
+  },
+  {
+    id: "mascotas",
+    name: "Mascotas",
+    desc: "Alimento, accesorios, etc.",
+    icon: Dog,
+    color: "#F59E0B",
+    path: "/restaurantes?cat=Mascotas",
+  },
 ];
 
-const features = [
-  { icon: Rocket, title: "Rápido", desc: "Tu pedido en minutos" },
-  { icon: ShieldCheck, title: "Seguro", desc: "Repartidores verificados" },
-  { icon: Clock, title: "Confiable", desc: "Seguimiento en tiempo real" },
-  { icon: CreditCard, title: "Flexible", desc: "Paga en efectivo" },
-];
-
-const populares = [
-  { nombre: "Hamburguesa Especial", precio: "$16.000", img: `${U}/photo-1568901346375-23c9450c58cd${Q}`, tag: "Más pedido" },
-  { nombre: "Bowl Casero", precio: "$12.000", img: `${U}/photo-1546069901-ba9599a7e63c${Q}`, tag: "Saludable" },
-  { nombre: "Empanadas x5", precio: "$8.000", img: `${U}/photo-1601050690597-df0568f70950${Q}`, tag: "Típico" },
-];
-
-const stats = [
-  { value: "+2.400", label: "Pedidos entregados" },
-  { value: "4.8★", label: "Calificación" },
-  { value: "25 min", label: "Promedio entrega" },
+const restaurantesPopulares = [
+  {
+    id: 1,
+    nombre: "La Pica",
+    categoria: "Comida rápida",
+    rating: 4.8,
+    reviews: "1.2k",
+    tiempo: "15-30 min",
+    precio: "$16.900",
+    img: `${U}/photo-1568901346375-23c9450c58cd${Q}`,
+    tag: "Más pedido",
+  },
+  {
+    id: 2,
+    nombre: "Sushi Express",
+    categoria: "Sushi & Asiática",
+    rating: 4.7,
+    reviews: "586",
+    tiempo: "20-35 min",
+    precio: "$24.000",
+    img: `${U}/photo-1579871494447-9811cf80d66c${Q}`,
+    tag: "Top Calidad",
+  },
+  {
+    id: 3,
+    nombre: "Hamburguesas El Rey",
+    categoria: "Hamburguesas",
+    rating: 4.6,
+    reviews: "942",
+    tiempo: "20-40 min",
+    precio: "$19.900",
+    img: `${U}/photo-1550547660-d9450f859349${Q}`,
+    tag: "Promoción",
+  },
+  {
+    id: 4,
+    nombre: "Pizza Mania",
+    categoria: "Pizzas artesanales",
+    rating: 4.5,
+    reviews: "721",
+    tiempo: "25-45 min",
+    precio: "$28.000",
+    img: `${U}/photo-1513104890138-7c749659a591${Q}`,
+    tag: "Tradicional",
+  },
+  {
+    id: 5,
+    nombre: "Tacos La Esquina",
+    categoria: "Mexicana",
+    rating: 4.7,
+    reviews: "826",
+    tiempo: "20-35 min",
+    precio: "$18.500",
+    img: `${U}/photo-1565299585323-38d6b0865b47${Q}`,
+    tag: "Picante",
+  },
+  {
+    id: 6,
+    nombre: "Bebidas y Más",
+    categoria: "Bebidas & Licores",
+    rating: 4.4,
+    reviews: "410",
+    tiempo: "15-25 min",
+    precio: "$8.000",
+    img: `${U}/photo-1544145945-f90425340c7e${Q}`,
+    tag: "Frías",
+  },
 ];
 
 export default function Landing() {
+  const navigate = useNavigate();
+  const [direccion, setDireccion] = useState("");
+  const [favoritos, setFavoritos] = useState({});
+
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    if (direccion.trim()) {
+      navigate(`/restaurantes?dir=${encodeURIComponent(direccion.trim())}`);
+    } else {
+      navigate("/restaurantes");
+    }
+  };
+
+  const toggleFavorito = (id, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFavoritos((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
     <div style={styles.page}>
-      {/* Hero */}
-      <div style={styles.hero}>
-        <div style={styles.heroContent}>
-          <div style={styles.eyebrow}>
-            <MapPin size={12} aria-hidden="true" />
-            <span>Popayán • Colombia</span>
-            <span style={styles.dot} aria-hidden="true" />
-            <span style={styles.liveDot} aria-hidden="true" />
-            <span>Repartidores en línea</span>
-          </div>
-          <div style={styles.logoLarge}>
-            <img
-              src="/logo-domiflex.jpg"
-              alt="DomiFlex — Delivery, rapidez y flexibilidad"
-              width="680"
-              height="371"
-              loading="eager"
-              style={styles.logoImg}
-            />
-          </div>
-          <h1 style={styles.heroTitle}>
-            Tu comida favorita, <span style={styles.heroAccent}>más cerca de ti</span>
-          </h1>
-          <p style={styles.heroSubtitle}>
-            Domicilios rápidos. Repartidores verificados. Paga en efectivo.
-          </p>
-          <div style={styles.heroButtons}>
-            <Link to="/register" style={styles.btnPrimary} className="df-press">
-              <Rocket size={18} aria-hidden="true" /> Comenzar
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
-            <Link to="/login" style={styles.btnSecondary} className="df-press">
-              Iniciar sesión
-            </Link>
-          </div>
-          <div style={styles.statsRow}>
-            {stats.map((s) => (
-              <div key={s.label} style={styles.stat}>
-                <span style={styles.statValue}>{s.value}</span>
-                <span style={styles.statLabel}>{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* 1. HERO SECTION (Rapitipica Web Desktop / Mobile) */}
+      <section style={styles.heroSection}>
+        <div style={styles.heroContainer}>
+          {/* Columna Izquierda: Mensaje + Búsqueda de dirección + Pills */}
+          <div style={styles.heroLeft}>
+            {/* Badge píldora destacada */}
+            <div style={styles.heroBadge}>
+              <span style={styles.heroBadgePulse} />
+              <span>¡Rápido, fácil y delicioso!</span>
+            </div>
 
-      {/* Marquee categorías */}
-      <div style={styles.marquee} aria-hidden="true">
-        <div style={styles.marqueeTrack} className="df-marquee-paused">
-          {[...categories, ...categories].map((cat, i) => (
-            <span key={i} style={styles.marqueeItem}>
-              {cat.icon} {cat.label} <span style={styles.marqueeSep}>•</span>
-            </span>
-          ))}
-        </div>
-      </div>
+            <h1 style={styles.heroHeading}>
+              Tu comida favorita <br />
+              <span style={styles.heroAccent}>en minutos</span>
+            </h1>
 
-      {/* Populares con fotos reales */}
-      <section aria-labelledby="populares-title" style={styles.popSection}>
-        <div style={styles.sectionHead}>
-          <div>
-            <p style={styles.kicker}>Lo más pedido</p>
-            <h2 id="populares-title" style={styles.sectionTitle}>Popular ahora en Popayán</h2>
+            <p style={styles.heroSubheading}>
+              Restaurantes, tiendas y más, todo en un solo lugar. Lo típico de tu ciudad directo a tu puerta.
+            </p>
+
+            {/* Input de dirección principal */}
+            <form onSubmit={handleBuscar} style={styles.searchBar}>
+              <div style={styles.searchInner}>
+                <MapPin size={22} color="#00E576" style={styles.mapIcon} aria-hidden="true" />
+                <input
+                  type="text"
+                  placeholder="Ingresa tu dirección de entrega..."
+                  value={direccion}
+                  onChange={(e) => setDireccion(e.target.value)}
+                  style={styles.addressInput}
+                  aria-label="Dirección de entrega"
+                />
+              </div>
+              <button type="submit" style={styles.searchBtn} className="btn-rapitipica">
+                <span>Buscar</span>
+                <ArrowRight size={18} />
+              </button>
+            </form>
+
+            {/* Accesos rápidos de categoría pills */}
+            <div style={styles.quickPills}>
+              {categories.slice(0, 5).map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => navigate(cat.path)}
+                  style={styles.quickPill}
+                  className="df-press"
+                >
+                  <cat.icon size={15} color={cat.color} />
+                  <span>{cat.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <Link to="/restaurantes" style={styles.seeAll}>
-            Ver todo <ArrowRight size={14} aria-hidden="true" />
-          </Link>
-        </div>
-        <div style={styles.popGrid}>
-          {populares.map((p) => (
-            <Link key={p.nombre} to="/restaurantes" style={styles.popCard} className="df-lift">
-              <div style={styles.popImgWrap}>
-                <img src={p.img} alt={p.nombre} loading="lazy" style={styles.popImg} />
-                <span style={styles.popTag}>{p.tag}</span>
+
+          {/* Columna Derecha: Imagen visual apetecible con sombras glow */}
+          <div style={styles.heroRight}>
+            <div style={styles.heroImageWrapper}>
+              <img
+                src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1000&q=85"
+                alt="Hamburguesa artesanal y comida deliciosa Rapitipica"
+                style={styles.heroImage}
+                loading="eager"
+              />
+              {/* Badge flotante de tiempo */}
+              <div style={styles.floatingBadgeTime}>
+                <Clock size={16} color="#00E576" />
+                <div>
+                  <div style={{ fontSize: "11px", color: "#9CA3AF" }}>Tiempo promedio</div>
+                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#F5F7FA" }}>15-25 minutos</div>
+                </div>
               </div>
-              <div style={styles.popInfo}>
-                <h3 style={styles.popName}>{p.nombre}</h3>
-                <span style={styles.popPrice}>{p.precio}</span>
+
+              {/* Badge flotante de calificación */}
+              <div style={styles.floatingBadgeScore}>
+                <Star size={16} color="#F59E0B" fill="#F59E0B" />
+                <div>
+                  <div style={{ fontSize: "11px", color: "#9CA3AF" }}>Satisfacción</div>
+                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#F5F7FA" }}>4.9 / 5 Estrellas</div>
+                </div>
               </div>
-            </Link>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section aria-labelledby="beneficios-title" style={styles.featuresSection}>
-        <h2 id="beneficios-title" style={styles.srOnly}>¿Por qué elegir DomiFlex?</h2>
-        <div style={styles.featuresGrid}>
-          {features.map((f) => {
-            const Icon = f.icon;
+      {/* 2. CATEGORÍAS PRINCIPALES */}
+      <section id="categorias" style={styles.categoriesSection}>
+        <div style={styles.sectionHeader}>
+          <div>
+            <h2 style={styles.sectionTitle}>Categorías principales</h2>
+            <p style={styles.sectionDesc}>Explora todo lo que puedes pedir hoy</p>
+          </div>
+          <Link to="/restaurantes" style={styles.viewAllLink}>
+            Ver todas <ChevronRight size={16} />
+          </Link>
+        </div>
+
+        <div style={styles.categoriesGrid}>
+          {categories.map((cat) => {
+            const Icon = cat.icon;
             return (
-              <div key={f.title} style={styles.featureCard} className="df-lift">
-                <div style={styles.featureIcon}>
-                  <Icon size={28} color={theme.colors.accent} aria-hidden="true" />
+              <div
+                key={cat.id}
+                onClick={() => navigate(cat.path)}
+                style={styles.categoryCard}
+                className="bg-rapitipica-card bg-rapitipica-card-hover df-lift"
+              >
+                <div style={{ ...styles.categoryIconWrap, backgroundColor: `${cat.color}22` }}>
+                  <Icon size={28} color={cat.color} />
                 </div>
-                <h3 style={styles.featureTitle}>{f.title}</h3>
-                <p style={styles.featureDesc}>{f.desc}</p>
+                <h3 style={styles.categoryName}>{cat.name}</h3>
+                <p style={styles.categoryDesc}>{cat.desc}</p>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* How it works */}
-      <div style={styles.howSection}>
-        <h2 style={styles.sectionTitle}>¿Cómo funciona?</h2>
-        <div style={styles.stepsGrid}>
-          <div style={styles.stepCard}>
-            <div style={styles.stepNumber}>1</div>
-            <Store size={32} color={theme.colors.accent} aria-hidden="true" />
-            <h3 style={styles.stepTitle}>Elige tu negocio</h3>
-            <p style={styles.stepDesc}>Restaurantes, farmacias, supermercados y más</p>
-          </div>
-          <div style={styles.stepCard}>
-            <div style={styles.stepNumber}>2</div>
-            <CreditCard size={32} color={theme.colors.accent} aria-hidden="true" />
-            <h3 style={styles.stepTitle}>Haz tu pedido</h3>
-            <p style={styles.stepDesc}>Selecciona productos y paga en efectivo</p>
-          </div>
-          <div style={styles.stepCard}>
-            <div style={styles.stepNumber}>3</div>
-            <Bike size={32} color={theme.colors.accent} aria-hidden="true" />
-            <h3 style={styles.stepTitle}>Recibe en casa</h3>
-            <p style={styles.stepDesc}>Sigue tu pedido en tiempo real</p>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div style={styles.ctaSection}>
-        <h2 style={styles.ctaTitle}>¡Pide ahora!</h2>
-        <p style={styles.ctaSubtitle}>Más que un domicilio, una experiencia</p>
-        <Link to="/register" style={styles.btnPrimary} className="df-press">
-          Registrarse gratis
-        </Link>
-      </div>
-
-      {/* Footer */}
-      <footer style={styles.footer}>
-        <div style={styles.footerGrid}>
+      {/* 3. RESTAURANTES POPULARES */}
+      <section style={styles.popularSection}>
+        <div style={styles.sectionHeader}>
           <div>
-            <p style={styles.footerBrand}>DomiFlex</p>
-            <p style={styles.footerText}>Delivery • Rapidez • Flexibilidad</p>
+            <h2 style={styles.sectionTitle}>Restaurantes populares</h2>
+            <p style={styles.sectionDesc}>Los favoritos de la comunidad con entrega express</p>
           </div>
-          <div style={styles.footerLinks}>
-            <Link to="/restaurantes" style={styles.footerLink}>Explorar</Link>
-            <Link to="/login" style={styles.footerLink}>Iniciar sesión</Link>
-            <Link to="/register" style={styles.footerLink}>Registrarse</Link>
+          <Link to="/restaurantes" style={styles.viewAllLink}>
+            Ver restaurantes <ChevronRight size={16} />
+          </Link>
+        </div>
+
+        <div style={styles.restaurantsGrid}>
+          {restaurantesPopulares.map((res) => (
+            <div
+              key={res.id}
+              onClick={() => navigate(`/negocio/${res.id}`)}
+              style={styles.resCard}
+              className="bg-rapitipica-card bg-rapitipica-card-hover df-lift"
+            >
+              {/* Imagen del restaurante */}
+              <div style={styles.resImageWrap}>
+                <img src={res.img} alt={res.nombre} style={styles.resImage} loading="lazy" />
+                <span style={styles.resTag}>{res.tag}</span>
+                <button
+                  type="button"
+                  onClick={(e) => toggleFavorito(res.id, e)}
+                  style={styles.resFavBtn}
+                  aria-label="Agregar a favoritos"
+                >
+                  <Heart
+                    size={17}
+                    color={favoritos[res.id] ? "#EF4444" : "#FFFFFF"}
+                    fill={favoritos[res.id] ? "#EF4444" : "none"}
+                  />
+                </button>
+              </div>
+
+              {/* Contenido de la tarjeta */}
+              <div style={styles.resContent}>
+                <div style={styles.resHeaderRow}>
+                  <h3 style={styles.resTitle}>{res.nombre}</h3>
+                  <div style={styles.resRating}>
+                    <Star size={14} color="#F59E0B" fill="#F59E0B" />
+                    <span>{res.rating}</span>
+                    <span style={styles.resReviews}>({res.reviews})</span>
+                  </div>
+                </div>
+
+                <p style={styles.resCat}>{res.categoria}</p>
+
+                <div style={styles.resFooter}>
+                  <div style={styles.resTime}>
+                    <Clock size={14} color="#00E576" />
+                    <span>{res.tiempo}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/negocio/${res.id}`);
+                    }}
+                    style={styles.resPedirBtn}
+                  >
+                    Pedir
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. PILARES DE MARCA: RÁPIDO, SEGURO, FÁCIL */}
+      <section style={styles.pillarsSection}>
+        <div style={styles.pillarsContainer}>
+          <div style={styles.pillarItem}>
+            <div style={styles.pillarIcon}>
+              <Zap size={28} color="#00E576" />
+            </div>
+            <h4 style={styles.pillarTitle}>Más rápido</h4>
+            <p style={styles.pillarText}>Ruta optimizada con IA para entregas en tiempo récord.</p>
+          </div>
+
+          <div style={styles.pillarItem}>
+            <div style={styles.pillarIcon}>
+              <Shield size={28} color="#00E576" />
+            </div>
+            <h4 style={styles.pillarTitle}>Más seguro</h4>
+            <p style={styles.pillarText}>Repartidores certificados y validación de seguridad activa.</p>
+          </div>
+
+          <div style={styles.pillarItem}>
+            <div style={styles.pillarIcon}>
+              <Smile size={28} color="#00E576" />
+            </div>
+            <h4 style={styles.pillarTitle}>Más fácil</h4>
+            <p style={styles.pillarText}>¡Pide, disfruta, llega! Tu comida favorita a un solo tap.</p>
           </div>
         </div>
-        <p style={styles.copy}>© 2026 DomiFlex. Todos los derechos reservados.</p>
+      </section>
+
+      {/* 5. FOOTER OFICIAL RAPITIPICA */}
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <div style={styles.footerColMain}>
+            <RapitipicaLogo size="md" showTagline={true} to="/" />
+            <p style={styles.footerTagline}>
+              Rapitipica es la plataforma de domicilios donde puedes pedir tu comida favorita, productos y mucho más, de forma rápida, segura y fácil.
+            </p>
+          </div>
+
+          <div style={styles.footerCol}>
+            <h5 style={styles.footerHeading}>Descubrir</h5>
+            <Link to="/restaurantes" style={styles.footerLink}>Restaurantes</Link>
+            <Link to="/restaurantes?cat=Tiendas" style={styles.footerLink}>Tiendas de conveniencia</Link>
+            <Link to="/restaurantes?cat=Supermercados" style={styles.footerLink}>Supermercados</Link>
+            <Link to="/restaurantes?cat=Farmacias" style={styles.footerLink}>Farmacias</Link>
+          </div>
+
+          <div style={styles.footerCol}>
+            <h5 style={styles.footerHeading}>Cuenta</h5>
+            <Link to="/login" style={styles.footerLink}>Iniciar sesión</Link>
+            <Link to="/register" style={styles.footerLink}>Crear cuenta gratis</Link>
+            <Link to="/profile" style={styles.footerLink}>Mi perfil</Link>
+            <Link to="/mis-pedidos" style={styles.footerLink}>Mis pedidos</Link>
+          </div>
+
+          <div style={styles.footerCol}>
+            <h5 style={styles.footerHeading}>Socios</h5>
+            <Link to="/register" style={styles.footerLink}>Registra tu restaurante</Link>
+            <Link to="/register" style={styles.footerLink}>Únete como repartidor</Link>
+            <Link to="/documentacion" style={styles.footerLink}>Centro de ayuda</Link>
+          </div>
+        </div>
+
+        <div style={styles.footerBottom}>
+          <p>© 2026 Rapitipica. Todos los derechos reservados. ¡Pide, disfruta, llega!</p>
+        </div>
       </footer>
     </div>
   );
@@ -194,400 +433,443 @@ export default function Landing() {
 const styles = {
   page: {
     minHeight: "100vh",
-    backgroundColor: theme.colors.bgPrimary,
-    color: theme.colors.textPrimary,
+    backgroundColor: "#0B1F44",
+    color: "#F5F7FA",
     fontFamily: "'Montserrat', sans-serif",
   },
-  hero: {
-    position: "relative",
-    padding: "clamp(56px, 12vw, 120px) 16px clamp(40px, 8vw, 80px)",
-    textAlign: "center",
-    background: `radial-gradient(ellipse at 50% 0%, ${theme.colors.accent}15 0%, transparent 60%)`,
-    overflow: "hidden",
+  heroSection: {
+    padding: "clamp(36px, 6vw, 64px) 20px clamp(48px, 8vw, 80px)",
+    background: "radial-gradient(ellipse at 50% 10%, rgba(0, 229, 118, 0.08) 0%, transparent 70%)",
   },
-  heroContent: {
-    position: "relative",
-    zIndex: 2,
-    maxWidth: "640px",
+  heroContainer: {
+    maxWidth: "1280px",
     margin: "0 auto",
-  },
-  eyebrow: {
-    display: "inline-flex",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    gap: "48px",
     alignItems: "center",
-    gap: "8px",
-    padding: "8px 16px",
-    borderRadius: "999px",
-    border: `1px solid ${theme.colors.border}`,
-    backgroundColor: theme.colors.bgCard,
-    fontSize: "12px",
-    fontWeight: 600,
-    color: theme.colors.textSecondary,
-    marginBottom: "24px",
   },
-  dot: {
-    width: "4px",
-    height: "4px",
-    borderRadius: "50%",
-    backgroundColor: theme.colors.borderLight,
-  },
-  liveDot: {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    backgroundColor: theme.colors.accent,
-    boxShadow: `0 0 8px ${theme.colors.accent}`,
-  },
-  logoLarge: {
-    maxWidth: "340px",
-    margin: "0 auto 24px",
-    borderRadius: theme.borderRadius.lg,
-    overflow: "hidden",
-    border: `1px solid ${theme.colors.border}`,
-    boxShadow: "0 8px 32px rgba(0, 230, 118, 0.15)",
-  },
-  logoImg: {
-    display: "block",
-    width: "100%",
-    height: "auto",
-    aspectRatio: "680 / 371",
-  },
-  heroTitle: {
-    fontSize: "clamp(30px, 7vw, 44px)",
-    fontWeight: 800,
-    lineHeight: 1.05,
-    letterSpacing: "-0.02em",
-    marginBottom: "16px",
-    overflowWrap: "break-word",
-    textWrap: "balance",
-  },
-  heroAccent: {
-    color: theme.colors.accent,
-  },
-  heroSubtitle: {
-    fontSize: theme.fontSize.lg,
-    lineHeight: 1.6,
-    color: theme.colors.textSecondary,
-    marginBottom: "32px",
-    maxWidth: "65ch",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  heroButtons: {
-    display: "flex",
-    gap: "16px",
-    justifyContent: "center",
-    flexWrap: "wrap",
-  },
-  btnPrimary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    backgroundColor: theme.colors.accent,
-    color: "#000",
-    padding: "14px 32px",
-    minHeight: "48px",
-    borderRadius: theme.borderRadius.xl,
-    fontSize: theme.fontSize.md,
-    fontWeight: theme.fontWeight.bold,
-    textDecoration: "none",
-  },
-  btnSecondary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    backgroundColor: "transparent",
-    color: theme.colors.accent,
-    border: `2px solid ${theme.colors.accent}`,
-    padding: "14px 32px",
-    minHeight: "48px",
-    borderRadius: theme.borderRadius.xl,
-    fontSize: theme.fontSize.md,
-    fontWeight: theme.fontWeight.semibold,
-    textDecoration: "none",
-  },
-  statsRow: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "32px",
-    marginTop: "40px",
-    flexWrap: "wrap",
-  },
-  stat: {
+  heroLeft: {
     display: "flex",
     flexDirection: "column",
-    gap: "4px",
+    gap: "20px",
   },
-  statValue: {
-    fontSize: "22px",
-    fontWeight: 800,
-    color: theme.colors.textPrimary,
-  },
-  statLabel: {
-    fontSize: "12px",
-    color: theme.colors.textSecondary,
-  },
-  marquee: {
-    borderTop: `1px solid ${theme.colors.border}`,
-    borderBottom: `1px solid ${theme.colors.border}`,
-    backgroundColor: theme.colors.bgCard,
-    overflow: "hidden",
-    padding: "12px 0",
-  },
-  marqueeTrack: {
+  heroBadge: {
     display: "inline-flex",
-    whiteSpace: "nowrap",
-    animation: "df-marquee 60s linear infinite",
-    willChange: "transform",
+    alignItems: "center",
+    gap: "8px",
+    backgroundColor: "rgba(0, 229, 118, 0.12)",
+    border: "1px solid rgba(0, 229, 118, 0.35)",
+    color: "#00E576",
+    fontSize: "13px",
+    fontWeight: "700",
+    padding: "6px 16px",
+    borderRadius: "9999px",
+    width: "fit-content",
   },
-  marqueeItem: {
-    fontSize: "14px",
-    fontWeight: 600,
-    color: theme.colors.textSecondary,
-    paddingRight: "48px",
+  heroBadgePulse: {
+    width: "8px",
+    height: "8px",
+    backgroundColor: "#00E576",
+    borderRadius: "50%",
+    boxShadow: "0 0 10px #00E576",
   },
-  marqueeSep: {
-    color: theme.colors.accent,
-    marginLeft: "48px",
-  },
-  popSection: {
-    padding: "clamp(48px, 8vw, 80px) 16px",
-    maxWidth: "1080px",
-    margin: "0 auto",
-  },
-  sectionHead: {
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    gap: "16px",
-    marginBottom: "24px",
-  },
-  kicker: {
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: theme.colors.accent,
-    marginBottom: "8px",
-  },
-  sectionTitle: {
-    fontSize: "clamp(24px, 4vw, 28px)",
-    fontWeight: 800,
-    letterSpacing: "-0.015em",
+  heroHeading: {
+    fontSize: "clamp(32px, 5vw, 54px)",
+    fontWeight: "800",
     lineHeight: 1.15,
-    textWrap: "balance",
+    color: "#F5F7FA",
+    letterSpacing: "-0.5px",
+    margin: 0,
   },
-  seeAll: {
+  heroAccent: {
+    color: "#00E576",
+    textShadow: "0 0 24px rgba(0, 229, 118, 0.25)",
+  },
+  heroSubheading: {
+    fontSize: "16px",
+    lineHeight: 1.6,
+    color: "#9CA3AF",
+    margin: 0,
+    maxWidth: "480px",
+  },
+  searchBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "10px",
+    backgroundColor: "#11254E",
+    border: "1px solid #1D3B72",
+    borderRadius: "9999px",
+    padding: "6px 8px 6px 16px",
+    boxShadow: "0 8px 24px rgba(3, 10, 26, 0.5)",
+    maxWidth: "540px",
+  },
+  searchInner: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    flex: "1",
+    minWidth: "200px",
+  },
+  mapIcon: {
+    flexShrink: 0,
+  },
+  addressInput: {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    color: "#F5F7FA",
+    fontSize: "15px",
+    outline: "none",
+  },
+  searchBtn: {
+    padding: "10px 24px",
+    fontSize: "15px",
+  },
+  quickPills: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    marginTop: "8px",
+  },
+  quickPill: {
     display: "inline-flex",
     alignItems: "center",
     gap: "6px",
-    fontSize: "14px",
-    fontWeight: 600,
-    color: theme.colors.accent,
-    textDecoration: "none",
-    whiteSpace: "nowrap",
+    backgroundColor: "rgba(17, 37, 78, 0.7)",
+    border: "1px solid #1D3B72",
+    borderRadius: "9999px",
+    padding: "6px 14px",
+    color: "#F5F7FA",
+    fontSize: "12px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "all 0.15s ease",
   },
-  popGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px",
+  heroRight: {
+    display: "flex",
+    justifyContent: "center",
   },
-  popCard: {
-    backgroundColor: theme.colors.bgCard,
-    border: `1px solid ${theme.colors.border}`,
-    borderRadius: theme.borderRadius.lg,
-    overflow: "hidden",
-    textDecoration: "none",
-    display: "block",
-  },
-  popImgWrap: {
+  heroImageWrapper: {
     position: "relative",
     width: "100%",
-    aspectRatio: "4 / 3",
+    maxWidth: "480px",
+    borderRadius: "28px",
     overflow: "hidden",
-    backgroundColor: theme.colors.bgSecondary,
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
+    border: "1px solid #1D3B72",
   },
-  popImg: {
+  heroImage: {
+    width: "100%",
+    height: "auto",
+    display: "block",
+    transform: "scale(1.02)",
+    transition: "transform 0.5s ease",
+  },
+  floatingBadgeTime: {
+    position: "absolute",
+    bottom: "20px",
+    left: "20px",
+    backgroundColor: "rgba(11, 31, 68, 0.92)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid #1D3B72",
+    borderRadius: "16px",
+    padding: "10px 14px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+  },
+  floatingBadgeScore: {
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    backgroundColor: "rgba(11, 31, 68, 0.92)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid #1D3B72",
+    borderRadius: "16px",
+    padding: "10px 14px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+  },
+  categoriesSection: {
+    maxWidth: "1280px",
+    margin: "0 auto",
+    padding: "40px 20px",
+  },
+  sectionHeader: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    marginBottom: "28px",
+  },
+  sectionTitle: {
+    fontSize: "clamp(22px, 3vw, 28px)",
+    fontWeight: "800",
+    color: "#F5F7FA",
+    margin: 0,
+  },
+  sectionDesc: {
+    fontSize: "14px",
+    color: "#9CA3AF",
+    margin: "6px 0 0",
+  },
+  viewAllLink: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "4px",
+    color: "#00E576",
+    fontSize: "14px",
+    fontWeight: "700",
+    textDecoration: "none",
+    transition: "gap 0.15s ease",
+  },
+  categoriesGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+    gap: "18px",
+  },
+  categoryCard: {
+    borderRadius: "18px",
+    padding: "22px 18px",
+    cursor: "pointer",
+    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+  },
+  categoryIconWrap: {
+    width: "56px",
+    height: "56px",
+    borderRadius: "16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "4px",
+  },
+  categoryName: {
+    fontSize: "16px",
+    fontWeight: "700",
+    color: "#F5F7FA",
+    margin: 0,
+  },
+  categoryDesc: {
+    fontSize: "12px",
+    color: "#9CA3AF",
+    margin: 0,
+    lineHeight: 1.4,
+  },
+  popularSection: {
+    maxWidth: "1280px",
+    margin: "0 auto",
+    padding: "40px 20px 60px",
+  },
+  restaurantsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+    gap: "24px",
+  },
+  resCard: {
+    borderRadius: "20px",
+    overflow: "hidden",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+  },
+  resImageWrap: {
+    position: "relative",
+    width: "100%",
+    height: "170px",
+    overflow: "hidden",
+  },
+  resImage: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    display: "block",
   },
-  popTag: {
+  resTag: {
     position: "absolute",
     top: "12px",
     left: "12px",
-    backgroundColor: theme.colors.accent,
-    color: "#000",
+    backgroundColor: "#00E576",
+    color: "#0B1F44",
     fontSize: "11px",
-    fontWeight: 700,
+    fontWeight: "800",
     padding: "4px 10px",
-    borderRadius: "999px",
+    borderRadius: "9999px",
   },
-  popInfo: {
-    padding: "14px 16px",
+  resFavBtn: {
+    position: "absolute",
+    top: "12px",
+    right: "12px",
+    backgroundColor: "rgba(11, 31, 68, 0.75)",
+    backdropFilter: "blur(6px)",
+    border: "none",
+    width: "34px",
+    height: "34px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+  },
+  resContent: {
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    flex: "1",
+  },
+  resHeaderRow: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: "8px",
+    gap: "10px",
   },
-  popName: {
-    fontSize: "15px",
-    fontWeight: 700,
-    color: theme.colors.textPrimary,
+  resTitle: {
+    fontSize: "17px",
+    fontWeight: "700",
+    color: "#F5F7FA",
     margin: 0,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
   },
-  popPrice: {
-    fontSize: "15px",
-    fontWeight: 800,
-    color: theme.colors.accent,
-    whiteSpace: "nowrap",
+  resRating: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#F5F7FA",
   },
-  featuresSection: {
-    padding: "clamp(48px, 8vw, 80px) 16px",
-    backgroundColor: theme.colors.bgSecondary,
+  resReviews: {
+    color: "#9CA3AF",
+    fontSize: "12px",
+    fontWeight: "400",
   },
-  featuresGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "16px",
-    maxWidth: "900px",
+  resCat: {
+    fontSize: "13px",
+    color: "#9CA3AF",
+    margin: 0,
+  },
+  resFooter: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: "auto",
+    paddingTop: "12px",
+    borderTop: "1px solid #1D3B72",
+  },
+  resTime: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    fontSize: "13px",
+    color: "#F5F7FA",
+    fontWeight: "600",
+  },
+  resPedirBtn: {
+    backgroundColor: "#00E576",
+    color: "#0B1F44",
+    border: "none",
+    borderRadius: "9999px",
+    padding: "6px 16px",
+    fontSize: "13px",
+    fontWeight: "800",
+    cursor: "pointer",
+    transition: "all 0.15s ease",
+  },
+  pillarsSection: {
+    backgroundColor: "#081836",
+    borderTop: "1px solid #1D3B72",
+    borderBottom: "1px solid #1D3B72",
+    padding: "50px 20px",
+  },
+  pillarsContainer: {
+    maxWidth: "1200px",
     margin: "0 auto",
-  },
-  featureCard: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: "36px",
     textAlign: "center",
-    padding: "32px 20px",
-    backgroundColor: theme.colors.bgCard,
-    borderRadius: theme.borderRadius.md,
-    border: `1px solid ${theme.colors.border}`,
   },
-  featureIcon: {
-    width: "56px",
-    height: "56px",
-    margin: "0 auto 16px",
+  pillarItem: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "12px",
+  },
+  pillarIcon: {
+    width: "60px",
+    height: "60px",
+    borderRadius: "50%",
+    backgroundColor: "rgba(0, 229, 118, 0.12)",
+    border: "1px solid rgba(0, 229, 118, 0.3)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: `${theme.colors.accent}15`,
-    borderRadius: "50%",
   },
-  featureTitle: {
-    fontSize: theme.fontSize.lg,
-    fontWeight: theme.fontWeight.bold,
-    marginBottom: "8px",
+  pillarTitle: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "#F5F7FA",
+    margin: 0,
   },
-  featureDesc: {
-    fontSize: theme.fontSize.sm,
-    lineHeight: 1.6,
-    color: theme.colors.textSecondary,
-  },
-  howSection: {
-    padding: "clamp(48px, 8vw, 80px) 16px",
-    maxWidth: "1000px",
-    margin: "0 auto",
-  },
-  stepsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "16px",
-  },
-  stepCard: {
-    textAlign: "center",
-    padding: "40px 24px",
-    backgroundColor: theme.colors.bgCard,
-    borderRadius: theme.borderRadius.lg,
-    border: `1px solid ${theme.colors.border}`,
-    position: "relative",
-  },
-  stepNumber: {
-    position: "absolute",
-    top: "16px",
-    left: "16px",
-    width: "32px",
-    height: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.accent,
-    color: "#000",
-    borderRadius: "50%",
-    fontSize: theme.fontSize.sm,
-    fontWeight: theme.fontWeight.bold,
-  },
-  stepTitle: {
-    fontSize: theme.fontSize.lg,
-    fontWeight: theme.fontWeight.bold,
-    marginTop: "16px",
-    marginBottom: "8px",
-  },
-  stepDesc: {
-    fontSize: theme.fontSize.sm,
-    lineHeight: 1.6,
-    color: theme.colors.textSecondary,
-  },
-  ctaSection: {
-    padding: "clamp(48px, 8vw, 80px) 16px",
-    textAlign: "center",
-    background: `radial-gradient(ellipse at 50% 100%, ${theme.colors.accent}10 0%, transparent 60%)`,
-  },
-  ctaTitle: {
-    fontSize: "clamp(30px, 7vw, 44px)",
-    fontWeight: 800,
-    letterSpacing: "-0.02em",
-    lineHeight: 1.05,
-    marginBottom: "16px",
-    textWrap: "balance",
-  },
-  ctaSubtitle: {
-    fontSize: theme.fontSize.lg,
-    lineHeight: 1.6,
-    color: theme.colors.textSecondary,
-    marginBottom: "32px",
+  pillarText: {
+    fontSize: "14px",
+    color: "#9CA3AF",
+    margin: 0,
+    lineHeight: 1.5,
+    maxWidth: "300px",
   },
   footer: {
-    borderTop: `1px solid ${theme.colors.border}`,
-    padding: "32px 16px",
+    backgroundColor: "#07132B",
+    borderTop: "1px solid #1D3B72",
+    padding: "60px 20px 30px",
   },
-  footerGrid: {
-    maxWidth: "1080px",
-    margin: "0 auto 24px",
+  footerContent: {
+    maxWidth: "1280px",
+    margin: "0 auto",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "40px",
+    marginBottom: "40px",
+  },
+  footerColMain: {
+    gridColumn: "span 1",
+  },
+  footerTagline: {
+    fontSize: "14px",
+    lineHeight: 1.6,
+    color: "#9CA3AF",
+    marginTop: "14px",
+    maxWidth: "340px",
+  },
+  footerCol: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "24px",
-    flexWrap: "wrap",
+    flexDirection: "column",
+    gap: "12px",
   },
-  footerBrand: {
-    fontSize: "18px",
-    fontWeight: 800,
-    marginBottom: "4px",
-  },
-  footerText: {
-    fontSize: "13px",
-    color: theme.colors.textSecondary,
-  },
-  footerLinks: {
-    display: "flex",
-    gap: "20px",
+  footerHeading: {
+    fontSize: "15px",
+    fontWeight: "700",
+    color: "#F5F7FA",
+    margin: 0,
   },
   footerLink: {
-    fontSize: "14px",
-    fontWeight: 600,
-    color: theme.colors.textSecondary,
+    color: "#9CA3AF",
     textDecoration: "none",
+    fontSize: "14px",
+    transition: "color 0.15s ease",
   },
-  copy: {
+  footerBottom: {
+    maxWidth: "1280px",
+    margin: "0 auto",
+    paddingTop: "24px",
+    borderTop: "1px solid #1D3B72",
     textAlign: "center",
-    fontSize: "12px",
-    color: theme.colors.textMuted,
-  },
-  srOnly: {
-    position: "absolute",
-    width: "1px",
-    height: "1px",
-    overflow: "hidden",
-    clip: "rect(0 0 0 0)",
+    color: "#6B7280",
+    fontSize: "13px",
   },
 };
