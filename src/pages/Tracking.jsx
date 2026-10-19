@@ -1,24 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  MessageCircle, 
-  Phone, 
-  Star, 
-  Send, 
-  Bike, 
-  MapPin, 
-  CheckCircle2, 
-  Clock, 
+import {
+  ArrowLeft,
+  MessageCircle,
+  Phone,
+  Star,
+  Send,
   ShoppingBag,
-  Store,
   ChevronRight,
-  ShieldCheck
 } from "lucide-react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, Popup, Polyline, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import tokens from "../design/tokens";
 import NavbarCustom from "../components/Navbar";
 import OrderStatusTimeline from "../components/OrderStatusTimeline";
 import Avatar from "../components/common/Avatar";
@@ -33,10 +26,10 @@ import { useAuth } from "./context/AuthContext";
 const POLL_MS = 15000;
 const POPAYAN = [2.4448, -76.6147];
 
-// Custom HTML Markers for Dark Map
+// Marcadores según Boceto 5 (Ruta roja #E30613, scooter rojo y pin de entrega)
 const restaurantPinIcon = L.divIcon({
   className: "custom-pin",
-  html: `<div style="background:#FF6B4A;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #0B1F44;box-shadow:0 0 12px rgba(255,107,74,0.6);font-size:16px;">🏪</div>`,
+  html: `<div style="background:#0D1117;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #FFFFFF;box-shadow:0 4px 10px rgba(0,0,0,0.25);font-size:16px;">🏪</div>`,
   iconSize: [34, 34],
   iconAnchor: [17, 17],
   popupAnchor: [0, -20],
@@ -44,19 +37,19 @@ const restaurantPinIcon = L.divIcon({
 
 const deliveryPinIcon = L.divIcon({
   className: "custom-pin",
-  html: `<div style="background:#00E576;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #0B1F44;box-shadow:0 0 12px rgba(0,229,118,0.7);font-size:16px;">📍</div>`,
-  iconSize: [34, 34],
-  iconAnchor: [17, 17],
+  html: `<div style="background:#E30613;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #FFFFFF;box-shadow:0 4px 12px rgba(227,6,19,0.5);font-size:17px;">📍</div>`,
+  iconSize: [36, 36],
+  iconAnchor: [18, 18],
   popupAnchor: [0, -20],
 });
 
 const driverIcon = L.divIcon({
   className: "custom-driver-pin",
-  html: `<div style="position:relative;width:40px;height:40px;border-radius:50%;background:#00E576;display:flex;align-items:center;justify-content:center;border:3px solid #0B1F44;box-shadow:0 0 16px rgba(0,229,118,0.9);">
+  html: `<div style="position:relative;width:42px;height:42px;border-radius:50%;background:#E30613;display:flex;align-items:center;justify-content:center;border:3px solid #FFFFFF;box-shadow:0 4px 14px rgba(227,6,19,0.65);">
     <span style="font-size:20px;">🛵</span>
   </div>`,
-  iconSize: [40, 40],
-  iconAnchor: [20, 20],
+  iconSize: [42, 42],
+  iconAnchor: [21, 21],
   popupAnchor: [0, -22],
 });
 
@@ -68,7 +61,7 @@ function FitBounds({ points }) {
       map.setView(points[0], 15);
       return;
     }
-    map.fitBounds(points, { padding: [40, 40] });
+    map.fitBounds(points, { padding: [45, 45] });
   }, [map, points]);
   return null;
 }
@@ -92,7 +85,7 @@ export default function Tracking() {
   const [driverPos, setDriverPos] = useState(null);
   const [pago, setPago] = useState(null);
   const [confirmandoPago, setConfirmandoPago] = useState(false);
-  
+
   // Chat en tiempo real
   const [chatOpen, setChatOpen] = useState(false);
   const [mensajes, setMensajes] = useState([]);
@@ -109,26 +102,28 @@ export default function Tracking() {
 
   const socketApi = useSocket();
 
-  const fetchPedido = useCallback(async (signal) => {
-    try {
-      const data = await api.get(`/pedidos/${pedidoId}`, { signal });
-      if (signal?.aborted) return;
-      if (data?.error || !data?.idPedido) {
-        setPedido(null);
-        setError(data?.error || "Pedido no encontrado");
-        return;
+  const fetchPedido = useCallback(
+    async (signal) => {
+      try {
+        const data = await api.get(`/pedidos/${pedidoId}`, { signal });
+        if (signal?.aborted) return;
+        if (data?.error || !data?.idPedido) {
+          setPedido(null);
+          setError(data?.error || "Pedido no encontrado");
+          return;
+        }
+        setPedido(data);
+        setError(null);
+      } catch (err) {
+        if (!signal?.aborted) {
+          setError(err.message || "No se pudo cargar el pedido.");
+        }
+      } finally {
+        if (!signal?.aborted) setLoading(false);
       }
-      setPedido(data);
-      setError(null);
-    } catch (err) {
-      if (!signal?.aborted) {
-        console.error("Error al cargar pedido:", err);
-        setError(err.message || "No se pudo cargar el pedido.");
-      }
-    } finally {
-      if (!signal?.aborted) setLoading(false);
-    }
-  }, [pedidoId]);
+    },
+    [pedidoId]
+  );
 
   const fetchChat = useCallback(async () => {
     try {
@@ -168,7 +163,11 @@ export default function Tracking() {
         };
         const onPagoActualizado = (datosPago) => {
           if (String(datosPago?.idPedido) === String(pedidoId)) {
-            setPago((prev) => ({ ...(prev || {}), ...datosPago, estado: datosPago.estado || "COMPLETADO" }));
+            setPago((prev) => ({
+              ...(prev || {}),
+              ...datosPago,
+              estado: datosPago.estado || "COMPLETADO",
+            }));
           }
         };
 
@@ -206,14 +205,17 @@ export default function Tracking() {
       return undefined;
     }
     let cancelado = false;
-    api.get(`/pagos/pedido/${pedidoId}`)
+    api
+      .get(`/pagos/pedido/${pedidoId}`)
       .then((lista) => {
         if (!cancelado) setPago(Array.isArray(lista) ? lista[0] || null : null);
       })
       .catch(() => {
         if (!cancelado) setPago(null);
       });
-    return () => { cancelado = true; };
+    return () => {
+      cancelado = true;
+    };
   }, [pedido?.estado, pedidoId]);
 
   const handleLlamar = () => {
@@ -221,7 +223,7 @@ export default function Tracking() {
     if (tel) {
       window.open(`tel:${tel}`, "_self");
     } else {
-      alert("El domiciliario no tiene un número telefónico público registrado.");
+      alert("El repartidor no tiene un número telefónico público registrado.");
     }
   };
 
@@ -256,7 +258,11 @@ export default function Tracking() {
     e?.preventDefault();
     setEnviandoCalificacion(true);
     try {
-      const idCalificado = pedido?.repartidor?.idUsuarios || pedido?.repartidor?.idUsuario || pedido?.idRepartidor || pedido?.idComercio;
+      const idCalificado =
+        pedido?.repartidor?.idUsuarios ||
+        pedido?.repartidor?.idUsuario ||
+        pedido?.idRepartidor ||
+        pedido?.idComercio;
       await api.post("/calificaciones", {
         idPedido: pedido.idPedido,
         idCalificado,
@@ -269,7 +275,6 @@ export default function Tracking() {
         setModalCalificar(false);
       }, 1500);
     } catch (err) {
-      console.error("Error al enviar calificación:", err);
       alert(err.message || "No se pudo registrar la calificación.");
     } finally {
       setEnviandoCalificacion(false);
@@ -296,7 +301,10 @@ export default function Tracking() {
           <ErrorState
             title="No pudimos cargar el seguimiento"
             description={error}
-            onRetry={() => { setLoading(true); setRetryKey((k) => k + 1); }}
+            onRetry={() => {
+              setLoading(true);
+              setRetryKey((k) => k + 1);
+            }}
           />
         </div>
       </div>
@@ -320,199 +328,191 @@ export default function Tracking() {
     );
   }
 
-  const puntos = [
-    toPoint(pedido.latRecogida, pedido.lngRecogida),
-    toPoint(pedido.latEntrega, pedido.lngEntrega),
-    driverPos,
-  ].filter(Boolean);
+  const pRecogida = toPoint(pedido.latRecogida, pedido.lngRecogida);
+  const pEntrega = toPoint(pedido.latEntrega, pedido.lngEntrega);
+  const puntos = [pRecogida, pEntrega, driverPos].filter(Boolean);
   const centro = puntos[0] || POPAYAN;
+  const routeLine = [pRecogida, driverPos, pEntrega].filter(Boolean);
+
+  const headerTitle =
+    pedido.estado === "ENTREGADO"
+      ? "Pedido entregado"
+      : pedido.estado === "EN_CAMINO"
+      ? "En camino"
+      : "Seguimiento del pedido";
+
+  const resumenTexto =
+    pedido.items?.length > 0
+      ? pedido.items
+          .map((i) => `${i.cantidad}x ${i.menuItem?.nombre || "Producto"}`)
+          .join(", ")
+      : pedido.detallePedido || "1x Pizza margarita, 1x Gaseosa";
 
   return (
     <div style={styles.page}>
       <NavbarCustom />
 
-      <main style={styles.container}>
-        {/* Top Header */}
-        <div style={styles.topHeader}>
-          <button 
-            type="button" 
+      {/* Header negro estilo Boceto 5: "← En camino" */}
+      <div style={styles.darkHeader}>
+        <div style={styles.darkHeaderInner}>
+          <button
+            type="button"
             style={styles.backBtn}
             onClick={() => navigate(-1)}
             aria-label="Volver"
           >
-            <ArrowLeft size={18} />
-            <span>Volver</span>
+            <ArrowLeft size={20} />
           </button>
-
-          <div style={styles.orderBadge}>
-            <span>Pedido #{pedido.idPedido}</span>
-          </div>
-
-          <div style={styles.liveIndicator}>
+          <h1 style={styles.darkHeaderTitle}>{headerTitle}</h1>
+          <div style={styles.liveBadge}>
             <span style={styles.liveDot} />
-            <span>{live ? "Seguimiento en vivo" : "Actualizando"}</span>
+            <span>{live ? "En vivo" : `Pedido #${pedido.idPedido}`}</span>
           </div>
         </div>
+      </div>
 
-        {/* Stepper Status Hero Banner */}
-        <section style={styles.statusHero}>
-          <div style={styles.statusTextWrap}>
-            <span style={styles.statusPill}>
-              {pedido.estado === "ENTREGADO" ? "¡Completado!" : "En curso"}
-            </span>
-            <h1 style={styles.heroTitle}>
-              {pedido.estado === "EN_CAMINO"
-                ? "¡Tu pedido está en camino!"
-                : pedido.estado === "ENTREGADO"
-                ? "¡Tu pedido ha sido entregado!"
-                : pedido.estado === "RECOGIENDO"
-                ? "Preparando tu orden en el restaurante"
-                : pedido.estado === "ASIGNADO"
-                ? "Repartidor asignado y en ruta al restaurante"
-                : "Pedido confirmado y recibido"}
-            </h1>
-            <p style={styles.heroSubtitle}>
-              {pedido.estado === "ENTREGADO"
-                ? "¡Esperamos que disfrutes tu comida! Déjanos saber cómo te fue."
-                : `Tiempo estimado de llegada: ${pedido.negocio?.tiempoEstimadoMin || 15} - 25 min`}
-            </p>
-          </div>
-
-          <div style={styles.stepperWrap}>
-            <OrderStatusTimeline currentStatus={pedido.estado} />
-          </div>
-        </section>
-
-        {/* Main 2-Column Grid */}
+      <main style={styles.container}>
         <div style={styles.grid}>
-          {/* Left Column: Interactive Dark Map */}
+          {/* Mapa claro con ruta roja y tarjeta flotante "Tu pedido llegará en 15 min" (Boceto 5) */}
           <div style={styles.mapCard}>
             <div style={styles.mapWrap}>
-              <MapContainer 
-                center={centro} 
-                zoom={14} 
-                style={{ width: "100%", height: "100%" }} 
+              {/* Tarjeta blanca flotante sobre el mapa */}
+              <div style={styles.floatingEtaCard}>
+                <span style={styles.floatingEtaTitle}>
+                  {pedido.estado === "ENTREGADO"
+                    ? "¡Tu pedido fue entregado!"
+                    : `Tu pedido llegará en ${pedido.negocio?.tiempoEstimadoMin || 15} min`}
+                </span>
+              </div>
+
+              <MapContainer
+                center={centro}
+                zoom={14}
+                style={{ width: "100%", height: "100%" }}
                 scrollWheelZoom={false}
               >
-                {/* CartoDB DarkMatter Tiles for high-end sleek navy look */}
                 <TileLayer
                   attribution='&copy; <a href="https://carto.com/">CARTO</a>'
                   url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                 />
                 <FitBounds points={puntos.length ? puntos : [centro]} />
-                
-                {toPoint(pedido.latRecogida, pedido.lngRecogida) && (
-                  <Marker position={toPoint(pedido.latRecogida, pedido.lngRecogida)} icon={restaurantPinIcon}>
+
+                {routeLine.length >= 2 && (
+                  <Polyline
+                    positions={routeLine}
+                    pathOptions={{ color: "#E30613", weight: 5, opacity: 0.9 }}
+                  />
+                )}
+
+                {pRecogida && (
+                  <Marker position={pRecogida} icon={restaurantPinIcon}>
                     <Popup>
-                      <strong>{pedido.negocio?.nombre || "Restaurante"}</strong><br />
+                      <strong>{pedido.negocio?.nombre || "Restaurante"}</strong>
+                      <br />
                       Punto de recogida
                     </Popup>
                   </Marker>
                 )}
 
-                {toPoint(pedido.latEntrega, pedido.lngEntrega) && (
-                  <Marker position={toPoint(pedido.latEntrega, pedido.lngEntrega)} icon={deliveryPinIcon}>
+                {pEntrega && (
+                  <Marker position={pEntrega} icon={deliveryPinIcon}>
                     <Popup>
-                      <strong>Entrega</strong><br />
+                      <strong>Entrega</strong>
+                      <br />
                       {pedido.dirEntrega || "Tu destino"}
                     </Popup>
                   </Marker>
                 )}
 
-                {driverPos && (
-                  <Marker position={driverPos} icon={driverIcon}>
+                {(driverPos || pRecogida) && (
+                  <Marker position={driverPos || pRecogida} icon={driverIcon}>
                     <Popup>
-                      <strong>Domiciliario en ruta</strong>
+                      <strong>Repartidor en camino</strong>
                     </Popup>
                   </Marker>
                 )}
               </MapContainer>
             </div>
-
-            <div style={styles.mapFooter}>
-              <div style={styles.routeLegend}>
-                <div style={styles.legendItem}>
-                  <span style={{ ...styles.legendDot, backgroundColor: "#FF6B4A" }} />
-                  <span>{pedido.negocio?.nombre || "Comercio"}</span>
-                </div>
-                <div style={styles.legendItem}>
-                  <span style={{ ...styles.legendDot, backgroundColor: tokens.colors.accent }} />
-                  <span>{pedido.dirEntrega || "Tu dirección"}</span>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Driver & Order Details */}
+          {/* Columna de información según Boceto 5 */}
           <div style={styles.detailsCol}>
-            {/* Domiciliario Card */}
-            {pedido.repartidor ? (
-              <div style={styles.driverCard}>
-                <div style={styles.driverTopRow}>
-                  <div style={styles.driverAvatarWrap}>
-                    <Avatar name={pedido.repartidor.nombre} size={54} />
-                    <span style={styles.onlineBadge} />
-                  </div>
-                  <div style={styles.driverMeta}>
-                    <span style={styles.driverRole}>Tu domiciliario Rapitipica</span>
-                    <h3 style={styles.driverName}>{pedido.repartidor.nombre}</h3>
-                    <div style={styles.driverRating}>
-                      <Star size={14} color="#00E576" fill="#00E576" />
-                      <span>4.9 (280+ entregas)</span>
-                    </div>
+            {/* Tarjeta del Repartidor: Avatar + Nombre + "Tu repartidor • ★ 4.8" + Botones Llamar / Chat */}
+            <div style={styles.driverCard}>
+              <div style={styles.driverRow}>
+                <Avatar
+                  name={pedido.repartidor?.nombre || "Juan Pérez"}
+                  size={52}
+                />
+                <div style={styles.driverInfo}>
+                  <h3 style={styles.driverName}>
+                    {pedido.repartidor?.nombre || "Juan Pérez"}
+                  </h3>
+                  <div style={styles.driverSub}>
+                    <span>Tu repartidor</span>
+                    <span>•</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, color: "#11141A", fontWeight: 700 }}>
+                      <Star size={13} fill="#F59E0B" color="#F59E0B" />
+                      4.8
+                    </span>
                   </div>
                 </div>
 
-                <div style={styles.vehicleBadge}>
-                  <Bike size={16} color={tokens.colors.accent} />
-                  <span>Moto registrada • Placa verificada</span>
-                </div>
-
-                <div style={styles.driverActions}>
+                <div style={styles.driverQuickBtns}>
                   <button
                     type="button"
-                    style={styles.actionBtnCall}
                     onClick={handleLlamar}
+                    style={styles.circleActionBtn}
+                    aria-label="Llamar al repartidor"
+                    title="Llamar"
                   >
-                    <Phone size={16} />
-                    <span>Llamar</span>
+                    <Phone size={18} />
                   </button>
                   <button
                     type="button"
-                    style={styles.actionBtnChat}
                     onClick={() => {
                       setChatOpen(true);
                       fetchChat();
                     }}
+                    style={styles.circleActionBtnRed}
+                    aria-label="Abrir chat"
+                    title="Chat en vivo"
                   >
-                    <MessageCircle size={16} />
-                    <span>Chat en vivo</span>
+                    <MessageCircle size={18} />
                   </button>
                 </div>
               </div>
-            ) : (
-              <div style={styles.driverCardPending}>
-                <div style={styles.pendingIcon}>🛵</div>
-                <div>
-                  <h4 style={styles.pendingTitle}>Buscando el repartidor más cercano...</h4>
-                  <p style={styles.pendingSubtitle}>
-                    Te asignaremos un domiciliario en menos de un minuto.
-                  </p>
-                </div>
-              </div>
-            )}
+            </div>
 
-            {/* Order Details Card */}
+            {/* Resumen compacto del pedido + link "Ver detalles" (Boceto 5) */}
+            <div style={styles.summaryRowCard}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={styles.summaryRestName}>
+                  {pedido.negocio?.nombre || "Pizzería La Italiana"}
+                </div>
+                <div style={styles.summaryItemsText}>{resumenTexto}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate(`/pedido/${pedidoId}`)}
+                style={styles.verDetallesLink}
+              >
+                Ver detalles
+              </button>
+            </div>
+
+            {/* Stepper Verde (#16A34A): Confirmado -> En camino -> Entregado (Boceto 5) */}
+            <OrderStatusTimeline estadoActual={pedido.estado} />
+
+            {/* Desglose y acciones adicionales */}
             <div style={styles.card}>
               <div style={styles.cardHeader}>
                 <div style={styles.iconCircle}>
-                  <ShoppingBag size={20} color={tokens.colors.accent} />
+                  <ShoppingBag size={18} color="#E30613" />
                 </div>
                 <div>
-                  <h3 style={styles.cardTitle}>Detalles de la orden</h3>
-                  <p style={styles.cardSubtitle}>
-                    {pedido.negocio?.nombre || "Restaurante"}
-                  </p>
+                  <h3 style={styles.cardTitle}>Resumen de cuenta</h3>
+                  <p style={styles.cardSubtitle}>Pedido #{pedido.idPedido}</p>
                 </div>
               </div>
 
@@ -520,9 +520,11 @@ export default function Tracking() {
                 {pedido.items?.map((item, i) => (
                   <div key={item.id || i} style={styles.orderItemRow}>
                     <span style={styles.itemQty}>{item.cantidad}x</span>
-                    <span style={styles.itemName}>{item.menuItem?.nombre || "Producto"}</span>
+                    <span style={styles.itemName}>
+                      {item.menuItem?.nombre || "Producto"}
+                    </span>
                     <span style={styles.itemPrice}>
-                      ${(Number(item.precio || 0) * item.cantidad).toLocaleString()}
+                      ${(Number(item.precio || 0) * item.cantidad).toLocaleString("es-CO")}
                     </span>
                   </div>
                 ))}
@@ -531,34 +533,23 @@ export default function Tracking() {
               <div style={styles.divider} />
 
               <div style={styles.totalRow}>
-                <span style={styles.totalLabel}>Total abonado</span>
+                <span style={styles.totalLabel}>Total</span>
                 <span style={styles.totalValue}>
-                  ${Number(pedido.total || 0).toLocaleString()}
+                  ${Number(pedido.total || 0).toLocaleString("es-CO")}
                 </span>
               </div>
 
-              <div style={styles.paymentStatusBadge}>
-                <span style={styles.paymentStatusDot} />
-                <span>
-                  {pedido.tipoPago === "ONLINE" || pago?.estado === "COMPLETADO"
-                    ? "Pago en línea verificado"
-                    : "Pago en efectivo contra entrega"}
-                </span>
-              </div>
-
-              {/* Botón de Calificación si está ENTREGADO */}
               {pedido.estado === "ENTREGADO" && !yaCalificado && (
                 <button
                   type="button"
                   style={styles.rateBtn}
                   onClick={() => setModalCalificar(true)}
                 >
-                  <Star size={18} fill="#0B1F44" color="#0B1F44" />
-                  <span>Calificar servicio y entrega</span>
+                  <Star size={18} fill="#FFFFFF" color="#FFFFFF" />
+                  <span>Calificar entrega</span>
                 </button>
               )}
 
-              {/* Botón para confirmar pago si aplica */}
               {pedido.estado === "ENTREGADO" && pago && !pago.confirmacionCliente && (
                 <button
                   type="button"
@@ -567,7 +558,9 @@ export default function Tracking() {
                   onClick={async () => {
                     setConfirmandoPago(true);
                     try {
-                      const actualizado = await api.put(`/pagos/confirmarCliente/${pago.idPago}`);
+                      const actualizado = await api.put(
+                        `/pagos/confirmarCliente/${pago.idPago}`
+                      );
                       setPago(actualizado);
                     } catch (err) {
                       setError(err.message || "No se pudo confirmar el pago.");
@@ -576,7 +569,9 @@ export default function Tracking() {
                     }
                   }}
                 >
-                  {confirmandoPago ? "Confirmando…" : "Ya entregué el efectivo al domiciliario"}
+                  {confirmandoPago
+                    ? "Confirmando…"
+                    : "Confirmar entrega de efectivo"}
                 </button>
               )}
 
@@ -595,7 +590,7 @@ export default function Tracking() {
         {/* Modal de Chat en Vivo */}
         {chatOpen && (
           <Modal
-            title={`Chat con ${pedido.repartidor?.nombre || "Domiciliario"}`}
+            title={`Chat con ${pedido.repartidor?.nombre || "Repartidor"}`}
             onClose={() => setChatOpen(false)}
           >
             <div style={styles.chatContainer}>
@@ -604,12 +599,16 @@ export default function Tracking() {
                   <p style={styles.chatEmpty}>Cargando mensajes...</p>
                 ) : mensajes.length === 0 ? (
                   <p style={styles.chatEmpty}>
-                    💬 No hay mensajes aún. Escríbele a tu domiciliario si necesitas darle alguna indicación.
+                    💬 No hay mensajes aún. Escríbele a tu repartidor si necesitas darle alguna indicación.
                   </p>
                 ) : (
                   mensajes.map((m, idx) => {
-                    const senderName = typeof m.remitente === "object" ? m.remitente?.nombre : m.remitente;
-                    const myId = usuario?.idUsuarios || usuario?.idUsuario || usuario?.id;
+                    const senderName =
+                      typeof m.remitente === "object"
+                        ? m.remitente?.nombre
+                        : m.remitente;
+                    const myId =
+                      usuario?.idUsuarios || usuario?.idUsuario || usuario?.id;
                     const isMe =
                       senderName === (usuario?.nombre || "Cliente") ||
                       (myId && Number(m.idRemitente) === Number(myId));
@@ -619,19 +618,22 @@ export default function Tracking() {
                         style={{
                           ...styles.chatBubble,
                           alignSelf: isMe ? "flex-end" : "flex-start",
-                          backgroundColor: isMe ? tokens.colors.accent : tokens.colors.bgPrimary,
-                          color: isMe ? "#0B1F44" : tokens.colors.textPrimary,
-                          border: isMe ? "none" : `1px solid ${tokens.colors.border}`,
+                          backgroundColor: isMe ? "#E30613" : "#F3F4F6",
+                          color: isMe ? "#FFFFFF" : "#11141A",
                         }}
                       >
-                        {!isMe && <span style={styles.chatSender}>{senderName || "Usuario"}</span>}
-                        <p style={{ margin: 0, fontSize: tokens.fontSize.sm, fontWeight: isMe ? 600 : 400 }}>
+                        {!isMe && (
+                          <span style={styles.chatSender}>
+                            {senderName || "Repartidor"}
+                          </span>
+                        )}
+                        <p style={{ margin: 0, fontSize: "0.9rem", fontWeight: 500 }}>
                           {m.mensaje}
                         </p>
                         <span
                           style={{
                             ...styles.chatTime,
-                            color: isMe ? "rgba(11, 31, 68, 0.7)" : tokens.colors.textSecondary,
+                            color: isMe ? "rgba(255,255,255,0.8)" : "#6B7280",
                           }}
                         >
                           {m.fechaEnvio
@@ -675,17 +677,17 @@ export default function Tracking() {
             {calificacionExito ? (
               <div style={{ textAlign: "center", padding: "24px 0" }}>
                 <p style={{ fontSize: "3rem", margin: "0 0 12px 0" }}>⭐</p>
-                <h4 style={{ color: tokens.colors.accent, fontWeight: tokens.fontWeight.bold, margin: 0 }}>
+                <h4 style={{ color: "#16A34A", fontWeight: 800, margin: 0 }}>
                   ¡Muchas gracias por calificar!
                 </h4>
-                <p style={{ color: tokens.colors.textSecondary, fontSize: tokens.fontSize.sm, marginTop: 6 }}>
-                  Tu opinión nos ayuda a mantener el mejor servicio de Popayán.
-                </p>
               </div>
             ) : (
-              <form onSubmit={handleCalificar} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                <p style={{ color: tokens.colors.textSecondary, fontSize: tokens.fontSize.sm, margin: 0 }}>
-                  ¿Cómo calificarías la rapidez y la atención de tu entrega?
+              <form
+                onSubmit={handleCalificar}
+                style={{ display: "flex", flexDirection: "column", gap: 16 }}
+              >
+                <p style={{ color: "#4B5563", fontSize: "0.9rem", margin: 0 }}>
+                  ¿Cómo calificarías la rapidez y atención de tu entrega?
                 </p>
                 <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -699,12 +701,11 @@ export default function Tracking() {
                         cursor: "pointer",
                         padding: "6px",
                       }}
-                      aria-label={`${star} estrellas`}
                     >
                       <Star
                         size={32}
-                        fill={star <= puntuacion ? tokens.colors.accent : "none"}
-                        color={star <= puntuacion ? tokens.colors.accent : tokens.colors.border}
+                        fill={star <= puntuacion ? "#F59E0B" : "none"}
+                        color={star <= puntuacion ? "#F59E0B" : "#D1D5DB"}
                       />
                     </button>
                   ))}
@@ -712,7 +713,7 @@ export default function Tracking() {
                 <textarea
                   value={comentario}
                   onChange={(e) => setComentario(e.target.value)}
-                  placeholder="Comentarios adicionales sobre el domiciliario o la comida..."
+                  placeholder="Comentarios adicionales..."
                   rows={3}
                   style={styles.ratingTextarea}
                 />
@@ -735,412 +736,325 @@ export default function Tracking() {
 const styles = {
   page: {
     minHeight: "100vh",
-    backgroundColor: tokens.colors.bgPrimary,
-    color: tokens.colors.textPrimary,
-    fontFamily: tokens.typography.fontFamily,
+    backgroundColor: "#F8F9FA",
+    color: "#11141A",
     paddingBottom: "80px",
   },
-  container: {
-    maxWidth: "1200px",
-    margin: "0 auto",
-    padding: "24px 20px",
+  darkHeader: {
+    backgroundColor: "#0D1117",
+    color: "#FFFFFF",
+    padding: "16px 20px",
   },
-  topHeader: {
+  darkHeaderInner: {
+    maxWidth: "1100px",
+    margin: "0 auto",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "20px",
+    gap: "14px",
   },
   backBtn: {
-    display: "inline-flex",
+    width: "38px",
+    height: "38px",
+    borderRadius: "50%",
+    border: "1px solid rgba(255,255,255,0.16)",
+    backgroundColor: "rgba(255,255,255,0.08)",
+    color: "#FFFFFF",
+    display: "flex",
     alignItems: "center",
-    gap: "8px",
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.full,
-    padding: "8px 16px",
-    color: tokens.colors.textPrimary,
+    justifyContent: "center",
     cursor: "pointer",
-    fontSize: tokens.fontSize.sm,
-    fontWeight: 500,
   },
-  orderBadge: {
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
-    color: tokens.colors.accent,
-    padding: "6px 14px",
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.sm,
-    fontWeight: tokens.fontWeight.bold,
-    border: `1px solid rgba(0, 229, 118, 0.3)`,
+  darkHeaderTitle: {
+    fontSize: "1.25rem",
+    fontWeight: 800,
+    margin: 0,
+    flex: 1,
+    color: "#FFFFFF",
   },
-  liveIndicator: {
+  liveBadge: {
     display: "inline-flex",
     alignItems: "center",
     gap: "8px",
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.full,
-    padding: "6px 14px",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textPrimary,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    padding: "6px 12px",
+    borderRadius: "9999px",
+    fontSize: "0.8rem",
+    fontWeight: 700,
+    color: "#FFFFFF",
   },
   liveDot: {
     width: "8px",
     height: "8px",
     borderRadius: "50%",
-    backgroundColor: tokens.colors.accent,
-    boxShadow: "0 0 8px rgba(0, 229, 118, 0.8)",
+    backgroundColor: "#16A34A",
   },
-  statusHero: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.lg,
-    padding: "28px 24px",
-    marginBottom: "24px",
-    boxShadow: tokens.shadows.card,
-  },
-  statusTextWrap: {
-    marginBottom: "20px",
-  },
-  statusPill: {
-    display: "inline-block",
-    backgroundColor: "rgba(0, 229, 118, 0.15)",
-    color: tokens.colors.accent,
-    fontSize: tokens.fontSize.xs,
-    fontWeight: tokens.fontWeight.bold,
-    padding: "4px 10px",
-    borderRadius: tokens.borderRadius.sm,
-    marginBottom: "8px",
-    textTransform: "uppercase",
-  },
-  heroTitle: {
-    fontSize: tokens.fontSize["2xl"],
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    margin: "0 0 6px 0",
-  },
-  heroSubtitle: {
-    fontSize: tokens.fontSize.sm,
-    color: tokens.colors.textSecondary,
-    margin: 0,
-  },
-  stepperWrap: {
-    marginTop: "8px",
+  container: {
+    maxWidth: "1100px",
+    margin: "0 auto",
+    padding: "24px 20px",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
     gap: "24px",
     alignItems: "start",
   },
   mapCard: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.lg,
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "20px",
     overflow: "hidden",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
   },
   mapWrap: {
+    position: "relative",
     width: "100%",
-    height: "380px",
-    backgroundColor: tokens.colors.bgPrimary,
+    height: "420px",
   },
-  mapFooter: {
-    padding: "16px 20px",
-    borderTop: `1px solid ${tokens.colors.border}`,
+  floatingEtaCard: {
+    position: "absolute",
+    top: "16px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 500,
+    backgroundColor: "#FFFFFF",
+    color: "#11141A",
+    padding: "10px 20px",
+    borderRadius: "9999px",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.14)",
+    border: "1px solid #E5E7EB",
+    whiteSpace: "nowrap",
   },
-  routeLegend: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-around",
-    gap: "16px",
-  },
-  legendItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
-  },
-  legendDot: {
-    width: "10px",
-    height: "10px",
-    borderRadius: "50%",
+  floatingEtaTitle: {
+    fontWeight: 800,
+    fontSize: "0.95rem",
+    color: "#11141A",
   },
   detailsCol: {
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
+    gap: "16px",
   },
   driverCard: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.lg,
-    padding: "20px",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "18px",
+    padding: "16px 18px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.04)",
   },
-  driverCardPending: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px dashed ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.lg,
-    padding: "24px",
+  driverRow: {
     display: "flex",
     alignItems: "center",
-    gap: "16px",
+    gap: "14px",
   },
-  pendingIcon: {
-    fontSize: "36px",
-  },
-  pendingTitle: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    margin: "0 0 4px 0",
-  },
-  pendingSubtitle: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
-    margin: 0,
-  },
-  driverTopRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    marginBottom: "14px",
-  },
-  driverAvatarWrap: {
-    position: "relative",
-  },
-  onlineBadge: {
-    position: "absolute",
-    bottom: 2,
-    right: 2,
-    width: "12px",
-    height: "12px",
-    borderRadius: "50%",
-    backgroundColor: tokens.colors.accent,
-    border: "2px solid #11254E",
-  },
-  driverMeta: {
+  driverInfo: {
     flex: 1,
-  },
-  driverRole: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
-    display: "block",
+    minWidth: 0,
   },
   driverName: {
-    fontSize: tokens.fontSize.lg,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    margin: "2px 0 4px 0",
+    fontSize: "1.05rem",
+    fontWeight: 800,
+    color: "#11141A",
+    margin: "0 0 2px 0",
   },
-  driverRating: {
+  driverSub: {
     display: "flex",
     alignItems: "center",
-    gap: "4px",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.accent,
-    fontWeight: 600,
+    gap: "6px",
+    fontSize: "0.84rem",
+    color: "#6B7280",
   },
-  vehicleBadge: {
-    display: "inline-flex",
+  driverQuickBtns: {
+    display: "flex",
     alignItems: "center",
     gap: "8px",
-    backgroundColor: tokens.colors.bgPrimary,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "8px 12px",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
-    width: "100%",
-    marginBottom: "16px",
   },
-  driverActions: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+  circleActionBtn: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    border: "1px solid #E5E7EB",
+    backgroundColor: "#F8F9FA",
+    color: "#11141A",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+  },
+  circleActionBtnRed: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    border: "none",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(227,6,19,0.3)",
+  },
+  summaryRowCard: {
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "16px",
+    padding: "14px 18px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     gap: "12px",
   },
-  actionBtnCall: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    backgroundColor: "transparent",
-    border: `1px solid ${tokens.colors.border}`,
-    color: tokens.colors.textPrimary,
-    padding: "12px",
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.sm,
-    fontWeight: 600,
-    cursor: "pointer",
+  summaryRestName: {
+    fontWeight: 800,
+    fontSize: "0.95rem",
+    color: "#11141A",
+    marginBottom: "2px",
   },
-  actionBtnChat: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    backgroundColor: tokens.colors.accent,
-    color: "#0B1F44",
+  summaryItemsText: {
+    fontSize: "0.85rem",
+    color: "#6B7280",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  verDetallesLink: {
+    background: "none",
     border: "none",
-    padding: "12px",
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.sm,
-    fontWeight: tokens.fontWeight.bold,
+    color: "#E30613",
+    fontWeight: 800,
+    fontSize: "0.88rem",
     cursor: "pointer",
-    boxShadow: tokens.shadows.glow,
+    flexShrink: 0,
   },
   card: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.lg,
-    padding: "24px",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "18px",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px",
   },
   cardHeader: {
     display: "flex",
     alignItems: "center",
-    gap: "14px",
-    marginBottom: "16px",
+    gap: "12px",
   },
   iconCircle: {
-    width: "40px",
-    height: "40px",
+    width: "36px",
+    height: "36px",
     borderRadius: "50%",
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
+    backgroundColor: "#FEF2F2",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   cardTitle: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
+    fontSize: "0.98rem",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
   },
   cardSubtitle: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
+    fontSize: "0.8rem",
+    color: "#6B7280",
     margin: 0,
   },
   itemsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
-    marginBottom: "16px",
+    gap: "8px",
   },
   orderItemRow: {
     display: "flex",
     alignItems: "center",
     gap: "10px",
-    fontSize: tokens.fontSize.sm,
+    fontSize: "0.9rem",
   },
   itemQty: {
-    color: tokens.colors.accent,
-    fontWeight: 700,
+    fontWeight: 800,
+    color: "#E30613",
   },
   itemName: {
     flex: 1,
-    color: tokens.colors.textPrimary,
+    color: "#11141A",
   },
   itemPrice: {
-    color: tokens.colors.textSecondary,
-    fontWeight: 500,
+    fontWeight: 700,
+    color: "#11141A",
   },
   divider: {
     height: "1px",
-    backgroundColor: tokens.colors.border,
-    margin: "12px 0",
+    backgroundColor: "#E5E7EB",
   },
   totalRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "14px",
   },
   totalLabel: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
+    fontWeight: 700,
+    color: "#4B5563",
   },
   totalValue: {
-    fontSize: tokens.fontSize.xl,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.accent,
-  },
-  paymentStatusBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    backgroundColor: "rgba(0, 229, 118, 0.08)",
-    padding: "8px 12px",
-    borderRadius: tokens.borderRadius.sm,
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.accent,
-    width: "100%",
-    marginBottom: "16px",
-  },
-  paymentStatusDot: {
-    width: "6px",
-    height: "6px",
-    borderRadius: "50%",
-    backgroundColor: tokens.colors.accent,
+    fontSize: "1.2rem",
+    fontWeight: 900,
+    color: "#11141A",
   },
   rateBtn: {
-    width: "100%",
-    padding: "14px",
-    backgroundColor: tokens.colors.accent,
-    color: "#0B1F44",
-    border: "none",
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.sm,
-    fontWeight: tokens.fontWeight.bold,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
+    backgroundColor: "#16A34A",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "9999px",
+    padding: "12px",
+    fontWeight: 800,
     cursor: "pointer",
-    boxShadow: tokens.shadows.glow,
-    marginBottom: "12px",
   },
   confirmPayBtn: {
-    width: "100%",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "9999px",
     padding: "12px",
-    backgroundColor: "transparent",
-    border: `1px solid ${tokens.colors.accent}`,
-    color: tokens.colors.accent,
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.xs,
-    fontWeight: 600,
+    fontWeight: 800,
     cursor: "pointer",
-    marginBottom: "12px",
   },
   viewFullDetailsBtn: {
-    width: "100%",
-    padding: "12px",
-    backgroundColor: tokens.colors.bgPrimary,
-    border: `1px solid ${tokens.colors.border}`,
-    color: tokens.colors.textSecondary,
-    borderRadius: tokens.borderRadius.md,
-    fontSize: tokens.fontSize.xs,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "6px",
+    backgroundColor: "#F8F9FA",
+    border: "1px solid #E5E7EB",
+    borderRadius: "12px",
+    padding: "10px",
+    color: "#11141A",
+    fontSize: "0.86rem",
+    fontWeight: 700,
     cursor: "pointer",
   },
   chatContainer: {
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    height: "360px",
   },
   chatMessagesList: {
-    height: "280px",
+    flex: 1,
     overflowY: "auto",
     display: "flex",
     flexDirection: "column",
     gap: "10px",
-    padding: "12px",
-    backgroundColor: tokens.colors.bgPrimary,
-    borderRadius: tokens.borderRadius.md,
-    border: `1px solid ${tokens.colors.border}`,
+    padding: "10px 4px",
+  },
+  chatEmpty: {
+    textAlign: "center",
+    color: "#6B7280",
+    fontSize: "0.9rem",
+    margin: "auto 0",
   },
   chatBubble: {
     maxWidth: "80%",
@@ -1148,76 +1062,60 @@ const styles = {
     borderRadius: "14px",
     display: "flex",
     flexDirection: "column",
-    wordBreak: "break-word",
+    gap: "4px",
   },
   chatSender: {
-    fontSize: "11px",
-    fontWeight: 700,
-    color: tokens.colors.accent,
-    marginBottom: "2px",
+    fontSize: "0.72rem",
+    fontWeight: 800,
+    color: "#E30613",
   },
   chatTime: {
-    fontSize: "10px",
-    marginTop: "4px",
+    fontSize: "0.68rem",
     alignSelf: "flex-end",
   },
   chatInputRow: {
     display: "flex",
     gap: "8px",
+    paddingTop: "10px",
+    borderTop: "1px solid #E5E7EB",
   },
   chatInput: {
     flex: 1,
-    minHeight: "44px",
-    padding: "0 14px",
-    borderRadius: tokens.borderRadius.full,
-    border: `1px solid ${tokens.colors.border}`,
-    backgroundColor: tokens.colors.bgPrimary,
-    color: tokens.colors.textPrimary,
-    fontSize: tokens.fontSize.sm,
+    backgroundColor: "#F8F9FA",
+    border: "1px solid #D1D5DB",
+    borderRadius: "9999px",
+    padding: "10px 16px",
+    color: "#11141A",
     outline: "none",
   },
   chatSendBtn: {
-    width: "44px",
-    height: "44px",
+    width: "42px",
+    height: "42px",
     borderRadius: "50%",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
     border: "none",
-    backgroundColor: tokens.colors.accent,
-    color: "#0B1F44",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
   },
-  chatEmpty: {
-    textAlign: "center",
-    color: tokens.colors.textSecondary,
-    fontSize: tokens.fontSize.sm,
-    margin: "auto",
-    padding: "20px",
-  },
   ratingTextarea: {
     width: "100%",
-    padding: "12px 14px",
-    borderRadius: tokens.borderRadius.md,
-    border: `1px solid ${tokens.colors.border}`,
-    backgroundColor: tokens.colors.bgPrimary,
-    color: tokens.colors.textPrimary,
-    fontSize: tokens.fontSize.sm,
-    fontFamily: tokens.typography.fontFamily,
-    resize: "vertical",
+    backgroundColor: "#F8F9FA",
+    border: "1px solid #D1D5DB",
+    borderRadius: "12px",
+    padding: "12px",
+    color: "#11141A",
     outline: "none",
-    boxSizing: "border-box",
   },
   submitRatingBtn: {
-    width: "100%",
-    padding: "14px",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
     border: "none",
-    borderRadius: tokens.borderRadius.full,
-    backgroundColor: tokens.colors.accent,
-    color: "#0B1F44",
-    fontWeight: tokens.fontWeight.bold,
-    fontSize: tokens.fontSize.sm,
+    borderRadius: "9999px",
+    padding: "12px",
+    fontWeight: 800,
     cursor: "pointer",
-    boxShadow: tokens.shadows.glow,
   },
 };

@@ -1,43 +1,49 @@
-// Rapitipica Design Tokens — Paleta Oficial (#0B1F44, #00E576, #F5F7FA, #9CA3AF)
+// Rapitipica Design Tokens — Paleta Oficial del Boceto (Rojo #E30613, Negro #0D1117, Verde #16A34A, Blanco #FFFFFF)
 export const colors = {
-  bgPrimary: "#0B1F44",       // Azul oscuro principal
-  bgSecondary: "#0F2552",     // Contenedores secundarios
-  bgCard: "#11254E",          // Superficie de tarjetas y modales
-  bgCardHover: "#163265",     // Tarjetas en hover / elementos activos
-  bgInput: "#081836",          // Fondo de inputs
-  bgNavbar: "rgba(11, 31, 68, 0.95)", // Navbar con glassmorphism
-  accent: "#00E576",          // Verde neón primario
-  accentDark: "#00C864",      // Verde neón presionado / hover
-  accentLight: "#4EFA9E",     // Verde neón iluminado
-  textPrimary: "#F5F7FA",     // Blanco textos principales
-  textSecondary: "#9CA3AF",   // Gris claro para subtítulos y detalles
-  textMuted: "#9CA3AF",       // Metadatos y notas
-  border: "#1D3B72",          // Bordes de tarjetas y separadores
-  borderLight: "#254A8D",     // Bordes en foco / hover
-  danger: "#EF4444",          // Rojo de error / cancelar
-  dangerDark: "#DC2626",
-  warning: "#F59E0B",         // Amarillo/Ámbar de alertas y estrellas
-  success: "#00E576",         // Verde de confirmación
-  info: "#38BDF8",            // Azul informativo
-  overlay: "rgba(7, 19, 43, 0.75)",
+  bgPrimary: "#0D1117",       // Negro carbón principal (Header / Hero / Admin)
+  bgSecondary: "#161B22",     // Contenedores oscuros secundarios
+  bgCard: "#161B22",          // Superficie oscura
+  bgCardHover: "#1F2937",     // Hover oscuro
+  bgInput: "#0D1117",         // Fondo de inputs oscuros
+  bgNavbar: "#0D1117",        // Navbar negro sólido
+  bgLight: "#F8F9FA",         // Fondo claro para páginas de cliente
+  bgWhite: "#FFFFFF",         // Tarjetas blancas limpias
+  accent: "#E30613",          // Rojo principal Rapitipica
+  accentDark: "#B9050F",      // Rojo presionado / hover
+  accentLight: "#FF3B47",     // Rojo iluminado
+  green: "#16A34A",           // Verde detalles / éxitos
+  greenDark: "#15803D",       // Verde pincelada hero
+  textPrimary: "#F5F7FA",     // Blanco textos sobre negro
+  textDark: "#11141A",        // Negro textos sobre blanco
+  textSecondary: "#9CA3AF",   // Gris subtítulos
+  textMuted: "#6B7280",       // Metadatos y notas
+  border: "#21262D",          // Bordes oscuros
+  borderLight: "#E5E7EB",     // Bordes claros
+  danger: "#E30613",          // Rojo
+  dangerDark: "#B9050F",
+  warning: "#F59E0B",         // Estrellas de calificación
+  success: "#16A34A",         // Verde de confirmación / entregas
+  info: "#38BDF8",
+  overlay: "rgba(13, 17, 23, 0.75)",
   categories: {
-    restaurants: "#FF6B4A",
-    stores: "#10B981",
-    markets: "#3B82F6",
-    drinks: "#8B5CF6",
-    pharmacy: "#06B6D4",
-    pets: "#F59E0B",
-  }
+    restaurants: "#E30613",   // Rojo
+    markets: "#16A34A",       // Verde
+    liquor: "#11141A",        // Negro
+    sweets: "#E30613",        // Rojo
+    drinks: "#16A34A",        // Verde
+    more: "#11141A",          // Negro
+  },
 };
 
 export const fontSize = {
-  xs: "12px", // mínimo legible móvil. Antes 11px.
+  xs: "12px",
   sm: "13px",
   md: "15px",
   lg: "18px",
   xl: "clamp(20px, 2.5vw, 22px)",
+  "2xl": "clamp(24px, 3.5vw, 28px)",
   xxl: "clamp(24px, 4vw, 28px)",
-  hero: "clamp(30px, 7vw, 44px)",
+  hero: "clamp(32px, 6vw, 48px)",
 };
 
 export const fontWeight = {
@@ -56,7 +62,7 @@ export const spacing = {
   lg: "24px",
   xl: "32px",
   xxl: "48px",
-  section: "clamp(48px, 8vw, 80px)",
+  section: "clamp(40px, 6vw, 64px)",
 };
 
 export const radius = {
@@ -67,9 +73,20 @@ export const radius = {
   full: "999px",
 };
 
+export const borderRadius = radius;
+
+export const typography = {
+  fontFamily: "'Montserrat', sans-serif",
+};
+
+export const shadows = {
+  card: "0 4px 16px rgba(0, 0, 0, 0.08)",
+  glow: "0 4px 14px rgba(227, 6, 19, 0.35)",
+};
+
 export const touch = {
-  min: "44px", // objetivo táctil mínimo (WCAG 2.5.8 / iOS HIG)
-  comfortable: "48px", // formularios y CTAs móviles
+  min: "44px",
+  comfortable: "48px",
 };
 
 export const motion = {
@@ -106,6 +123,9 @@ const tokens = {
   fontWeight,
   spacing,
   radius,
+  borderRadius,
+  typography,
+  shadows,
   touch,
   motion,
   breakpoints,

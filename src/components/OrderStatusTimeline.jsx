@@ -1,67 +1,115 @@
-import React from "react";
-import { Check, Clock, Bike, CheckCircle2, ShoppingBag } from "lucide-react";
-import tokens from "../design/tokens";
+import React from 'react';
+import { Check } from 'lucide-react';
 
 const STEPS = [
-  { key: "CREADO", label: "Confirmado", icon: ShoppingBag },
-  { key: "ASIGNADO", label: "Asignado", icon: Clock },
-  { key: "RECOGIENDO", label: "Preparando", icon: Clock },
-  { key: "EN_CAMINO", label: "En camino", icon: Bike },
-  { key: "ENTREGADO", label: "Entregado", icon: CheckCircle2 },
+  { key: 'CONFIRMADO', label: 'Confirmado' },
+  { key: 'EN_CAMINO', label: 'En camino' },
+  { key: 'ENTREGADO', label: 'Entregado' },
 ];
 
-export default function OrderStatusTimeline({ currentStatus }) {
-  const currentIndex = STEPS.findIndex((s) => s.key === currentStatus);
-  const activeIdx = currentIndex === -1 ? 0 : currentIndex;
+function getStepIndex(estado) {
+  if (!estado) return 0;
+  if (estado === 'ENTREGADO') return 2;
+  if (estado === 'EN_CAMINO') return 1;
+  return 0;
+}
+
+export default function OrderStatusTimeline({ estadoActual, currentStatus }) {
+  const status = estadoActual || currentStatus || 'EN_CAMINO';
+
+  if (status === 'CANCELADO') {
+    return (
+      <div style={{
+        background: '#FEF2F2',
+        border: '1px solid #FECACA',
+        borderRadius: 16,
+        padding: '16px 20px',
+        textAlign: 'center',
+        color: '#DC2626',
+        fontWeight: 800
+      }}>
+        Pedido cancelado
+      </div>
+    );
+  }
+
+  const activeIndex = getStepIndex(status);
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.stepperContainer}>
-        {/* Progress Background Line */}
-        <div style={styles.lineBg} />
-        {/* Active Progress Line */}
-        <div
-          style={{
-            ...styles.lineActive,
-            width: `${(activeIdx / (STEPS.length - 1)) * 100}%`,
-          }}
-        />
+    <div style={{
+      background: '#FFFFFF',
+      borderRadius: 18,
+      padding: '20px 24px',
+      border: '1px solid #E5E7EB',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.04)'
+    }}>
+      <div style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        {/* Línea base gris */}
+        <div style={{
+          position: 'absolute',
+          top: 15,
+          left: 24,
+          right: 24,
+          height: 4,
+          background: '#E5E7EB',
+          borderRadius: 999,
+          zIndex: 0
+        }} />
 
-        {/* Step Nodes */}
-        {STEPS.map((step, index) => {
-          const isDone = index < activeIdx;
-          const isCurrent = index === activeIdx;
-          const isPending = index > activeIdx;
-          const Icon = step.icon;
+        {/* Línea activa verde (#16A34A) según boceto 5 */}
+        <div style={{
+          position: 'absolute',
+          top: 15,
+          left: 24,
+          width: activeIndex === 0 ? '0%' : activeIndex === 1 ? 'calc(50% - 24px)' : 'calc(100% - 48px)',
+          height: 4,
+          background: '#16A34A',
+          borderRadius: 999,
+          zIndex: 1,
+          transition: 'width 0.35s ease'
+        }} />
+
+        {STEPS.map((step, idx) => {
+          const completed = idx <= activeIndex;
+          const isCurrent = idx === activeIndex;
 
           return (
-            <div key={step.key} style={styles.stepCol}>
-              <div
-                style={{
-                  ...styles.nodeCircle,
-                  backgroundColor: isDone || isCurrent ? tokens.colors.accent : tokens.colors.bgPrimary,
-                  borderColor: isDone || isCurrent ? tokens.colors.accent : tokens.colors.border,
-                  boxShadow: isCurrent ? tokens.shadows.glow : "none",
-                  color: isDone || isCurrent ? "#0B1F44" : tokens.colors.textMuted,
-                }}
-              >
-                {isDone ? (
-                  <Check size={16} strokeWidth={3} />
-                ) : (
-                  <Icon size={16} strokeWidth={isCurrent ? 2.5 : 1.8} />
-                )}
+            <div
+              key={step.key}
+              style={{
+                position: 'relative',
+                zIndex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8
+              }}
+            >
+              <div style={{
+                width: 34,
+                height: 34,
+                borderRadius: '50%',
+                background: completed ? '#16A34A' : '#E5E7EB',
+                color: completed ? '#FFFFFF' : '#9CA3AF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: isCurrent ? '0 0 0 4px rgba(22, 163, 74, 0.18)' : 'none',
+                transition: 'all 0.25s ease'
+              }}>
+                <Check size={18} strokeWidth={3} />
               </div>
-              <span
-                style={{
-                  ...styles.stepLabel,
-                  color: isCurrent
-                    ? tokens.colors.accent
-                    : isDone
-                    ? tokens.colors.textPrimary
-                    : tokens.colors.textMuted,
-                  fontWeight: isCurrent ? 700 : 500,
-                }}
-              >
+
+              <span style={{
+                fontSize: '0.84rem',
+                fontWeight: completed ? 800 : 600,
+                color: completed ? '#11141A' : '#9CA3AF'
+              }}>
                 {step.label}
               </span>
             </div>
@@ -71,60 +119,3 @@ export default function OrderStatusTimeline({ currentStatus }) {
     </div>
   );
 }
-
-const styles = {
-  wrapper: {
-    width: "100%",
-    padding: "16px 0",
-  },
-  stepperContainer: {
-    position: "relative",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    width: "100%",
-  },
-  lineBg: {
-    position: "absolute",
-    top: "18px",
-    left: "20px",
-    right: "20px",
-    height: "3px",
-    backgroundColor: tokens.colors.border,
-    zIndex: 1,
-  },
-  lineActive: {
-    position: "absolute",
-    top: "18px",
-    left: "20px",
-    height: "3px",
-    backgroundColor: tokens.colors.accent,
-    boxShadow: "0 0 8px rgba(0, 229, 118, 0.6)",
-    transition: "width 0.4s ease",
-    zIndex: 2,
-  },
-  stepCol: {
-    position: "relative",
-    zIndex: 3,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "8px",
-    width: "70px",
-  },
-  nodeCircle: {
-    width: "36px",
-    height: "36px",
-    borderRadius: "50%",
-    border: "2px solid",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.3s ease",
-  },
-  stepLabel: {
-    fontSize: tokens.fontSize.xs,
-    textAlign: "center",
-    lineHeight: 1.2,
-  },
-};

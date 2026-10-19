@@ -1,6 +1,5 @@
-/* DomiFlex GlobalStyles — reemplazo seguro de styles/darkOverride.css.
-   Reglas mínimas y seguras. PROHIBIDO: selectores [style*=...],
-   `color: inherit !important` global, fondos sobre contenedores fixed. */
+/* Rapitipica GlobalStyles — Paleta Oficial del Boceto:
+   Rojo (#E30613), Negro (#0D1117), Verde (#16A34A), Blanco (#FFFFFF) */
 
 * {
   margin: 0;
@@ -17,25 +16,22 @@ body,
 
 body {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background-color: #0B1F44;
-  color: #F5F7FA;
+  background-color: #F8F9FA;
+  color: #11141A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Foco visible accesible (WCAG 2.4.11) */
 :focus-visible {
-  outline: 2px solid #00E576;
+  outline: 2px solid #E30613;
   outline-offset: 2px;
 }
 
-/* Contenedor de toasts: transparente, jamás tapa la página */
 div[data-rht-toaster] {
   background-color: transparent !important;
 }
 
-/* Keyframes globales (los spinners con animation "spin" estaban rotos) */
 @keyframes df-spin {
   to {
     transform: rotate(360deg);
@@ -48,7 +44,6 @@ div[data-rht-toaster] {
   }
 }
 
-/* Marquee de categorías (respeta reduced-motion) */
 @keyframes df-marquee {
   from {
     transform: translateX(0);
@@ -58,12 +53,10 @@ div[data-rht-toaster] {
   }
 }
 
-/* El marquee se detiene al pasar el cursor/tocar */
 .df-marquee-paused:hover {
   animation-play-state: paused;
 }
 
-/* Micro-interacciones: press + lift, solo transform/opacity (compositor) */
 .df-press {
   transition: transform 180ms cubic-bezier(0.2, 0, 0, 1), opacity 180ms cubic-bezier(0.2, 0, 0, 1);
 }
@@ -77,15 +70,14 @@ div[data-rht-toaster] {
 }
 
 .df-lift {
-  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .df-lift:hover {
   transform: translateY(-4px);
-  border-color: #30363d;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Shimmer para skeletons */
 @keyframes df-shimmer {
   from {
     background-position: 200% 0;
@@ -109,7 +101,7 @@ button {
 
 input::placeholder,
 textarea::placeholder {
-  color: #9aa4b2;
+  color: #6B7280;
 }
 
 ::-webkit-scrollbar {
@@ -118,48 +110,51 @@ textarea::placeholder {
 }
 
 ::-webkit-scrollbar-track {
-  background: #081836;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1D3B72;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #254A8D;
+  background: #94A3B8;
 }
 
 /* Rapitipica Utility Classes */
 .bg-rapitipica-dark {
-  background-color: #0B1F44 !important;
+  background-color: #0D1117 !important;
 }
 
 .bg-rapitipica-card {
-  background-color: #11254E !important;
-  border: 1px solid #1D3B72 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
 }
 
 .bg-rapitipica-card-hover:hover {
-  background-color: #163265 !important;
-  border-color: #254A8D !important;
+  border-color: #D1D5DB !important;
 }
 
 .text-rapitipica-green {
-  color: #00E576 !important;
+  color: #16A34A !important;
+}
+
+.text-rapitipica-red {
+  color: #E30613 !important;
 }
 
 .text-rapitipica-muted {
-  color: #9CA3AF !important;
+  color: #6B7280 !important;
 }
 
 .btn-rapitipica {
-  background-color: #00E576;
-  color: #0B1F44;
+  background-color: #E30613;
+  color: #FFFFFF;
   font-weight: 700;
   border-radius: 9999px;
   border: none;
-  padding: 10px 22px;
+  padding: 11px 26px;
   font-size: 15px;
   display: inline-flex;
   align-items: center;
@@ -167,13 +162,13 @@ textarea::placeholder {
   gap: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(0, 229, 118, 0.3);
+  box-shadow: 0 4px 14px rgba(227, 6, 19, 0.35);
 }
 
 .btn-rapitipica:hover {
-  background-color: #00C864;
+  background-color: #B9050F;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 229, 118, 0.45);
+  box-shadow: 0 6px 18px rgba(227, 6, 19, 0.45);
 }
 
 .btn-rapitipica:active {
@@ -182,8 +177,8 @@ textarea::placeholder {
 
 .btn-rapitipica-outline {
   background-color: transparent;
-  color: #00E576;
-  border: 2px solid #00E576;
+  color: #E30613;
+  border: 2px solid #E30613;
   font-weight: 600;
   border-radius: 9999px;
   padding: 8px 20px;
@@ -197,7 +192,7 @@ textarea::placeholder {
 }
 
 .btn-rapitipica-outline:hover {
-  background-color: rgba(0, 229, 118, 0.12);
+  background-color: rgba(227, 6, 19, 0.08);
   transform: translateY(-1px);
 }
 
@@ -209,18 +204,18 @@ textarea::placeholder {
   border-radius: 9999px;
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid #1D3B72;
-  background-color: #11254E;
-  color: #F5F7FA;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+  color: #11141A;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .pill-badge.active,
 .pill-badge:hover {
-  background-color: #00E576;
-  color: #0B1F44;
-  border-color: #00E576;
+  background-color: #E30613;
+  color: #FFFFFF;
+  border-color: #E30613;
   font-weight: 700;
 }
 

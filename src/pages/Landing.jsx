@@ -1,154 +1,123 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  MapPin,
-  Search,
   ArrowRight,
   Zap,
   Shield,
   Smile,
   Star,
-  Clock,
   Heart,
-  ChevronRight,
   UtensilsCrossed,
-  Store,
   ShoppingCart,
   Wine,
-  Pill,
-  Dog,
+  CakeSlice,
+  CupSoda,
+  MoreHorizontal,
+  Bike,
 } from "lucide-react";
 import RapitipicaLogo from "../components/common/RapitipicaLogo";
 import NavbarCustom from "../components/Navbar";
 import toast from "react-hot-toast";
-import theme from "../styles/theme";
 
 const U = "https://images.unsplash.com";
 const Q = "?auto=format&fit=crop&w=800&q=80";
 
+// Las 6 categorías exactas del boceto con su orden y colores (Rojo, Verde, Negro)
 const categories = [
   {
     id: "restaurantes",
     name: "Restaurantes",
-    desc: "Comida típica, platos, etc.",
     icon: UtensilsCrossed,
-    color: "#FF6B4A",
-    path: "/restaurantes?cat=Restaurantes",
-  },
-  {
-    id: "tiendas",
-    name: "Tiendas",
-    desc: "Abarrotes, snacks, etc.",
-    icon: Store,
-    color: "#10B981",
-    path: "/restaurantes?cat=Tiendas",
+    bg: "#E30613", // Rojo
+    path: "/restaurantes?cat=restaurantes",
   },
   {
     id: "supermercados",
     name: "Supermercados",
-    desc: "Mercado, frutas, verduras, etc.",
     icon: ShoppingCart,
-    color: "#3B82F6",
-    path: "/restaurantes?cat=Supermercados",
+    bg: "#16A34A", // Verde
+    path: "/restaurantes?cat=supermercados",
+  },
+  {
+    id: "licores",
+    name: "Licores",
+    icon: Wine,
+    bg: "#11141A", // Negro
+    path: "/restaurantes?cat=licores",
+  },
+  {
+    id: "dulces",
+    name: "Dulces",
+    icon: CakeSlice,
+    bg: "#E30613", // Rojo
+    path: "/restaurantes?cat=dulces",
   },
   {
     id: "bebidas",
     name: "Bebidas",
-    desc: "Refrescos, jugos, cervezas, etc.",
-    icon: Wine,
-    color: "#8B5CF6",
-    path: "/restaurantes?cat=Bebidas",
+    icon: CupSoda,
+    bg: "#16A34A", // Verde
+    path: "/restaurantes?cat=bebidas",
   },
   {
-    id: "farmacias",
-    name: "Farmacias",
-    desc: "Medicamentos, cuidado personal, etc.",
-    icon: Pill,
-    color: "#06B6D4",
-    path: "/restaurantes?cat=Farmacias",
-  },
-  {
-    id: "mascotas",
-    name: "Mascotas",
-    desc: "Alimento, accesorios, etc.",
-    icon: Dog,
-    color: "#F59E0B",
-    path: "/restaurantes?cat=Mascotas",
+    id: "mas",
+    name: "Más",
+    icon: MoreHorizontal,
+    bg: "#11141A", // Negro
+    path: "/restaurantes",
   },
 ];
 
-const restaurantesPopulares = [
+// Restaurantes destacados exactos del boceto
+const restaurantesDestacados = [
   {
     id: 1,
-    nombre: "La Pica",
-    categoria: "Comida rápida",
+    nombre: "Burger House",
+    categoria: "Hamburguesas",
+    rating: 4.7,
+    reviews: "942",
+    tiempo: "25 min",
+    precio: "$19.900",
+    img: `${U}/photo-1568901346375-23c9450c58cd${Q}`,
+    tag: "Destacado",
+  },
+  {
+    id: 4,
+    nombre: "Pizzería La Italiana",
+    categoria: "Italiana",
     rating: 4.8,
     reviews: "1.2k",
-    tiempo: "15-30 min",
-    precio: "$16.900",
-    img: `${U}/photo-1568901346375-23c9450c58cd${Q}`,
-    tag: "Más pedido",
+    tiempo: "30 min",
+    precio: "$15.900",
+    img: `${U}/photo-1513104890138-7c749659a591${Q}`,
+    tag: "Popular",
   },
   {
     id: 2,
     nombre: "Sushi Express",
-    categoria: "Sushi & Asiática",
-    rating: 4.7,
+    categoria: "Japonesa",
+    rating: 4.6,
     reviews: "586",
-    tiempo: "20-35 min",
+    tiempo: "35 min",
     precio: "$24.000",
     img: `${U}/photo-1579871494447-9811cf80d66c${Q}`,
     tag: "Top Calidad",
   },
   {
-    id: 3,
-    nombre: "Hamburguesas El Rey",
-    categoria: "Hamburguesas",
-    rating: 4.6,
-    reviews: "942",
-    tiempo: "20-40 min",
-    precio: "$19.900",
-    img: `${U}/photo-1550547660-d9450f859349${Q}`,
-    tag: "Promoción",
-  },
-  {
-    id: 4,
-    nombre: "Pizza Mania",
-    categoria: "Pizzas artesanales",
-    rating: 4.5,
-    reviews: "721",
-    tiempo: "25-45 min",
-    precio: "$28.000",
-    img: `${U}/photo-1513104890138-7c749659a591${Q}`,
-    tag: "Tradicional",
-  },
-  {
     id: 5,
-    nombre: "Tacos La Esquina",
+    nombre: "Tacos El Mexa",
     categoria: "Mexicana",
-    rating: 4.7,
+    rating: 4.5,
     reviews: "826",
-    tiempo: "20-35 min",
+    tiempo: "40 min",
     precio: "$18.500",
     img: `${U}/photo-1565299585323-38d6b0865b47${Q}`,
-    tag: "Picante",
-  },
-  {
-    id: 6,
-    nombre: "Bebidas y Más",
-    categoria: "Bebidas & Licores",
-    rating: 4.4,
-    reviews: "410",
-    tiempo: "15-25 min",
-    precio: "$8.000",
-    img: `${U}/photo-1544145945-f90425340c7e${Q}`,
-    tag: "Frías",
+    tag: "Tradicional",
   },
 ];
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [direccion, setDireccion] = useState("");
   const [favoritos, setFavoritos] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]");
@@ -157,16 +126,6 @@ export default function Landing() {
       return {};
     }
   });
-
-  const handleBuscar = (e) => {
-    e.preventDefault();
-    if (direccion.trim()) {
-      localStorage.setItem("domiflex_direccion", direccion.trim());
-      navigate(`/restaurantes?dir=${encodeURIComponent(direccion.trim())}`);
-    } else {
-      navigate("/restaurantes");
-    }
-  };
 
   const toggleFavorito = (id, e) => {
     e.preventDefault();
@@ -188,251 +147,183 @@ export default function Landing() {
   return (
     <div style={styles.page}>
       <NavbarCustom />
-      {/* 1. HERO SECTION (Rapitipica Web Desktop / Mobile) */}
-      <section style={styles.heroSection}>
-        <div style={styles.heroContainer}>
-          {/* Columna Izquierda: Mensaje + Búsqueda de dirección + Pills */}
-          <div style={styles.heroLeft}>
-            {/* Badge píldora destacada */}
-            <div style={styles.heroBadge}>
-              <span style={styles.heroBadgePulse} />
-              <span>¡Rápido, fácil y delicioso!</span>
-            </div>
 
+      {/* 1. HERO BANNER (Fondo Negro con brochazos Rojos + Pincelada Verde "a un clic" + Hamburguesa con papas) */}
+      <section style={styles.heroSection}>
+        {/* Trazos diagonales rojos de fondo estilo boceto */}
+        <div style={styles.redBrushBg} aria-hidden="true" />
+
+        <div style={styles.heroContainer}>
+          {/* Columna Izquierda: Título + Pincelada Verde + Rapitipica + Botón Rojo "Ordena ahora" */}
+          <div style={styles.heroLeft}>
             <h1 style={styles.heroHeading}>
-              Tu comida favorita <br />
-              <span style={styles.heroAccent}>en minutos</span>
+              <span style={styles.heroLineWhite}>Tu comida favorita</span>
+              <span style={styles.greenBrushBanner}>a un clic</span>
             </h1>
 
-            <p style={styles.heroSubheading}>
-              Restaurantes, tiendas y más, todo en un solo lugar. Lo típico de tu ciudad directo a tu puerta.
-            </p>
+            <div style={styles.brandSignature}>Rapitipica</div>
 
-            {/* Input de dirección principal */}
-            <form onSubmit={handleBuscar} style={styles.searchBar}>
-              <div style={styles.searchInner}>
-                <MapPin size={22} color="#00E576" style={styles.mapIcon} aria-hidden="true" />
-                <input
-                  type="text"
-                  placeholder="Ingresa tu dirección de entrega..."
-                  value={direccion}
-                  onChange={(e) => setDireccion(e.target.value)}
-                  style={styles.addressInput}
-                  aria-label="Dirección de entrega"
-                />
-              </div>
-              <button type="submit" style={styles.searchBtn} className="btn-rapitipica">
-                <span>Buscar</span>
-                <ArrowRight size={18} />
+            <div style={styles.ctaWrap}>
+              <button
+                type="button"
+                onClick={() => navigate("/restaurantes")}
+                style={styles.ordenaAhoraBtn}
+                className="df-press"
+              >
+                Ordena ahora
               </button>
-            </form>
+            </div>
+          </div>
 
-            {/* Accesos rápidos de categoría pills */}
-            <div style={styles.quickPills}>
-              {categories.slice(0, 5).map((cat) => (
+          {/* Columna Derecha: Hamburguesa doble con queso y papas fritas sobre trazos rojos */}
+          <div style={styles.heroRight}>
+            <div style={styles.heroImageWrapper}>
+              <div style={styles.redSplashBehindBurger} aria-hidden="true" />
+              <img
+                src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1100&q=85"
+                alt="Hamburguesa doble con queso y papas fritas Rapitipica"
+                style={styles.heroImage}
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. BARRA DE 6 CÍRCULOS DE CATEGORÍAS SOBRE FONDO BLANCO */}
+      <section id="categorias" style={styles.categoriesSection}>
+        <div style={styles.categoriesContainer}>
+          <div style={styles.categoriesRow}>
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => navigate(cat.path)}
-                  style={styles.quickPill}
+                  style={styles.categoryItemBtn}
                   className="df-press"
                 >
-                  <cat.icon size={15} color={cat.color} />
-                  <span>{cat.name}</span>
+                  <div style={{ ...styles.categoryCircle, backgroundColor: cat.bg }}>
+                    <Icon size={28} color="#FFFFFF" strokeWidth={2} />
+                  </div>
+                  <span style={styles.categoryLabel}>{cat.name}</span>
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Columna Derecha: Imagen visual apetecible con sombras glow */}
-          <div style={styles.heroRight}>
-            <div style={styles.heroImageWrapper}>
-              <img
-                src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1000&q=85"
-                alt="Hamburguesa artesanal y comida deliciosa Rapitipica"
-                style={styles.heroImage}
-                loading="eager"
-              />
-              {/* Badge flotante de tiempo */}
-              <div style={styles.floatingBadgeTime}>
-                <Clock size={16} color="#00E576" />
-                <div>
-                  <div style={{ fontSize: "11px", color: "#9CA3AF" }}>Tiempo promedio</div>
-                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#F5F7FA" }}>15-25 minutos</div>
-                </div>
-              </div>
-
-              {/* Badge flotante de calificación */}
-              <div style={styles.floatingBadgeScore}>
-                <Star size={16} color="#F59E0B" fill="#F59E0B" />
-                <div>
-                  <div style={{ fontSize: "11px", color: "#9CA3AF" }}>Satisfacción</div>
-                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#F5F7FA" }}>4.9 / 5 Estrellas</div>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* 2. CATEGORÍAS PRINCIPALES */}
-      <section id="categorias" style={styles.categoriesSection}>
-        <div style={styles.sectionHeader}>
-          <div>
-            <h2 style={styles.sectionTitle}>Categorías principales</h2>
-            <p style={styles.sectionDesc}>Explora todo lo que puedes pedir hoy</p>
+      {/* 3. RESTAURANTES DESTACADOS (Tarjetas blancas limpias en fila de 4 como en el boceto) */}
+      <section style={styles.featuredSection}>
+        <div style={styles.featuredContainer}>
+          <div style={styles.sectionHeader}>
+            <h2 style={styles.sectionTitle}>Restaurantes destacados</h2>
+            <Link to="/restaurantes" style={styles.viewAllLink}>
+              <span>Ver todos</span>
+              <ArrowRight size={16} />
+            </Link>
           </div>
-          <Link to="/restaurantes" style={styles.viewAllLink}>
-            Ver todas <ChevronRight size={16} />
-          </Link>
-        </div>
 
-        <div style={styles.categoriesGrid}>
-          {categories.map((cat) => {
-            const Icon = cat.icon;
-            return (
+          <div style={styles.restaurantsGrid}>
+            {restaurantesDestacados.map((res) => (
               <div
-                key={cat.id}
-                onClick={() => navigate(cat.path)}
-                style={styles.categoryCard}
-                className="bg-rapitipica-card bg-rapitipica-card-hover df-lift"
+                key={res.id}
+                onClick={() => navigate(`/negocio/${res.id}`)}
+                style={styles.resCard}
+                className="df-lift"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate(`/negocio/${res.id}`)}
               >
-                <div style={{ ...styles.categoryIconWrap, backgroundColor: `${cat.color}22` }}>
-                  <Icon size={28} color={cat.color} />
-                </div>
-                <h3 style={styles.categoryName}>{cat.name}</h3>
-                <p style={styles.categoryDesc}>{cat.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 3. RESTAURANTES POPULARES */}
-      <section style={styles.popularSection}>
-        <div style={styles.sectionHeader}>
-          <div>
-            <h2 style={styles.sectionTitle}>Restaurantes populares</h2>
-            <p style={styles.sectionDesc}>Los favoritos de la comunidad con entrega express</p>
-          </div>
-          <Link to="/restaurantes" style={styles.viewAllLink}>
-            Ver restaurantes <ChevronRight size={16} />
-          </Link>
-        </div>
-
-        <div style={styles.restaurantsGrid}>
-          {restaurantesPopulares.map((res) => (
-            <div
-              key={res.id}
-              onClick={() => navigate(`/negocio/${res.id}`)}
-              style={styles.resCard}
-              className="bg-rapitipica-card bg-rapitipica-card-hover df-lift"
-            >
-              {/* Imagen del restaurante */}
-              <div style={styles.resImageWrap}>
-                <img src={res.img} alt={res.nombre} style={styles.resImage} loading="lazy" />
-                <span style={styles.resTag}>{res.tag}</span>
-                <button
-                  type="button"
-                  onClick={(e) => toggleFavorito(res.id, e)}
-                  style={styles.resFavBtn}
-                  aria-label="Agregar a favoritos"
-                >
-                  <Heart
-                    size={17}
-                    color={favoritos[res.id] ? "#EF4444" : "#FFFFFF"}
-                    fill={favoritos[res.id] ? "#EF4444" : "none"}
-                  />
-                </button>
-              </div>
-
-              {/* Contenido de la tarjeta */}
-              <div style={styles.resContent}>
-                <div style={styles.resHeaderRow}>
-                  <h3 style={styles.resTitle}>{res.nombre}</h3>
-                  <div style={styles.resRating}>
-                    <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                    <span>{res.rating}</span>
-                    <span style={styles.resReviews}>({res.reviews})</span>
-                  </div>
-                </div>
-
-                <p style={styles.resCat}>{res.categoria}</p>
-
-                <div style={styles.resFooter}>
-                  <div style={styles.resTime}>
-                    <Clock size={14} color="#00E576" />
-                    <span>{res.tiempo}</span>
-                  </div>
+                <div style={styles.resImageWrap}>
+                  <img src={res.img} alt={res.nombre} style={styles.resImage} loading="lazy" />
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/negocio/${res.id}`);
-                    }}
-                    style={styles.resPedirBtn}
+                    onClick={(e) => toggleFavorito(res.id, e)}
+                    style={styles.resFavBtn}
+                    aria-label="Agregar a favoritos"
                   >
-                    Pedir
+                    <Heart
+                      size={16}
+                      color={favoritos[res.id] ? "#E30613" : "#11141A"}
+                      fill={favoritos[res.id] ? "#E30613" : "none"}
+                    />
                   </button>
+                  <div style={styles.scooterBadge}>
+                    <Bike size={14} color="#FFFFFF" />
+                  </div>
+                </div>
+
+                <div style={styles.resContent}>
+                  <h3 style={styles.resTitle}>{res.nombre}</h3>
+                  <p style={styles.resSubtitle}>
+                    {res.categoria} • {res.tiempo}
+                  </p>
+                  <div style={styles.resRatingRow}>
+                    <Star size={14} color="#F59E0B" fill="#F59E0B" />
+                    <span style={styles.resRatingNum}>{res.rating}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 4. PILARES DE MARCA: RÁPIDO, SEGURO, FÁCIL */}
+      {/* 4. SELLO DE MARCA: ¡RAPITÍPICA: RÁPIDO, SEGURO Y DELICIOSO! */}
       <section style={styles.pillarsSection}>
         <div style={styles.pillarsContainer}>
           <div style={styles.pillarItem}>
-            <div style={styles.pillarIcon}>
-              <Zap size={28} color="#00E576" />
+            <div style={{ ...styles.pillarIcon, backgroundColor: "rgba(227, 6, 19, 0.1)" }}>
+              <Zap size={26} color="#E30613" />
             </div>
-            <h4 style={styles.pillarTitle}>Más rápido</h4>
-            <p style={styles.pillarText}>Ruta optimizada con IA para entregas en tiempo récord.</p>
+            <h4 style={styles.pillarTitle}>Rápido</h4>
+            <p style={styles.pillarText}>Ruta optimizada con IA para entregas en minutos.</p>
           </div>
 
           <div style={styles.pillarItem}>
-            <div style={styles.pillarIcon}>
-              <Shield size={28} color="#00E576" />
+            <div style={{ ...styles.pillarIcon, backgroundColor: "rgba(22, 163, 74, 0.12)" }}>
+              <Shield size={26} color="#16A34A" />
             </div>
-            <h4 style={styles.pillarTitle}>Más seguro</h4>
-            <p style={styles.pillarText}>Repartidores certificados y validación de seguridad activa.</p>
+            <h4 style={styles.pillarTitle}>Seguro</h4>
+            <p style={styles.pillarText}>Repartidores verificados y seguimiento en vivo.</p>
           </div>
 
           <div style={styles.pillarItem}>
-            <div style={styles.pillarIcon}>
-              <Smile size={28} color="#00E576" />
+            <div style={{ ...styles.pillarIcon, backgroundColor: "rgba(17, 20, 26, 0.08)" }}>
+              <Smile size={26} color="#11141A" />
             </div>
-            <h4 style={styles.pillarTitle}>Más fácil</h4>
-            <p style={styles.pillarText}>¡Pide, disfruta, llega! Tu comida favorita a un solo tap.</p>
+            <h4 style={styles.pillarTitle}>Delicioso</h4>
+            <p style={styles.pillarText}>¡Lo que quieres, en un clic directo a tu puerta!</p>
           </div>
         </div>
       </section>
 
-      {/* 5. FOOTER OFICIAL RAPITIPICA */}
+      {/* 5. FOOTER OFICIAL EN NEGRO */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
           <div style={styles.footerColMain}>
             <RapitipicaLogo size="md" showTagline={true} to="/" />
             <p style={styles.footerTagline}>
-              Rapitipica es la plataforma de domicilios donde puedes pedir tu comida favorita, productos y mucho más, de forma rápida, segura y fácil.
+              Rapitipica es tu plataforma de domicilios rápida, segura y deliciosa. Pide de tus restaurantes, supermercados y tiendas favoritas en un clic.
             </p>
           </div>
 
           <div style={styles.footerCol}>
             <h5 style={styles.footerHeading}>Descubrir</h5>
             <Link to="/restaurantes" style={styles.footerLink}>Restaurantes</Link>
-            <Link to="/restaurantes?cat=Tiendas" style={styles.footerLink}>Tiendas de conveniencia</Link>
-            <Link to="/restaurantes?cat=Supermercados" style={styles.footerLink}>Supermercados</Link>
-            <Link to="/restaurantes?cat=Farmacias" style={styles.footerLink}>Farmacias</Link>
+            <Link to="/restaurantes?cat=supermercados" style={styles.footerLink}>Supermercados</Link>
+            <Link to="/restaurantes?cat=licores" style={styles.footerLink}>Licores</Link>
+            <Link to="/restaurantes?cat=dulces" style={styles.footerLink}>Dulces y Bebidas</Link>
           </div>
 
           <div style={styles.footerCol}>
             <h5 style={styles.footerHeading}>Cuenta</h5>
             <Link to="/login" style={styles.footerLink}>Iniciar sesión</Link>
-            <Link to="/register" style={styles.footerLink}>Crear cuenta gratis</Link>
-            <Link to="/profile" style={styles.footerLink}>Mi perfil</Link>
+            <Link to="/register" style={styles.footerLink}>Registrarse</Link>
+            <Link to="/profile" style={styles.footerLink}>Mi cuenta</Link>
             <Link to="/mis-pedidos" style={styles.footerLink}>Mis pedidos</Link>
           </div>
 
@@ -454,7 +345,7 @@ export default function Landing() {
         </div>
 
         <div style={styles.footerBottom}>
-          <p>© 2026 Rapitipica. Todos los derechos reservados. ¡Pide, disfruta, llega!</p>
+          <p>© 2026 Rapitipica — ¡Rápido, seguro y delicioso!</p>
         </div>
       </footer>
     </div>
@@ -464,443 +355,363 @@ export default function Landing() {
 const styles = {
   page: {
     minHeight: "100vh",
-    backgroundColor: "#0B1F44",
-    color: "#F5F7FA",
+    backgroundColor: "#FFFFFF",
+    color: "#11141A",
     fontFamily: "'Montserrat', sans-serif",
   },
   heroSection: {
-    padding: "clamp(36px, 6vw, 64px) 20px clamp(48px, 8vw, 80px)",
-    background: "radial-gradient(ellipse at 50% 10%, rgba(0, 229, 118, 0.08) 0%, transparent 70%)",
+    position: "relative",
+    backgroundColor: "#0D1117",
+    overflow: "hidden",
+    padding: "clamp(32px, 5vw, 56px) 20px",
+  },
+  redBrushBg: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "radial-gradient(circle at 72% 50%, rgba(227, 6, 19, 0.42) 0%, rgba(185, 5, 15, 0.18) 38%, transparent 70%), linear-gradient(125deg, #0D1117 35%, rgba(227, 6, 19, 0.28) 65%, #0D1117 95%)",
+    pointerEvents: "none",
   },
   heroContainer: {
-    maxWidth: "1280px",
+    position: "relative",
+    zIndex: 2,
+    maxWidth: "1200px",
     margin: "0 auto",
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-    gap: "48px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "36px",
     alignItems: "center",
   },
   heroLeft: {
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
-  },
-  heroBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
-    border: "1px solid rgba(0, 229, 118, 0.35)",
-    color: "#00E576",
-    fontSize: "13px",
-    fontWeight: "700",
-    padding: "6px 16px",
-    borderRadius: "9999px",
-    width: "fit-content",
-  },
-  heroBadgePulse: {
-    width: "8px",
-    height: "8px",
-    backgroundColor: "#00E576",
-    borderRadius: "50%",
-    boxShadow: "0 0 10px #00E576",
+    alignItems: "flex-start",
+    gap: "12px",
   },
   heroHeading: {
-    fontSize: "clamp(32px, 5vw, 54px)",
-    fontWeight: "800",
-    lineHeight: 1.15,
-    color: "#F5F7FA",
-    letterSpacing: "-0.5px",
-    margin: 0,
-  },
-  heroAccent: {
-    color: "#00E576",
-    textShadow: "0 0 24px rgba(0, 229, 118, 0.25)",
-  },
-  heroSubheading: {
-    fontSize: "16px",
-    lineHeight: 1.6,
-    color: "#9CA3AF",
-    margin: 0,
-    maxWidth: "480px",
-  },
-  searchBar: {
     display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-    backgroundColor: "#11254E",
-    border: "1px solid #1D3B72",
-    borderRadius: "9999px",
-    padding: "6px 8px 6px 16px",
-    boxShadow: "0 8px 24px rgba(3, 10, 26, 0.5)",
-    maxWidth: "540px",
-  },
-  searchInner: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    flex: "1",
-    minWidth: "200px",
-  },
-  mapIcon: {
-    flexShrink: 0,
-  },
-  addressInput: {
-    width: "100%",
-    background: "transparent",
-    border: "none",
-    color: "#F5F7FA",
-    fontSize: "15px",
-    outline: "none",
-  },
-  searchBtn: {
-    padding: "10px 24px",
-    fontSize: "15px",
-  },
-  quickPills: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "8px",
-    marginTop: "8px",
-  },
-  quickPill: {
-    display: "inline-flex",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
     gap: "6px",
-    backgroundColor: "rgba(17, 37, 78, 0.7)",
-    border: "1px solid #1D3B72",
+    margin: 0,
+  },
+  heroLineWhite: {
+    fontSize: "clamp(30px, 4.5vw, 48px)",
+    fontWeight: 900,
+    fontStyle: "italic",
+    color: "#FFFFFF",
+    lineHeight: 1.08,
+    letterSpacing: "-0.5px",
+    textShadow: "0 4px 16px rgba(0, 0, 0, 0.5)",
+  },
+  greenBrushBanner: {
+    display: "inline-block",
+    backgroundColor: "#15803D",
+    backgroundImage: "linear-gradient(95deg, #16A34A 0%, #15803D 100%)",
+    color: "#FFFFFF",
+    fontSize: "clamp(32px, 4.8vw, 50px)",
+    fontWeight: 900,
+    fontStyle: "italic",
+    padding: "4px 28px 6px 18px",
+    borderRadius: "10px 26px 8px 22px",
+    transform: "rotate(-2deg)",
+    boxShadow: "0 6px 20px rgba(21, 128, 61, 0.45)",
+    lineHeight: 1.05,
+  },
+  brandSignature: {
+    fontSize: "clamp(22px, 3vw, 32px)",
+    fontWeight: 900,
+    fontStyle: "italic",
+    color: "#E30613",
+    marginTop: "6px",
+    marginLeft: "12px",
+    letterSpacing: "-0.5px",
+    textShadow: "0 2px 10px rgba(227, 6, 19, 0.35)",
+  },
+  ctaWrap: {
+    marginTop: "14px",
+  },
+  ordenaAhoraBtn: {
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
+    fontWeight: 800,
+    fontSize: "16px",
+    border: "none",
     borderRadius: "9999px",
-    padding: "6px 14px",
-    color: "#F5F7FA",
-    fontSize: "12px",
-    fontWeight: "600",
+    padding: "13px 34px",
     cursor: "pointer",
-    transition: "all 0.15s ease",
+    boxShadow: "0 8px 22px rgba(227, 6, 19, 0.45)",
+    transition: "all 0.2s ease",
   },
   heroRight: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
   },
   heroImageWrapper: {
     position: "relative",
     width: "100%",
-    maxWidth: "480px",
-    borderRadius: "28px",
+    maxWidth: "520px",
+    borderRadius: "24px",
     overflow: "hidden",
-    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
-    border: "1px solid #1D3B72",
+    boxShadow: "0 18px 40px rgba(0, 0, 0, 0.6)",
+    border: "2px solid rgba(227, 6, 19, 0.35)",
+  },
+  redSplashBehindBurger: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(135deg, rgba(227,6,19,0.25) 0%, transparent 60%)",
+    pointerEvents: "none",
   },
   heroImage: {
     width: "100%",
-    height: "auto",
+    height: "310px",
+    objectFit: "cover",
     display: "block",
-    transform: "scale(1.02)",
-    transition: "transform 0.5s ease",
-  },
-  floatingBadgeTime: {
-    position: "absolute",
-    bottom: "20px",
-    left: "20px",
-    backgroundColor: "rgba(11, 31, 68, 0.92)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid #1D3B72",
-    borderRadius: "16px",
-    padding: "10px 14px",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
-  },
-  floatingBadgeScore: {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    backgroundColor: "rgba(11, 31, 68, 0.92)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid #1D3B72",
-    borderRadius: "16px",
-    padding: "10px 14px",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
   },
   categoriesSection: {
-    maxWidth: "1280px",
+    backgroundColor: "#FFFFFF",
+    padding: "36px 20px 28px",
+    borderBottom: "1px solid #F1F5F9",
+  },
+  categoriesContainer: {
+    maxWidth: "1000px",
     margin: "0 auto",
-    padding: "40px 20px",
+  },
+  categoriesRow: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))",
+    gap: "20px",
+    justifyItems: "center",
+  },
+  categoryItemBtn: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: "6px",
+  },
+  categoryCircle: {
+    width: "68px",
+    height: "68px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 6px 16px rgba(0, 0, 0, 0.14)",
+    transition: "transform 0.2s ease",
+  },
+  categoryLabel: {
+    fontSize: "13px",
+    fontWeight: 700,
+    color: "#11141A",
+    textAlign: "center",
+  },
+  featuredSection: {
+    backgroundColor: "#F8F9FA",
+    padding: "36px 20px 56px",
+  },
+  featuredContainer: {
+    maxWidth: "1200px",
+    margin: "0 auto",
   },
   sectionHeader: {
     display: "flex",
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: "28px",
+    marginBottom: "22px",
+    gap: "12px",
   },
   sectionTitle: {
-    fontSize: "clamp(22px, 3vw, 28px)",
-    fontWeight: "800",
-    color: "#F5F7FA",
+    fontSize: "22px",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
-  },
-  sectionDesc: {
-    fontSize: "14px",
-    color: "#9CA3AF",
-    margin: "6px 0 0",
   },
   viewAllLink: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "4px",
-    color: "#00E576",
+    gap: "6px",
+    color: "#11141A",
+    fontWeight: 700,
     fontSize: "14px",
-    fontWeight: "700",
     textDecoration: "none",
-    transition: "gap 0.15s ease",
-  },
-  categoriesGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-    gap: "18px",
-  },
-  categoryCard: {
-    borderRadius: "18px",
-    padding: "22px 18px",
-    cursor: "pointer",
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "10px",
-  },
-  categoryIconWrap: {
-    width: "56px",
-    height: "56px",
-    borderRadius: "16px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "4px",
-  },
-  categoryName: {
-    fontSize: "16px",
-    fontWeight: "700",
-    color: "#F5F7FA",
-    margin: 0,
-  },
-  categoryDesc: {
-    fontSize: "12px",
-    color: "#9CA3AF",
-    margin: 0,
-    lineHeight: 1.4,
-  },
-  popularSection: {
-    maxWidth: "1280px",
-    margin: "0 auto",
-    padding: "40px 20px 60px",
   },
   restaurantsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-    gap: "24px",
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gap: "22px",
   },
   resCard: {
-    borderRadius: "20px",
+    backgroundColor: "#FFFFFF",
+    borderRadius: "16px",
+    border: "1px solid #E5E7EB",
     overflow: "hidden",
     cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+    transition: "all 0.2s ease",
   },
   resImageWrap: {
     position: "relative",
     width: "100%",
-    height: "170px",
+    height: "155px",
     overflow: "hidden",
+    backgroundColor: "#11141A",
   },
   resImage: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
   },
-  resTag: {
-    position: "absolute",
-    top: "12px",
-    left: "12px",
-    backgroundColor: "#00E576",
-    color: "#0B1F44",
-    fontSize: "11px",
-    fontWeight: "800",
-    padding: "4px 10px",
-    borderRadius: "9999px",
-  },
   resFavBtn: {
     position: "absolute",
-    top: "12px",
-    right: "12px",
-    backgroundColor: "rgba(11, 31, 68, 0.75)",
-    backdropFilter: "blur(6px)",
-    border: "none",
-    width: "34px",
-    height: "34px",
+    top: "10px",
+    right: "10px",
+    width: "32px",
+    height: "32px",
     borderRadius: "50%",
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    border: "none",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+  },
+  scooterBadge: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    width: "28px",
+    height: "28px",
+    borderRadius: "50%",
+    backgroundColor: "#E30613",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 2px 6px rgba(227, 6, 19, 0.45)",
   },
   resContent: {
-    padding: "16px",
+    padding: "14px 16px",
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
-    flex: "1",
-  },
-  resHeaderRow: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "10px",
+    gap: "4px",
   },
   resTitle: {
-    fontSize: "17px",
-    fontWeight: "700",
-    color: "#F5F7FA",
+    fontSize: "16px",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
   },
-  resRating: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
+  resSubtitle: {
     fontSize: "13px",
-    fontWeight: "700",
-    color: "#F5F7FA",
-  },
-  resReviews: {
-    color: "#9CA3AF",
-    fontSize: "12px",
-    fontWeight: "400",
-  },
-  resCat: {
-    fontSize: "13px",
-    color: "#9CA3AF",
+    color: "#6B7280",
     margin: 0,
+    fontWeight: 500,
   },
-  resFooter: {
+  resRatingRow: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: "auto",
-    paddingTop: "12px",
-    borderTop: "1px solid #1D3B72",
+    gap: "5px",
+    marginTop: "4px",
   },
-  resTime: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
+  resRatingNum: {
     fontSize: "13px",
-    color: "#F5F7FA",
-    fontWeight: "600",
-  },
-  resPedirBtn: {
-    backgroundColor: "#00E576",
-    color: "#0B1F44",
-    border: "none",
-    borderRadius: "9999px",
-    padding: "6px 16px",
-    fontSize: "13px",
-    fontWeight: "800",
-    cursor: "pointer",
-    transition: "all 0.15s ease",
+    fontWeight: 700,
+    color: "#11141A",
   },
   pillarsSection: {
-    backgroundColor: "#081836",
-    borderTop: "1px solid #1D3B72",
-    borderBottom: "1px solid #1D3B72",
-    padding: "50px 20px",
+    backgroundColor: "#FFFFFF",
+    borderTop: "1px solid #E5E7EB",
+    padding: "44px 20px",
   },
   pillarsContainer: {
-    maxWidth: "1200px",
+    maxWidth: "1100px",
     margin: "0 auto",
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "36px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "28px",
     textAlign: "center",
   },
   pillarItem: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "12px",
+    gap: "10px",
   },
   pillarIcon: {
-    width: "60px",
-    height: "60px",
+    width: "56px",
+    height: "56px",
     borderRadius: "50%",
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
-    border: "1px solid rgba(0, 229, 118, 0.3)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   pillarTitle: {
     fontSize: "18px",
-    fontWeight: "700",
-    color: "#F5F7FA",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
   },
   pillarText: {
     fontSize: "14px",
-    color: "#9CA3AF",
+    color: "#6B7280",
     margin: 0,
+    maxWidth: "260px",
     lineHeight: 1.5,
-    maxWidth: "300px",
   },
   footer: {
-    backgroundColor: "#07132B",
-    borderTop: "1px solid #1D3B72",
-    padding: "60px 20px 30px",
+    backgroundColor: "#0D1117",
+    color: "#FFFFFF",
+    padding: "48px 20px 24px",
   },
   footerContent: {
-    maxWidth: "1280px",
+    maxWidth: "1200px",
     margin: "0 auto",
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "40px",
-    marginBottom: "40px",
+    gap: "36px",
+    paddingBottom: "36px",
+    borderBottom: "1px solid #1F2937",
   },
   footerColMain: {
-    gridColumn: "span 1",
-  },
-  footerTagline: {
-    fontSize: "14px",
-    lineHeight: 1.6,
-    color: "#9CA3AF",
-    marginTop: "14px",
-    maxWidth: "340px",
-  },
-  footerCol: {
     display: "flex",
     flexDirection: "column",
     gap: "12px",
   },
-  footerHeading: {
-    fontSize: "15px",
-    fontWeight: "700",
-    color: "#F5F7FA",
+  footerTagline: {
+    fontSize: "13px",
+    color: "#9CA3AF",
+    lineHeight: 1.6,
     margin: 0,
+  },
+  footerCol: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  footerHeading: {
+    fontSize: "14px",
+    fontWeight: 800,
+    color: "#FFFFFF",
+    margin: "0 0 4px",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
   },
   footerLink: {
     color: "#9CA3AF",
     textDecoration: "none",
-    fontSize: "14px",
+    fontSize: "13px",
     transition: "color 0.15s ease",
   },
   footerBottom: {
-    maxWidth: "1280px",
-    margin: "0 auto",
-    paddingTop: "24px",
-    borderTop: "1px solid #1D3B72",
+    maxWidth: "1200px",
+    margin: "20px auto 0",
     textAlign: "center",
+    fontSize: "12px",
     color: "#6B7280",
-    fontSize: "13px",
   },
 };

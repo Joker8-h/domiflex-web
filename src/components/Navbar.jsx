@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Search, ShoppingBag, Bell, Menu, User, LogIn, Heart } from "lucide-react";
+import { Search, ShoppingCart, Bell, Menu } from "lucide-react";
 import RapitipicaLogo from "./common/RapitipicaLogo";
 import { useAuth } from "../pages/context/AuthContext";
 import { API_URL } from "../config";
-import theme from "../styles/theme";
 import Avatar from "./common/Avatar";
 import MobileDrawer from "./layout/MobileDrawer";
 import { useIsMobile } from "../hooks/useMediaQuery";
 import { loadCart } from "../lib/cartStorage";
 
-export default function NavbarCustom({ transparent }) {
-  const { token, usuario, logout } = useAuth();
+export default function NavbarCustom() {
+  const { token, usuario } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -20,7 +19,6 @@ export default function NavbarCustom({ transparent }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartCount, setCartCount] = useState(0);
 
-  // Cargar items del carrito
   const updateCartCount = () => {
     try {
       const { cart } = loadCart();
@@ -34,8 +32,7 @@ export default function NavbarCustom({ transparent }) {
   useEffect(() => {
     updateCartCount();
     window.addEventListener("storage", updateCartCount);
-    // Intervalo suave para sincronizar carrito entre pestañas y componentes
-    const interval = setInterval(updateCartCount, 1500);
+    const interval = setInterval(updateCartCount, 1200);
     return () => {
       window.removeEventListener("storage", updateCartCount);
       clearInterval(interval);
@@ -69,12 +66,17 @@ export default function NavbarCustom({ transparent }) {
     }
   };
 
-  const isActiveLink = (path) => location.pathname === path;
+  const fullPath = location.pathname + location.search;
+  const isLinkActive = (target) => {
+    if (target === "/") return location.pathname === "/";
+    if (target === "/restaurantes") return location.pathname === "/restaurantes" && !location.search;
+    return fullPath.toLowerCase() === target.toLowerCase();
+  };
 
   return (
     <nav style={styles.navbar} aria-label="Barra superior">
       <div style={styles.container}>
-        {/* Izquierda: Drawer móvil + Logo Rapitipica */}
+        {/* Izquierda: Menú móvil + Logo Rapitipica + Enlaces del Boceto */}
         <div style={styles.left}>
           {isMobile && (
             <button
@@ -84,21 +86,20 @@ export default function NavbarCustom({ transparent }) {
               onClick={() => setDrawerOpen(true)}
               style={styles.menuBtn}
             >
-              <Menu size={20} aria-hidden="true" color="#F5F7FA" />
+              <Menu size={20} aria-hidden="true" color="#FFFFFF" />
             </button>
           )}
 
-          <RapitipicaLogo size={isMobile ? "sm" : "md"} showTagline={!isMobile} to="/" />
+          <RapitipicaLogo size={isMobile ? "sm" : "md"} showTagline={false} to="/" />
 
-          {/* Enlaces de navegación desktop */}
           {!isMobile && (
             <div style={styles.navLinks}>
               <Link
                 to="/"
                 style={{
                   ...styles.navLink,
-                  color: isActiveLink("/") ? theme.colors.accent : theme.colors.textPrimary,
-                  fontWeight: isActiveLink("/") ? 700 : 500,
+                  color: isLinkActive("/") ? "#E30613" : "#FFFFFF",
+                  fontWeight: isLinkActive("/") ? 700 : 500,
                 }}
               >
                 Inicio
@@ -107,27 +108,39 @@ export default function NavbarCustom({ transparent }) {
                 to="/restaurantes"
                 style={{
                   ...styles.navLink,
-                  color: isActiveLink("/restaurantes") ? theme.colors.accent : theme.colors.textPrimary,
-                  fontWeight: isActiveLink("/restaurantes") ? 700 : 500,
+                  color: isLinkActive("/restaurantes") ? "#E30613" : "#FFFFFF",
+                  fontWeight: isLinkActive("/restaurantes") ? 700 : 500,
                 }}
               >
                 Restaurantes
               </Link>
-              <a
-                href="#categorias"
-                onClick={(e) => {
-                  if (location.pathname !== "/") {
-                    e.preventDefault();
-                    navigate("/#categorias");
-                  }
-                }}
-                style={styles.navLink}
-              >
-                Categorías
-              </a>
               <Link
-                to="/restaurantes?filter=ofertas"
-                style={styles.navLink}
+                to="/restaurantes?cat=supermercados"
+                style={{
+                  ...styles.navLink,
+                  color: isLinkActive("/restaurantes?cat=supermercados") ? "#E30613" : "#FFFFFF",
+                  fontWeight: isLinkActive("/restaurantes?cat=supermercados") ? 700 : 500,
+                }}
+              >
+                Supermercados
+              </Link>
+              <Link
+                to="/restaurantes?cat=licores"
+                style={{
+                  ...styles.navLink,
+                  color: isLinkActive("/restaurantes?cat=licores") ? "#E30613" : "#FFFFFF",
+                  fontWeight: isLinkActive("/restaurantes?cat=licores") ? 700 : 500,
+                }}
+              >
+                Licores
+              </Link>
+              <Link
+                to="/restaurantes?cat=ofertas"
+                style={{
+                  ...styles.navLink,
+                  color: isLinkActive("/restaurantes?cat=ofertas") ? "#E30613" : "#FFFFFF",
+                  fontWeight: isLinkActive("/restaurantes?cat=ofertas") ? 700 : 500,
+                }}
               >
                 Ofertas
               </Link>
@@ -135,10 +148,9 @@ export default function NavbarCustom({ transparent }) {
           )}
         </div>
 
-        {/* Centro: Buscador "¿Qué se te antoja hoy?" (Desktop/Tablet) */}
+        {/* Centro-Derecha: Buscador blanco redondeado "¿Qué se te antoja hoy?" como en el boceto */}
         {!isMobile && (
           <form onSubmit={handleSearchSubmit} style={styles.searchForm}>
-            <Search size={18} color="#9CA3AF" style={styles.searchIcon} aria-hidden="true" />
             <input
               type="text"
               placeholder="¿Qué se te antoja hoy?"
@@ -147,35 +159,40 @@ export default function NavbarCustom({ transparent }) {
               style={styles.searchInput}
               aria-label="Buscar restaurantes o comidas"
             />
+            <button type="submit" style={styles.searchBtn} aria-label="Buscar">
+              <Search size={17} color="#11141A" strokeWidth={2.5} />
+            </button>
           </form>
         )}
 
-        {/* Derecha: Carrito + Notificaciones + Perfil / Iniciar Sesión */}
+        {/* Derecha: Carrito con badge rojo + Iniciar sesión / Registrarse */}
         <div style={styles.right}>
-          {/* Botón Carrito */}
-          <Link to="/carrito" style={styles.cartBtn} aria-label={`Carrito de compras con ${cartCount} productos`}>
-            <ShoppingBag size={20} color="#F5F7FA" />
-            {cartCount > 0 && (
-              <span style={styles.cartBadge}>{cartCount > 99 ? "99+" : cartCount}</span>
-            )}
+          <Link to="/carrito" style={styles.cartBtn} aria-label={`Carrito con ${cartCount} productos`}>
+            <ShoppingCart size={21} color="#FFFFFF" />
+            <span style={styles.cartBadge}>{cartCount > 99 ? "99+" : cartCount}</span>
           </Link>
 
           {!token ? (
-            <Link to="/login" style={styles.loginBtn}>
-              <LogIn size={16} aria-hidden="true" />
-              <span>Iniciar sesión</span>
-            </Link>
+            <div style={styles.authLinks}>
+              <Link to="/login" style={styles.authLinkText}>
+                Iniciar sesión
+              </Link>
+              <span style={{ color: "#6B7280", fontSize: "13px" }}>/</span>
+              <Link to="/register" style={styles.authLinkText}>
+                Registrarse
+              </Link>
+            </div>
           ) : (
             <div style={styles.userSection}>
               <Link to="/notificaciones" style={styles.iconBtn} aria-label="Notificaciones" title="Notificaciones">
-                <Bell size={19} color="#F5F7FA" aria-hidden="true" />
+                <Bell size={18} color="#FFFFFF" aria-hidden="true" />
               </Link>
 
-              <Link to="/perfil" style={styles.userBtn} aria-label="Mi perfil">
+              <Link to="/profile" style={styles.userBtn} aria-label="Mi perfil">
                 <Avatar
                   name={usuario?.nombre}
                   src={fotoPerfil || usuario?.fotoPerfil}
-                  size={32}
+                  size={30}
                 />
                 {!isMobile && (
                   <span style={styles.userName}>{usuario?.nombre?.split(" ")[0]}</span>
@@ -195,13 +212,10 @@ const styles = {
   navbar: {
     position: "sticky",
     top: 0,
-    backgroundColor: "rgba(11, 31, 68, 0.94)",
-    backdropFilter: "blur(14px)",
-    WebkitBackdropFilter: "blur(14px)",
-    borderBottom: "1px solid #1D3B72",
+    backgroundColor: "#0D1117",
+    borderBottom: "1px solid #1F2937",
     zIndex: 300,
-    padding: "10px 0",
-    transition: "background-color 0.2s ease",
+    padding: "12px 0",
   },
   container: {
     display: "flex",
@@ -215,15 +229,15 @@ const styles = {
   left: {
     display: "flex",
     alignItems: "center",
-    gap: "24px",
+    gap: "28px",
   },
   menuBtn: {
-    width: "40px",
-    height: "40px",
+    width: "38px",
+    height: "38px",
     borderRadius: "10px",
-    border: "1px solid #1D3B72",
-    backgroundColor: "#11254E",
-    color: "#F5F7FA",
+    border: "1px solid #374151",
+    backgroundColor: "#161B22",
+    color: "#FFFFFF",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -232,84 +246,90 @@ const styles = {
   navLinks: {
     display: "flex",
     alignItems: "center",
-    gap: "20px",
+    gap: "22px",
   },
   navLink: {
-    color: "#F5F7FA",
+    color: "#FFFFFF",
     textDecoration: "none",
     fontSize: "14px",
     transition: "color 0.15s ease",
     cursor: "pointer",
+    whiteSpace: "nowrap",
   },
   searchForm: {
     position: "relative",
     flex: "1",
-    maxWidth: "420px",
-    margin: "0 12px",
-  },
-  searchIcon: {
-    position: "absolute",
-    left: "14px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    pointerEvents: "none",
+    maxWidth: "310px",
+    marginLeft: "auto",
   },
   searchInput: {
     width: "100%",
-    backgroundColor: "#081836",
-    color: "#F5F7FA",
-    border: "1px solid #1D3B72",
+    backgroundColor: "#FFFFFF",
+    color: "#11141A",
+    border: "none",
     borderRadius: "9999px",
-    padding: "9px 18px 9px 42px",
-    fontSize: "14px",
+    padding: "9px 40px 9px 18px",
+    fontSize: "13px",
+    fontWeight: 500,
     outline: "none",
-    transition: "all 0.2s ease",
-    boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+  },
+  searchBtn: {
+    position: "absolute",
+    right: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "4px",
   },
   right: {
     display: "flex",
     alignItems: "center",
-    gap: "14px",
+    gap: "16px",
   },
   cartBtn: {
     position: "relative",
-    width: "42px",
-    height: "42px",
+    width: "40px",
+    height: "40px",
     borderRadius: "50%",
-    backgroundColor: "#11254E",
-    border: "1px solid #1D3B72",
+    backgroundColor: "transparent",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     textDecoration: "none",
-    transition: "all 0.2s ease",
   },
   cartBadge: {
     position: "absolute",
-    top: "-3px",
-    right: "-3px",
-    backgroundColor: "#00E576",
-    color: "#0B1F44",
-    fontSize: "11px",
+    top: "0px",
+    right: "0px",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
+    fontSize: "10px",
     fontWeight: "800",
     borderRadius: "9999px",
-    padding: "2px 6px",
-    lineHeight: 1.2,
-    border: "2px solid #0B1F44",
+    padding: "1px 5px",
+    minWidth: "18px",
+    textAlign: "center",
+    lineHeight: 1.3,
+    border: "2px solid #0D1117",
   },
-  loginBtn: {
-    backgroundColor: "#00E576",
-    color: "#0B1F44",
-    fontWeight: 700,
-    fontSize: "14px",
-    borderRadius: "9999px",
-    padding: "8px 20px",
-    display: "inline-flex",
+  authLinks: {
+    display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "6px",
+    whiteSpace: "nowrap",
+  },
+  authLinkText: {
+    color: "#FFFFFF",
     textDecoration: "none",
-    transition: "all 0.2s ease",
-    boxShadow: "0 4px 14px rgba(0, 229, 118, 0.3)",
+    fontSize: "13px",
+    fontWeight: 600,
+    transition: "color 0.15s ease",
   },
   userSection: {
     display: "flex",
@@ -317,29 +337,27 @@ const styles = {
     gap: "10px",
   },
   iconBtn: {
-    width: "42px",
-    height: "42px",
+    width: "38px",
+    height: "38px",
     borderRadius: "50%",
-    backgroundColor: "#11254E",
-    border: "1px solid #1D3B72",
-    color: "#F5F7FA",
+    backgroundColor: "#161B22",
+    border: "1px solid #30363D",
+    color: "#FFFFFF",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     textDecoration: "none",
-    transition: "all 0.2s ease",
   },
   userBtn: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
     textDecoration: "none",
-    color: "#F5F7FA",
+    color: "#FFFFFF",
     padding: "4px 12px 4px 4px",
     borderRadius: "9999px",
-    backgroundColor: "#11254E",
-    border: "1px solid #1D3B72",
-    transition: "all 0.2s ease",
+    backgroundColor: "#161B22",
+    border: "1px solid #30363D",
   },
   userName: {
     fontSize: "13px",

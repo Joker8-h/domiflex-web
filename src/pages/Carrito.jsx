@@ -1,33 +1,28 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { 
-  Navigation, 
-  ArrowLeft, 
-  MapPin, 
-  Tag, 
-  Clock, 
-  ShieldCheck, 
-  CreditCard, 
-  Banknote, 
+import {
+  Navigation,
+  ArrowLeft,
+  MapPin,
+  Tag,
+  Clock,
+  ShieldCheck,
+  CreditCard,
+  Banknote,
   Smartphone,
   Trash2,
-  ChevronRight,
-  Store
+  Store,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import theme from "../styles/theme";
-import tokens from "../design/tokens";
 import NavbarCustom from "../components/Navbar";
 import CartItem from "../components/CartItem";
 import EmptyState from "../components/ui/EmptyState";
 import { api } from "../api/client";
-import { useIsMobile } from "../hooks/useMediaQuery";
 import { loadCart, saveCart, clearCart } from "../lib/cartStorage";
 
 export default function Carrito() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useIsMobile();
   const stored = loadCart();
   const incomingCart = location.state?.cart;
   const incomingNegocio = location.state?.negocio ?? null;
@@ -46,7 +41,7 @@ export default function Carrito() {
   const [couponCode, setCouponCode] = useState("");
   const [discountRate, setDiscountRate] = useState(0);
   const [freeShipping, setFreeShipping] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("EFECTIVO"); // "EFECTIVO" | "ONLINE"
+  const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
 
   useEffect(() => {
     if (location.state?.cart?.length) {
@@ -83,7 +78,7 @@ export default function Carrito() {
   };
 
   const subtotal = useMemo(
-    () => cart.reduce((sum, item) => sum + Number(item.precio || 0) * item.cantidad, 0),
+    () => cart.reduce((sum, item) => sum + Number(item.precio || item.precioUnitario || 0) * item.cantidad, 0),
     [cart]
   );
   const domicilioLocal = Number(negocio?.costoEnvio ?? 3500);
@@ -102,14 +97,18 @@ export default function Carrito() {
     const run = async () => {
       setQuoting(true);
       try {
-        const data = await api.post("/pedidos/cotizar", {
-          negocioId: negocio.id,
-          latRecogida: negocio.latitud,
-          lngRecogida: negocio.longitud,
-          latEntrega: coords.lat,
-          lngEntrega: coords.lng,
-          items: cart.map((item) => ({ menuItemId: item.id, cantidad: item.cantidad })),
-        }, { signal: controller.signal });
+        const data = await api.post(
+          "/pedidos/cotizar",
+          {
+            negocioId: negocio.id,
+            latRecogida: negocio.latitud,
+            lngRecogida: negocio.longitud,
+            latEntrega: coords.lat,
+            lngEntrega: coords.lng,
+            items: cart.map((item) => ({ menuItemId: item.id, cantidad: item.cantidad })),
+          },
+          { signal: controller.signal }
+        );
         if (!controller.signal.aborted) setQuote(data);
       } catch (err) {
         if (!controller.signal.aborted) {
@@ -138,7 +137,6 @@ export default function Carrito() {
       },
       () => {
         setLocating(false);
-        // Fallback default coordinates (Popayán center)
         setCoords({ lat: 2.4448, lng: -76.6147 });
         toast.error("No se pudo obtener el GPS exacto. Usando ubicación estimada de Popayán.");
       },
@@ -161,7 +159,7 @@ export default function Carrito() {
     items: cart.map((item) => ({
       menuItemId: item.id,
       cantidad: item.cantidad,
-      precio: item.precio,
+      precio: item.precio ?? item.precioUnitario,
     })),
   });
 
@@ -170,11 +168,10 @@ export default function Carrito() {
     if (cart.length === 0) return false;
     if (!dirEntrega.trim()) {
       setFormError("Por favor ingresa tu dirección de entrega exacta.");
-      window.scrollTo({ top: 300, behavior: "smooth" });
+      window.scrollTo({ top: 260, behavior: "smooth" });
       return false;
     }
     if (!coords) {
-      // Set auto Popayán coordinate if user didn't press button
       setCoords({ lat: 2.4448, lng: -76.6147 });
     }
     return true;
@@ -197,7 +194,6 @@ export default function Carrito() {
         setPlacing(false);
       }
     } else {
-      // Pago online Wompi / PSE / Tarjeta
       try {
         const pedido = await api.post("/pedidos", datosPedido());
         clearCart();
@@ -243,25 +239,33 @@ export default function Carrito() {
     <div style={styles.page}>
       <NavbarCustom />
 
-      <main style={styles.mainContainer}>
-        {/* Breadcrumb / Top Bar */}
-        <div style={styles.topBar}>
-          <button 
-            type="button" 
-            style={styles.backBtn}
+      {/* Header oscuro estilo Boceto 4: "← Tu carrito" */}
+      <div style={styles.darkHeader}>
+        <div style={styles.darkHeaderInner}>
+          <button
+            type="button"
             onClick={() => navigate(-1)}
+            style={styles.headerBackBtn}
             aria-label="Volver"
           >
-            <ArrowLeft size={18} />
-            <span>Volver</span>
+            <ArrowLeft size={20} />
           </button>
-          <div style={styles.breadcrumb}>
-            <span style={{ color: tokens.colors.textMuted }}>Inicio</span>
-            <span style={{ color: tokens.colors.border }}>/</span>
-            <span style={{ color: tokens.colors.accent, fontWeight: 600 }}>Carrito de compras</span>
-          </div>
+          <h1 style={styles.headerTitle}>Tu carrito</h1>
+          {cart.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearCart}
+              style={styles.headerClearBtn}
+              title="Vaciar carrito"
+            >
+              <Trash2 size={16} />
+              <span>Vaciar</span>
+            </button>
+          )}
         </div>
+      </div>
 
+      <main style={styles.mainContainer}>
         {cart.length === 0 ? (
           <div style={styles.emptyContainer}>
             <EmptyState
@@ -274,56 +278,45 @@ export default function Carrito() {
           </div>
         ) : (
           <div style={styles.grid}>
-            {/* Left Column: Items & Delivery Info */}
+            {/* Columna izquierda: Productos + Dirección + Pago */}
             <div style={styles.leftCol}>
-              {/* Header Restaurant Badge */}
               {negocio && (
                 <div style={styles.restaurantBanner}>
                   <div style={styles.restaurantInfo}>
                     <div style={styles.restaurantIcon}>
-                      <Store size={22} color={tokens.colors.accent} />
+                      <Store size={20} color="#E30613" />
                     </div>
                     <div>
-                      <span style={styles.restaurantSub}>Pidiendo en:</span>
+                      <span style={styles.restaurantSub}>Restaurante seleccionado</span>
                       <h2 style={styles.restaurantTitle}>{negocio.nombre}</h2>
                     </div>
                   </div>
-                  <button 
-                    type="button" 
-                    onClick={handleClearCart} 
-                    style={styles.clearCartBtn}
-                    title="Vaciar carrito"
-                  >
-                    <Trash2 size={16} />
-                    <span>Vaciar</span>
-                  </button>
                 </div>
               )}
 
-              {/* Items List */}
+              {/* Lista de productos según Boceto 4 */}
               <section aria-label="Productos en el carrito" style={styles.itemsSection}>
-                <h3 style={styles.sectionHeader}>
-                  Productos seleccionados ({cart.reduce((c, i) => c + i.cantidad, 0)})
-                </h3>
-                {cart.map((item) => (
-                  <CartItem
-                    key={item.id}
-                    item={item}
-                    onUpdateQuantity={updateQuantity}
-                    onRemove={removeItem}
-                  />
-                ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {cart.map((item) => (
+                    <CartItem
+                      key={item.id}
+                      item={item}
+                      onUpdateQuantity={updateQuantity}
+                      onRemove={removeItem}
+                    />
+                  ))}
+                </div>
               </section>
 
-              {/* Delivery Address Card */}
+              {/* Dirección de entrega */}
               <section style={styles.card}>
                 <div style={styles.cardHeader}>
                   <div style={styles.iconCircle}>
-                    <MapPin size={20} color={tokens.colors.accent} />
+                    <MapPin size={20} color="#E30613" />
                   </div>
                   <div>
                     <h3 style={styles.cardTitle}>Dirección de entrega</h3>
-                    <p style={styles.cardSubtitle}>¿A dónde te llevamos este pedido?</p>
+                    <p style={styles.cardSubtitle}>¿A dónde te llevamos tu pedido?</p>
                   </div>
                 </div>
 
@@ -350,7 +343,7 @@ export default function Carrito() {
                     type="text"
                     value={dirEntrega}
                     onChange={(e) => setDirEntrega(e.target.value)}
-                    placeholder="Ej. Calle 5 # 12-45, Barrio Centro, Casa 3"
+                    placeholder="Ej. Calle 45 # 12-34, Barrio Centro"
                     style={styles.input}
                     autoComplete="street-address"
                     required
@@ -359,14 +352,14 @@ export default function Carrito() {
 
                 <div style={styles.formGroup}>
                   <label htmlFor="notas-entrega" style={styles.label}>
-                    Indicaciones especiales (opcional)
+                    Indicaciones adicionales (opcional)
                   </label>
                   <input
                     id="notas-entrega"
                     type="text"
                     value={notas}
                     onChange={(e) => setNotas(e.target.value)}
-                    placeholder="Ej. Timbre 201, dejar en portería, edificio blanco..."
+                    placeholder="Ej. Timbre 201, sin cebolla..."
                     style={styles.input}
                   />
                 </div>
@@ -377,36 +370,35 @@ export default function Carrito() {
                   disabled={locating}
                   style={styles.gpsBtn}
                 >
-                  <Navigation size={16} color={tokens.colors.accent} />
-                  <span>
+                  <Navigation size={16} color={coords ? "#16A34A" : "#E30613"} />
+                  <span style={{ color: coords ? "#16A34A" : "#E30613" }}>
                     {locating
                       ? "Obteniendo ubicación GPS…"
                       : coords
-                      ? "✓ Ubicación GPS verificada (clic para actualizar)"
+                      ? "✓ Ubicación GPS verificada"
                       : "Usar mi ubicación GPS actual"}
                   </span>
                 </button>
               </section>
 
-              {/* Payment Methods Card */}
+              {/* Método de pago */}
               <section style={styles.card}>
                 <div style={styles.cardHeader}>
                   <div style={styles.iconCircle}>
-                    <CreditCard size={20} color={tokens.colors.accent} />
+                    <CreditCard size={20} color="#E30613" />
                   </div>
                   <div>
                     <h3 style={styles.cardTitle}>Método de pago</h3>
-                    <p style={styles.cardSubtitle}>Elige cómo deseas abonar tu orden</p>
+                    <p style={styles.cardSubtitle}>Elige cómo deseas pagar tu orden</p>
                   </div>
                 </div>
 
                 <div style={styles.paymentMethodsGrid}>
-                  {/* Option 1: Cash */}
-                  <label 
+                  <label
                     style={{
                       ...styles.paymentOption,
-                      borderColor: paymentMethod === "EFECTIVO" ? tokens.colors.accent : tokens.colors.border,
-                      backgroundColor: paymentMethod === "EFECTIVO" ? "rgba(0, 229, 118, 0.08)" : tokens.colors.bgPrimary,
+                      borderColor: paymentMethod === "EFECTIVO" ? "#E30613" : "#E5E7EB",
+                      backgroundColor: paymentMethod === "EFECTIVO" ? "#FEF2F2" : "#FFFFFF",
                     }}
                   >
                     <input
@@ -419,19 +411,18 @@ export default function Carrito() {
                     />
                     <div style={styles.paymentInfo}>
                       <div style={styles.paymentTitleRow}>
-                        <Banknote size={20} color={paymentMethod === "EFECTIVO" ? tokens.colors.accent : tokens.colors.textPrimary} />
+                        <Banknote size={20} color={paymentMethod === "EFECTIVO" ? "#E30613" : "#11141A"} />
                         <span style={styles.paymentName}>Efectivo contra entrega</span>
                       </div>
-                      <p style={styles.paymentDesc}>Pagas al recibir tu comida directamente al domiciliario.</p>
+                      <p style={styles.paymentDesc}>Pagas al recibir tu pedido directamente al repartidor.</p>
                     </div>
                   </label>
 
-                  {/* Option 2: Online / Wompi */}
-                  <label 
+                  <label
                     style={{
                       ...styles.paymentOption,
-                      borderColor: paymentMethod === "ONLINE" ? tokens.colors.accent : tokens.colors.border,
-                      backgroundColor: paymentMethod === "ONLINE" ? "rgba(0, 229, 118, 0.08)" : tokens.colors.bgPrimary,
+                      borderColor: paymentMethod === "ONLINE" ? "#E30613" : "#E5E7EB",
+                      backgroundColor: paymentMethod === "ONLINE" ? "#FEF2F2" : "#FFFFFF",
                     }}
                   >
                     <input
@@ -444,25 +435,25 @@ export default function Carrito() {
                     />
                     <div style={styles.paymentInfo}>
                       <div style={styles.paymentTitleRow}>
-                        <Smartphone size={20} color={paymentMethod === "ONLINE" ? tokens.colors.accent : tokens.colors.textPrimary} />
-                        <span style={styles.paymentName}>Nequi, Daviplata, Tarjetas (Wompi)</span>
+                        <Smartphone size={20} color={paymentMethod === "ONLINE" ? "#E30613" : "#11141A"} />
+                        <span style={styles.paymentName}>Nequi, PSE, Tarjetas (Wompi)</span>
                       </div>
-                      <p style={styles.paymentDesc}>Pago en línea inmediato 100% seguro con pasarela Wompi Bancolombia.</p>
+                      <p style={styles.paymentDesc}>Pago en línea seguro e inmediato con Wompi.</p>
                     </div>
                   </label>
                 </div>
               </section>
 
-              {/* Coupon Section */}
+              {/* Cupón */}
               <section style={styles.couponCard}>
                 <form onSubmit={handleApplyCoupon} style={styles.couponForm}>
                   <div style={styles.couponInputWrap}>
-                    <Tag size={18} color={tokens.colors.textMuted} style={styles.couponIcon} />
+                    <Tag size={18} color="#9CA3AF" style={styles.couponIcon} />
                     <input
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="¿Tienes un cupón de descuento?"
+                      placeholder="Código promocional (ej. RAPITIPICA)"
                       style={styles.couponInput}
                     />
                   </div>
@@ -473,81 +464,66 @@ export default function Carrito() {
               </section>
             </div>
 
-            {/* Right Column: Order Summary (Sticky) */}
+            {/* Columna derecha: Resumen de pago exacto al Boceto 4 (Subtotal, Domicilio, Total + Botón rojo "Continuar") */}
             <aside style={styles.rightCol}>
               <div style={styles.summaryCard}>
-                <h3 style={styles.summaryTitle}>Resumen del pedido</h3>
-
                 <div style={styles.summaryLines}>
                   <div style={styles.summaryLine}>
-                    <span style={styles.summaryLabel}>Subtotal de productos</span>
-                    <span style={styles.summaryValue}>${subtotal.toLocaleString()}</span>
+                    <span style={styles.summaryLabel}>Subtotal</span>
+                    <span style={styles.summaryValue}>${subtotal.toLocaleString("es-CO")}</span>
                   </div>
 
                   <div style={styles.summaryLine}>
-                    <span style={styles.summaryLabel}>Costo de entrega</span>
+                    <span style={styles.summaryLabel}>Domicilio</span>
                     <span style={styles.summaryValue}>
-                      {quoting ? "Calculando..." : `$${domicilio.toLocaleString()}`}
+                      {quoting ? "Calculando..." : `$${domicilio.toLocaleString("es-CO")}`}
                     </span>
                   </div>
 
-                  <div style={styles.summaryLine}>
-                    <span style={styles.summaryLabel}>Tarifa de servicio</span>
-                    <span style={{ ...styles.summaryValue, color: tokens.colors.accent }}>$0 (Gratis)</span>
-                  </div>
+                  {discountAmount > 0 && (
+                    <div style={styles.summaryLine}>
+                      <span style={{ ...styles.summaryLabel, color: "#16A34A" }}>Descuento cupón</span>
+                      <span style={{ ...styles.summaryValue, color: "#16A34A" }}>
+                        -${discountAmount.toLocaleString("es-CO")}
+                      </span>
+                    </div>
+                  )}
 
                   <div style={styles.divider} />
 
                   <div style={styles.totalLine}>
-                    <div>
-                      <span style={styles.totalLabel}>Total a pagar</span>
-                      <span style={styles.totalSub}>Incluye IVA y domicilio</span>
-                    </div>
+                    <span style={styles.totalLabel}>Total</span>
                     <span style={styles.totalPrice}>
-                      {quoting ? "..." : `$${total.toLocaleString()}`}
+                      {quoting ? "..." : `$${total.toLocaleString("es-CO")}`}
                     </span>
                   </div>
                 </div>
 
-                {/* Estimate & Guarantees */}
                 <div style={styles.guaranteeBox}>
                   <div style={styles.guaranteeItem}>
-                    <Clock size={16} color={tokens.colors.accent} />
-                    <span>Tiempo estimado: <strong>25 - 35 min</strong></span>
+                    <Clock size={16} color="#16A34A" />
+                    <span>Entrega estimada: <strong>25 - 35 min</strong></span>
                   </div>
                   <div style={styles.guaranteeItem}>
-                    <ShieldCheck size={16} color={tokens.colors.accent} />
-                    <span>Garantía Rapitipica: Comida fresca y a tiempo</span>
+                    <ShieldCheck size={16} color="#16A34A" />
+                    <span>Pedido protegido por Rapitipica</span>
                   </div>
                 </div>
 
-                {/* Form Error Alert */}
                 {formError && (
                   <div role="alert" style={styles.errorAlert}>
                     ⚠️ {formError}
                   </div>
                 )}
 
-                {/* Main Action Button */}
                 <button
                   type="button"
                   style={styles.confirmBtn}
                   disabled={placing || quoting}
                   onClick={handleProcesarPedido}
                 >
-                  {placing ? (
-                    "Confirmando pedido..."
-                  ) : paymentMethod === "EFECTIVO" ? (
-                    `Pedir en efectivo • $${total.toLocaleString()}`
-                  ) : (
-                    `Pagar en línea • $${total.toLocaleString()}`
-                  )}
-                  <ChevronRight size={20} />
+                  {placing ? "Procesando..." : "Continuar"}
                 </button>
-
-                <p style={styles.secureText}>
-                  🔒 Transacción segura y verificada por Rapitipica
-                </p>
               </div>
             </aside>
           </div>
@@ -560,149 +536,148 @@ export default function Carrito() {
 const styles = {
   page: {
     minHeight: "100vh",
-    backgroundColor: tokens.colors.bgPrimary,
-    color: tokens.colors.textPrimary,
-    fontFamily: tokens.typography.fontFamily,
-    paddingBottom: "80px",
+    backgroundColor: "#F8F9FA",
+    color: "#11141A",
+    paddingBottom: "90px",
+  },
+  darkHeader: {
+    backgroundColor: "#0D1117",
+    color: "#FFFFFF",
+    padding: "16px 20px",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  },
+  darkHeaderInner: {
+    maxWidth: "1100px",
+    margin: "0 auto",
+    display: "flex",
+    alignItems: "center",
+    gap: "14px",
+  },
+  headerBackBtn: {
+    width: "38px",
+    height: "38px",
+    borderRadius: "50%",
+    border: "1px solid rgba(255,255,255,0.16)",
+    backgroundColor: "rgba(255,255,255,0.08)",
+    color: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+  },
+  headerTitle: {
+    fontSize: "1.25rem",
+    fontWeight: 800,
+    margin: 0,
+    flex: 1,
+    color: "#FFFFFF",
+  },
+  headerClearBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "6px",
+    backgroundColor: "rgba(227, 6, 19, 0.15)",
+    color: "#FF6B6B",
+    border: "1px solid rgba(227, 6, 19, 0.35)",
+    borderRadius: "9999px",
+    padding: "6px 12px",
+    fontSize: "0.82rem",
+    fontWeight: 700,
+    cursor: "pointer",
   },
   mainContainer: {
-    maxWidth: "1200px",
+    maxWidth: "1100px",
     margin: "0 auto",
     padding: "24px 20px",
   },
-  topBar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "24px",
-  },
-  backBtn: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.full,
-    padding: "8px 16px",
-    color: tokens.colors.textPrimary,
-    cursor: "pointer",
-    fontSize: tokens.fontSize.sm,
-    fontWeight: 500,
-    transition: "background 0.2s ease, border-color 0.2s ease",
-  },
-  breadcrumb: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: tokens.fontSize.sm,
-  },
   emptyContainer: {
-    backgroundColor: tokens.colors.bgCard,
-    borderRadius: tokens.borderRadius.lg,
-    border: `1px solid ${tokens.colors.border}`,
+    backgroundColor: "#FFFFFF",
+    borderRadius: "20px",
+    border: "1px solid #E5E7EB",
     padding: "48px 24px",
     textAlign: "center",
   },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-    gap: "32px",
+    gap: "24px",
     alignItems: "start",
   },
   leftCol: {
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
+    gap: "18px",
   },
   restaurantBanner: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.md,
-    padding: "16px 20px",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "16px",
+    padding: "14px 18px",
   },
   restaurantInfo: {
     display: "flex",
     alignItems: "center",
-    gap: "14px",
+    gap: "12px",
   },
   restaurantIcon: {
-    width: "44px",
-    height: "44px",
-    borderRadius: tokens.borderRadius.sm,
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
+    width: "40px",
+    height: "40px",
+    borderRadius: "12px",
+    backgroundColor: "#FEF2F2",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   restaurantSub: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
+    fontSize: "0.75rem",
+    color: "#6B7280",
     display: "block",
   },
   restaurantTitle: {
-    fontSize: tokens.fontSize.lg,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
+    fontSize: "1.05rem",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
-  },
-  clearCartBtn: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "6px",
-    background: "transparent",
-    border: "none",
-    color: "#EF4444",
-    fontSize: tokens.fontSize.sm,
-    cursor: "pointer",
-    padding: "6px 10px",
-    borderRadius: tokens.borderRadius.sm,
   },
   itemsSection: {
     display: "flex",
     flexDirection: "column",
   },
-  sectionHeader: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    marginBottom: "12px",
-  },
   card: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.md,
-    padding: "24px",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "18px",
+    padding: "20px",
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: "14px",
   },
   cardHeader: {
     display: "flex",
     alignItems: "center",
-    gap: "14px",
-    marginBottom: "4px",
+    gap: "12px",
   },
   iconCircle: {
     width: "40px",
     height: "40px",
     borderRadius: "50%",
-    backgroundColor: "rgba(0, 229, 118, 0.12)",
+    backgroundColor: "#FEF2F2",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   cardTitle: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
+    fontSize: "1rem",
+    fontWeight: 800,
+    color: "#11141A",
     margin: 0,
   },
   cardSubtitle: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
+    fontSize: "0.8rem",
+    color: "#6B7280",
     margin: 0,
   },
   formGroup: {
@@ -711,55 +686,50 @@ const styles = {
     gap: "6px",
   },
   label: {
-    fontSize: tokens.fontSize.sm,
-    fontWeight: tokens.fontWeight.medium,
-    color: tokens.colors.textSecondary,
+    fontSize: "0.85rem",
+    fontWeight: 700,
+    color: "#374151",
   },
   input: {
     width: "100%",
-    backgroundColor: tokens.colors.bgPrimary,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "12px 16px",
-    color: tokens.colors.textPrimary,
-    fontSize: tokens.fontSize.md,
+    backgroundColor: "#F8F9FA",
+    border: "1px solid #D1D5DB",
+    borderRadius: "12px",
+    padding: "11px 14px",
+    color: "#11141A",
+    fontSize: "0.95rem",
     outline: "none",
-    fontFamily: tokens.typography.fontFamily,
-    transition: "border-color 0.2s ease",
   },
   gpsBtn: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "10px",
-    backgroundColor: "rgba(0, 229, 118, 0.08)",
-    border: `1px solid ${tokens.colors.accent}`,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "12px 16px",
-    color: tokens.colors.accent,
-    fontSize: tokens.fontSize.sm,
-    fontWeight: tokens.fontWeight.semibold,
+    gap: "8px",
+    backgroundColor: "#FEF2F2",
+    border: "1px solid #FECACA",
+    borderRadius: "12px",
+    padding: "11px 16px",
+    fontSize: "0.88rem",
+    fontWeight: 700,
     cursor: "pointer",
-    transition: "background 0.2s ease",
   },
   paymentMethodsGrid: {
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    gap: "10px",
   },
   paymentOption: {
     display: "flex",
     alignItems: "flex-start",
-    gap: "14px",
-    padding: "16px",
-    borderRadius: tokens.borderRadius.md,
-    border: `1px solid ${tokens.colors.border}`,
+    gap: "12px",
+    padding: "14px",
+    borderRadius: "14px",
+    border: "1.5px solid #E5E7EB",
     cursor: "pointer",
-    transition: "all 0.2s ease",
   },
   radioInput: {
     marginTop: "4px",
-    accentColor: tokens.colors.accent,
+    accentColor: "#E30613",
     cursor: "pointer",
   },
   paymentInfo: {
@@ -769,24 +739,23 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    marginBottom: "4px",
+    marginBottom: "2px",
   },
   paymentName: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.semibold,
-    color: tokens.colors.textPrimary,
+    fontSize: "0.95rem",
+    fontWeight: 700,
+    color: "#11141A",
   },
   paymentDesc: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
+    fontSize: "0.8rem",
+    color: "#6B7280",
     margin: 0,
-    lineHeight: 1.4,
   },
   couponCard: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.md,
-    padding: "16px 20px",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "16px",
+    padding: "14px 16px",
   },
   couponForm: {
     display: "flex",
@@ -798,144 +767,119 @@ const styles = {
   },
   couponIcon: {
     position: "absolute",
-    left: "14px",
+    left: "12px",
     top: "50%",
     transform: "translateY(-50%)",
   },
   couponInput: {
     width: "100%",
-    backgroundColor: tokens.colors.bgPrimary,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "12px 14px 12px 42px",
-    color: tokens.colors.textPrimary,
-    fontSize: tokens.fontSize.sm,
+    backgroundColor: "#F8F9FA",
+    border: "1px solid #D1D5DB",
+    borderRadius: "10px",
+    padding: "10px 12px 10px 38px",
+    color: "#11141A",
+    fontSize: "0.9rem",
     outline: "none",
   },
   couponBtn: {
-    backgroundColor: "transparent",
-    border: `1px solid ${tokens.colors.accent}`,
-    color: tokens.colors.accent,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "0 20px",
-    fontWeight: tokens.fontWeight.bold,
-    fontSize: tokens.fontSize.sm,
+    backgroundColor: "#0D1117",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "10px",
+    padding: "0 18px",
+    fontWeight: 700,
+    fontSize: "0.88rem",
     cursor: "pointer",
-    transition: "background 0.2s ease",
   },
   rightCol: {
     position: "sticky",
-    top: "100px",
+    top: "88px",
   },
   summaryCard: {
-    backgroundColor: tokens.colors.bgCard,
-    border: `1px solid ${tokens.colors.border}`,
-    borderRadius: tokens.borderRadius.md,
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E7EB",
+    borderRadius: "20px",
     padding: "24px",
-    boxShadow: tokens.shadows.card,
-  },
-  summaryTitle: {
-    fontSize: tokens.fontSize.lg,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    marginBottom: "20px",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.05)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
   },
   summaryLines: {
     display: "flex",
     flexDirection: "column",
     gap: "12px",
-    marginBottom: "20px",
   },
   summaryLine: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    fontSize: "0.95rem",
   },
   summaryLabel: {
-    fontSize: tokens.fontSize.sm,
-    color: tokens.colors.textSecondary,
+    color: "#4B5563",
+    fontWeight: 600,
   },
   summaryValue: {
-    fontSize: tokens.fontSize.sm,
-    color: tokens.colors.textPrimary,
-    fontWeight: tokens.fontWeight.semibold,
+    color: "#11141A",
+    fontWeight: 700,
   },
   divider: {
     height: "1px",
-    backgroundColor: tokens.colors.border,
-    margin: "8px 0",
+    backgroundColor: "#E5E7EB",
+    margin: "4px 0",
   },
   totalLine: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "6px",
   },
   totalLabel: {
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.textPrimary,
-    display: "block",
-  },
-  totalSub: {
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
-    display: "block",
+    fontSize: "1.15rem",
+    fontWeight: 800,
+    color: "#11141A",
   },
   totalPrice: {
-    fontSize: tokens.fontSize["2xl"],
-    fontWeight: tokens.fontWeight.bold,
-    color: tokens.colors.accent,
+    fontSize: "1.35rem",
+    fontWeight: 900,
+    color: "#11141A",
   },
   guaranteeBox: {
-    backgroundColor: tokens.colors.bgPrimary,
-    borderRadius: tokens.borderRadius.sm,
-    padding: "14px",
+    backgroundColor: "#F0FDF4",
+    border: "1px solid #BBF7D0",
+    borderRadius: "12px",
+    padding: "12px 14px",
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
-    marginBottom: "20px",
-    border: `1px solid ${tokens.colors.border}`,
+    gap: "6px",
   },
   guaranteeItem: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textSecondary,
+    gap: "8px",
+    fontSize: "0.82rem",
+    color: "#166534",
   },
   errorAlert: {
-    backgroundColor: "rgba(239, 68, 68, 0.15)",
-    border: "1px solid #EF4444",
-    borderRadius: tokens.borderRadius.sm,
-    padding: "12px 14px",
-    color: "#FCA5A5",
-    fontSize: tokens.fontSize.xs,
-    marginBottom: "16px",
-    lineHeight: 1.4,
+    backgroundColor: "#FEF2F2",
+    border: "1px solid #FECACA",
+    color: "#DC2626",
+    borderRadius: "12px",
+    padding: "12px",
+    fontSize: "0.86rem",
+    fontWeight: 700,
   },
   confirmBtn: {
     width: "100%",
-    padding: "16px 20px",
-    backgroundColor: tokens.colors.accent,
-    color: "#0B1F44",
+    backgroundColor: "#E30613",
+    color: "#FFFFFF",
     border: "none",
-    borderRadius: tokens.borderRadius.full,
-    fontSize: tokens.fontSize.md,
-    fontWeight: tokens.fontWeight.bold,
+    borderRadius: "9999px",
+    padding: "15px 24px",
+    fontSize: "1.05rem",
+    fontWeight: 800,
     cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    boxShadow: tokens.shadows.glow,
-    transition: "transform 0.2s ease, background-color 0.2s ease",
-  },
-  secureText: {
-    textAlign: "center",
-    fontSize: tokens.fontSize.xs,
-    color: tokens.colors.textMuted,
-    marginTop: "16px",
-    marginBottom: 0,
+    boxShadow: "0 8px 20px rgba(227, 6, 19, 0.3)",
+    transition: "transform 0.15s ease",
   },
 };
