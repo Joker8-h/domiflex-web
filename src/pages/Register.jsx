@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button, Alert, ProgressBar, Image, Modal } from "react-bootstrap";
-import { CircleCheck, ArrowRight, ArrowLeft, Mail, EyeOff, Camera, Video, Phone, Check, User, Lock, Eye } from "lucide-react";
+import { CircleCheck, ArrowRight, ArrowLeft, Mail, EyeOff, Camera, Video, Phone, Check, User, Lock, Eye, Upload } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
-import NavbarCustom from '../components/Navbar'
+import NavbarCustom from '../components/Navbar';
 import { API_URL } from '../config';
 import RapitipicaLogo from '../components/common/RapitipicaLogo';
 import EscenaHomeBase from './Imagenes/HomeBaseImage.png';
 import theme from '../styles/theme';
+import { useAuth } from './context/AuthContext';
 
 const termsText = `CONTRATO MARCO DE LICENCIA DE USO DE SOFTWARE, INTERMEDIACIÓN
 TECNOLÓGICA Y ESTATUTO DE TÉRMINOS Y CONDICIONES GLOBALES DE LA
@@ -70,7 +71,7 @@ de su afiliación y pago al Sistema de Seguridad Social Integral (Salud, Pensió
 ARL). El Repartidor mantendrá indemne a DOMIFLEX ante cualquier reclamación
 de la UGPP o entidades de seguridad social.
 
-CAPÍTULO III: MODELOS ECONÓMICOS Y PACTOS DE ESTABILIDAD
+CAPÍTULO III: MODELOS ECONÓMICO Y PACTOS DE ESTABILIDAD
 
 ARTÍCULO 5: ESQUEMAS DE CONTRAPRESTACIÓN
 El Repartidor podrá optar por dos modalidades de licenciamiento:
@@ -79,89 +80,28 @@ intermediación exitosa (10% hasta 5 km, 12% hasta 15 km, 15% superior). Este va
 plataforma (base $2000 + $800/km).
 • PLAN PRO REPARTIDOR FUNDADOR: Pago de una suscripción mensual
 de TREINTA MIL PESOS M/CTE ($30.000 COP).
-o Párrafo Primero (Estabilidad): Los Repartidores que se vinculen
-bajo esta modalidad durante la etapa de lanzamiento en Popayán
-gozarán de un Pacto de Estabilidad de Precio, manteniendo esta
-tarifa mensual de por vida, siempre que no interrumpan su
-suscripción por más de 30 días.
-o Párrafo Segundo: DOMIFLEX podrá ajustar el
-valor de este plan para futuros usuarios según la inflación o el IPC,
-sin afectar a los "Repartidores Fundadores".
-
-CAPÍTULO IV: EXONERACIÓN ABSOLUTA DE RESPONSABILIDAD (BLINDAJE
-CIVIL Y PENAL)
-
-ARTÍCULO 6: CLÁUSULA DE INDEMNIDAD POR RIESGO OPERATIVO
-Dado que el reparto es una actividad con riesgo operativo, el
-Repartidor y el Usuario Cliente asumen el riesgo total de la operación.
-DOMIFLEX no responderá solidaria ni directamente por:
-1. Accidentes de Tránsito: Todo siniestro se rige por el SOAT del vehículo y la
-responsabilidad civil del propietario.
-2. Responsabilidad Penal: En caso de delitos cometidos durante el domicilio
-(hurto, acoso, lesiones, homicidio), la responsabilidad será estrictamente
-individual del autor. DOMIFLEX no garantiza la idoneidad moral de los
-usuarios, limitándose a la verificación documental estándar.
-3. Contenidos y Objetos: Se prohíbe el envío de armas, drogas o
-sustancias explosivas. El Repartidor debe inspeccionar los paquetes;
-DOMIFLEX no custodia ni conoce el contenido de lo transportado.
-
-CAPÍTULO V: SEGURIDAD, PRUEBAS JUDICIALES Y TECNOLOGÍA
-
-ARTÍCULO 7: CONSENTIMIENTO PARA EL USO DE MEDIOS AUDIOVISUALES
-En virtud de la Ley 906 de 2004 (Código de Procedimiento Penal), las PARTES
-otorgan su consentimiento expreso para que la plataforma registre ubicación GPS
-durante los domicilios.
-• Finalidad: Estos registros serán custodiados bajo estándares de
-seguridad informática y solo serán revelados ante orden judicial o para
-dirimir conflictos internos de la plataforma.
-• Valor Probatorio: Las PARTES aceptan que estos registros constituyen
-prueba plena en procesos civiles o denuncias ante la Fiscalía General de la
-Nación.
-
-CAPÍTULO VI: POLÍTICA DE DATOS PERSONALES (HABEAS DATA)
-
-ARTÍCULO 8: CUMPLIMIENTO LEY 1581 DE 2012
-DOMIFLEX S.A.S., como Responsable del Tratamiento, recolectará datos
-sensibles (biometría, ubicación GPS, registros de entrega). El titular autoriza el
-tratamiento de estos datos para:
-1. Geolocalización en tiempo real del servicio.
-2. Verificación de identidad mediante reconocimiento facial.
-3. Fines comerciales y de marketing de DOMIFLEX.
-
-CAPÍTULO VII: RÉGIMEN DISCIPLINARIO Y PENALIDADES
-
-ARTÍCULO 9: MULTAS POR CANCELACIÓN (CLÁUSULA PENAL)
-Para proteger la confianza del consumidor, se establecen multas por cancelación
-injustificada:
-• A partir de la 3ra cancelación: $2.000 COP.
-• A partir de la 5ta cancelación: $5.000 COP. Estas multas se consideran una
-estimación anticipada de perjuicios por lucro cesante y daño a la imagen
-de la plataforma.
-
-CAPÍTULO VIII: RESOLUCIÓN DE CONFLICTOS Y CLÁUSULA COMPROMISORIA
-
-ARTÍCULO 10: PROCEDIMIENTO DE LEY
-Toda controversia se resolverá bajo los principios de economía y celeridad
-procesal:
-1. Etapa de Arreglo Directo: 15 días hábiles mediante comunicación escrita
-a somosdomiflex@gmail.com.
-2. Conciliación Obligatoria: En caso de fracaso, se acudirá a un Centro de
-Conciliación en Popayán, conforme a la Ley 640 de 2001.
-3. Jurisdicción Ordinaria: Los jueces civiles del circuito de Popayán serán los
-competentes para conocer cualquier demanda.
 
 DECLARACIÓN DE ACEPTACIÓN: El Usuario y/o Repartidor manifiesta que ha
-leído este documento de 25 Capítulos y 120 Artículos (representados en este
-estatuto marco), que entiende las implicaciones de la ausencia de relación laboral
+leído este documento, que entiende las implicaciones de la ausencia de relación laboral
 y la exoneración de responsabilidad de DOMIFLEX, y que acepta cada cláusula
-como ley para las partes.
+como ley para las partes.`;
 
-Declaro que he leído, entendido y aceptado de manera libre, previa, expresa e informada el Contrato Marco de Licencia de Uso de Software, Intermediación Tecnológica y Términos y Condiciones de la plataforma DOMIFLEX S.A.S.; reconozco la inexistencia de relación laboral con la compañía, acepto la exoneración de responsabilidad de DOMIFLEX como mero corredor tecnológico, autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 y otorgo consentimiento para el uso de medios audiovisuales como prueba judicial.`;
+const ROLE_OPTIONS = [
+    { key: "CLIENTE", icon: "🍔", title: "Cliente", desc: "Pide comida y mercado", color: "#E30613" },
+    { key: "COMERCIO", icon: "🏪", title: "Negocio", desc: "Vende con domicilios", color: "#16A34A" },
+    { key: "REPARTIDOR", icon: "🛵", title: "Repartidor", desc: "Entrega pedidos", color: "#0D1117" },
+];
 
 function Register() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const { login } = useAuth();
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const fileInputRef = useRef(null);
+
+    const initialRol = (searchParams.get("rol") || "CLIENTE").toUpperCase();
+    const validInitialRol = ["CLIENTE", "COMERCIO", "REPARTIDOR"].includes(initialRol) ? initialRol : "CLIENTE";
 
     const [step, setStep] = useState(1);
     const [nombre, setNombre] = useState("");
@@ -172,7 +112,14 @@ function Register() {
     const [fotoPreview, setFotoPreview] = useState("");
     const [nombreEmergencia, setNombreEmergencia] = useState("");
     const [numeroEmergencia, setNumeroEmergencia] = useState("");
-    const [rol, setRol] = useState("CLIENTE");
+    const [rol, setRol] = useState(validInitialRol);
+
+    useEffect(() => {
+        const paramRol = (searchParams.get("rol") || "").toUpperCase();
+        if (["CLIENTE", "COMERCIO", "REPARTIDOR"].includes(paramRol)) {
+            setRol(paramRol);
+        }
+    }, [searchParams]);
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -201,7 +148,7 @@ function Register() {
             setShowCamera(true);
             setTimeout(() => { if (videoRef.current) videoRef.current.srcObject = mediaStream; }, 100);
         } catch (err) {
-            toast.error('Error al acceder a la cámara.');
+            toast.error('No se detectó cámara. Puedes subir una imagen desde tu dispositivo.');
         }
     };
 
@@ -226,6 +173,19 @@ function Register() {
             detenerCamara();
             toast.success('¡Foto tomada!');
         }
+    };
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const res = String(reader.result || "");
+            setFotoBase64(res);
+            setFotoPreview(res);
+            toast.success("Imagen cargada correctamente");
+        };
+        reader.readAsDataURL(file);
     };
 
     async function handleRequestOtp() {
@@ -289,17 +249,34 @@ function Register() {
                 telefono, 
                 password, 
                 rol, 
-                image: fotoBase64,
-                nombreEmergencia,
-                numeroEmergencia
+                image: fotoBase64 || undefined,
+                nombreEmergencia: nombreEmergencia || nombre,
+                numeroEmergencia: numeroEmergencia || telefono
             };
             const respuesta = await fetch(`${API_URL}/auth/registro`, {
                 method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datosEnviar)
             });
             if (respuesta.ok) {
-                toast.success('¡Registro exitoso!');
-                setTimeout(() => navigate("/login"), 2000);
+                toast.success('¡Cuenta creada exitosamente!');
+                // Auto-login tras registro para llevar directo al panel de su rol
+                try {
+                    const loginRes = await fetch(`${API_URL}/auth/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const loginData = await loginRes.json();
+                    if (loginRes.ok && loginData.token) {
+                        login(loginData.token, loginData.usuario);
+                        if (rol === "COMERCIO") return navigate("/comercio");
+                        if (rol === "REPARTIDOR") return navigate("/vehicle-registration");
+                        return navigate("/restaurantes");
+                    }
+                } catch {
+                    // Fallback a login si falla el auto-login
+                }
+                setTimeout(() => navigate("/login"), 1200);
             } else {
                 const data = await respuesta.json();
                 setError(data.error || "Error en el registro.");
@@ -332,8 +309,15 @@ function Register() {
     const handleNextStep = () => {
         if (step === 1) return handleRequestOtp();
         if (step === 2) return handleVerifyOtp();
-        if (step === 3 && (!nombre || !telefono || !nombreEmergencia || !numeroEmergencia)) return toast.error("Completa todos los campos, incluyendo los de emergencia");
-        if (step === 4 && !fotoBase64) return toast.error("Toma una foto");
+        if (step === 3) {
+            if (!nombre || !telefono) return toast.error("Completa tu nombre y teléfono");
+            if (rol === "REPARTIDOR" && (!nombreEmergencia || !numeroEmergencia)) {
+                return toast.error("Para Repartidor es obligatorio el contacto de emergencia");
+            }
+        }
+        if (step === 4 && rol === "REPARTIDOR" && !fotoBase64) {
+            return toast.error("Para Repartidor es obligatorio subir o tomar tu foto de verificación");
+        }
         if (step === 5 && (!isPasswordValid() || !password)) return toast.error("La contraseña debe cumplir todos los requisitos");
         setStep(step + 1);
     };
@@ -365,7 +349,7 @@ function Register() {
         border: 'none',
         borderRadius: br.md,
         fontWeight: theme.fontWeight.bold,
-        color: '#000',
+        color: '#FFFFFF',
         fontSize: fs.md,
         cursor: 'pointer',
         transition: theme.transitions.fast,
@@ -412,7 +396,7 @@ function Register() {
                             border: `1px solid ${s.border}`,
                             borderRadius: br.sm,
                         },
-                        success: { iconTheme: { primary: s.accent, secondary: '#000' } },
+                        success: { iconTheme: { primary: '#16A34A', secondary: '#fff' } },
                         error: { iconTheme: { primary: s.danger, secondary: '#fff' } },
                     }}
                 />
@@ -420,7 +404,7 @@ function Register() {
 
                 <Container className="d-flex flex-column justify-content-center flex-grow-1 py-4">
                     <Row className="justify-content-center align-items-center g-0">
-                        <Col xs={12} md={10} lg={5} xl={4} className="p-3">
+                        <Col xs={12} md={10} lg={5} xl={5} className="p-3">
                             <div style={{
                                 backgroundColor: s.bgCard,
                                 borderRadius: br.lg,
@@ -447,13 +431,13 @@ function Register() {
                                         <div style={{
                                             width: `${(step / 6) * 100}%`,
                                             height: '100%',
-                                            background: `linear-gradient(90deg, ${s.accent}, ${s.accentLight})`,
+                                            background: `linear-gradient(90deg, ${s.accent}, #16A34A)`,
                                             borderRadius: br.lg,
                                             transition: 'width 0.4s ease',
                                         }} />
                                     </div>
                                     <small style={{ color: s.textMuted, display: 'block', marginTop: sp.sm, fontSize: fs.xs }}>
-                                        Paso {step} de 6
+                                        Paso {step} de 6 • Perfil: <strong>{rol}</strong>
                                     </small>
                                 </div>
 
@@ -474,12 +458,41 @@ function Register() {
                                 <Form onSubmit={guardar}>
                                     {step === 1 && (
                                         <div>
-                                            <p style={{ color: s.textSecondary, fontSize: fs.sm, textAlign: 'center', marginBottom: sp.lg }}>
-                                                Ingresa tu correo para recibir un código de verificación.
-                                            </p>
+                                            <label style={{ ...labelStyle, textAlign: 'center', marginBottom: '10px' }}>
+                                                1. ¿Cómo quieres registrarte en Rapitipica?
+                                            </label>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: sp.lg }}>
+                                                {ROLE_OPTIONS.map((opt) => {
+                                                    const selected = rol === opt.key;
+                                                    return (
+                                                        <button
+                                                            key={opt.key}
+                                                            type="button"
+                                                            onClick={() => setRol(opt.key)}
+                                                            style={{
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                alignItems: 'center',
+                                                                gap: '4px',
+                                                                padding: '12px 6px',
+                                                                borderRadius: '14px',
+                                                                border: selected ? `2px solid ${opt.color}` : `1px solid ${s.border}`,
+                                                                backgroundColor: selected ? `${opt.color}12` : s.bgInput,
+                                                                cursor: 'pointer',
+                                                                transition: 'all 0.15s ease',
+                                                            }}
+                                                        >
+                                                            <span style={{ fontSize: '22px' }}>{opt.icon}</span>
+                                                            <span style={{ fontSize: '12.5px', fontWeight: 800, color: s.textPrimary }}>{opt.title}</span>
+                                                            <span style={{ fontSize: '10.5px', color: s.textMuted, textAlign: 'center', lineHeight: 1.2 }}>{opt.desc}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+
                                             <Form.Group style={{ marginBottom: sp.lg }}>
                                                 <label htmlFor="register-email" style={{ display: 'block', fontSize: fs.sm, fontWeight: theme.fontWeight.medium, color: s.textSecondary, marginBottom: '6px' }}>
-                                                    Correo electrónico
+                                                    2. Ingresa tu correo electrónico para verificar
                                                 </label>
                                                 <Form.Control
                                                     id="register-email"
@@ -491,8 +504,6 @@ function Register() {
                                                     inputMode="email"
                                                     required
                                                     style={inputStyle}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
                                                 />
                                             </Form.Group>
                                             <button type="button" onClick={handleNextStep} disabled={loading} style={btnPrimary}>
@@ -525,8 +536,6 @@ function Register() {
                                                         fontSize: '1.5rem',
                                                         letterSpacing: '8px',
                                                     }}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
                                                 />
                                             </Form.Group>
                                             <button type="button" onClick={handleNextStep} disabled={loading || otp.length !== 6} style={{ ...btnPrimary, marginBottom: sp.md }}>
@@ -546,23 +555,21 @@ function Register() {
                                     {step === 3 && (
                                         <div>
                                             <Form.Group style={{ marginBottom: sp.md }}>
-                                                <Form.Control type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre Completo" required style={inputStyle}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
-                                                />
+                                                <label style={labelStyle}>
+                                                    {rol === "COMERCIO" ? "Nombre del Propietario o Representante *" : "Nombre Completo *"}
+                                                </label>
+                                                <Form.Control type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej. Juan Pérez" required style={inputStyle} />
                                             </Form.Group>
                                             <Form.Group style={{ marginBottom: sp.md }}>
-                                                <Form.Control type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="Teléfono" required style={inputStyle}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
-                                                />
+                                                <label style={labelStyle}>Teléfono / WhatsApp *</label>
+                                                <Form.Control type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="Ej. 3101234567" required style={inputStyle} />
                                             </Form.Group>
                                             <Form.Group style={{ marginBottom: sp.md }}>
                                                 <label style={labelStyle}>Tipo de cuenta Rapitipica</label>
-                                                <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
-                                                    <option value="CLIENTE">CLIENTE — pide domicilios</option>
-                                                    <option value="REPARTIDOR">REPARTIDOR — entrega pedidos</option>
-                                                    <option value="COMERCIO">COMERCIO — vende con domicilios</option>
+                                                <Form.Select value={rol} onChange={(e) => setRol(e.target.value)} required style={{ ...inputStyle, cursor: 'pointer' }}>
+                                                    <option value="CLIENTE">🍔 CLIENTE — pide domicilios</option>
+                                                    <option value="COMERCIO">🏪 NEGOCIO / COMERCIO — vende con domicilios</option>
+                                                    <option value="REPARTIDOR">🛵 REPARTIDOR — entrega pedidos</option>
                                                 </Form.Select>
                                             </Form.Group>
 
@@ -572,19 +579,15 @@ function Register() {
                                                 marginBottom: sp.md,
                                                 color: s.accent,
                                                 fontSize: fs.md,
-                                            }}>Contacto de Emergencia</h6>
+                                            }}>
+                                                Contacto de Emergencia {rol !== "REPARTIDOR" && <span style={{ fontWeight: 400, color: s.textMuted, fontSize: '12px' }}>(Opcional)</span>}
+                                            </h6>
 
                                             <Form.Group style={{ marginBottom: sp.md }}>
-                                                <Form.Control type="text" value={nombreEmergencia} onChange={(e) => setNombreEmergencia(e.target.value)} placeholder="Nombre del Contacto de Emergencia" required style={inputStyle}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
-                                                />
+                                                <Form.Control type="text" value={nombreEmergencia} onChange={(e) => setNombreEmergencia(e.target.value)} placeholder="Nombre del Contacto de Emergencia" required={rol === "REPARTIDOR"} style={inputStyle} />
                                             </Form.Group>
                                             <Form.Group style={{ marginBottom: sp.lg }}>
-                                                <Form.Control type="tel" value={numeroEmergencia} onChange={(e) => setNumeroEmergencia(e.target.value)} placeholder="Número de Emergencia" required style={inputStyle}
-                                                    onFocus={(e) => { e.target.style.borderColor = s.accent; e.target.style.boxShadow = theme.shadows.input; }}
-                                                    onBlur={(e) => { e.target.style.borderColor = s.border; e.target.style.boxShadow = 'none'; }}
-                                                />
+                                                <Form.Control type="tel" value={numeroEmergencia} onChange={(e) => setNumeroEmergencia(e.target.value)} placeholder="Número de Emergencia" required={rol === "REPARTIDOR"} style={inputStyle} />
                                             </Form.Group>
                                             <button type="button" onClick={handleNextStep} style={btnPrimary}>
                                                 Siguiente <ArrowRight style={{ marginLeft: '8px' }} size={14} />
@@ -594,6 +597,13 @@ function Register() {
 
                                     {step === 4 && (
                                         <div style={{ textAlign: 'center' }}>
+                                            <p style={{ fontSize: fs.sm, color: s.textSecondary, marginBottom: sp.md }}>
+                                                {rol === "REPARTIDOR"
+                                                    ? "Toma o sube tu foto de rostro para el inicio de turno con IA."
+                                                    : rol === "COMERCIO"
+                                                    ? "Sube el logo de tu negocio o tu foto de perfil (opcional)."
+                                                    : "Toma o sube tu foto de perfil (opcional)."}
+                                            </p>
                                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: sp.lg }}>
                                                 <div style={{
                                                     width: '120px',
@@ -612,31 +622,68 @@ function Register() {
                                                     }
                                                 </div>
                                             </div>
-                                            <button
-                                                type="button"
-                                                onClick={iniciarCamara}
-                                                disabled={cameraActive}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: '16px',
-                                                    border: `2px solid ${s.accent}`,
-                                                    background: 'transparent',
-                                                    color: s.accent,
-                                                    borderRadius: br.md,
-                                                    fontWeight: theme.fontWeight.medium,
-                                                    fontSize: fs.md,
-                                                    cursor: cameraActive ? 'not-allowed' : 'pointer',
-                                                    opacity: cameraActive ? 0.6 : 1,
-                                                    marginBottom: sp.md,
-                                                    transition: theme.transitions.fast,
-                                                    fontFamily: "'Montserrat', sans-serif",
-                                                }}
-                                            >
-                                                <Video style={{ marginRight: '8px' }} /> Tomar Foto
-                                            </button>
+
+                                            <input
+                                                ref={fileInputRef}
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleFileUpload}
+                                                style={{ display: 'none' }}
+                                            />
+
+                                            <div style={{ display: 'flex', gap: '8px', marginBottom: sp.md }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={iniciarCamara}
+                                                    disabled={cameraActive}
+                                                    style={{
+                                                        flex: 1,
+                                                        padding: '12px',
+                                                        border: `2px solid ${s.accent}`,
+                                                        background: 'transparent',
+                                                        color: s.accent,
+                                                        borderRadius: br.md,
+                                                        fontWeight: theme.fontWeight.bold,
+                                                        fontSize: fs.sm,
+                                                        cursor: cameraActive ? 'not-allowed' : 'pointer',
+                                                    }}
+                                                >
+                                                    <Video size={16} style={{ marginRight: '6px' }} /> Usar Cámara
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                    style={{
+                                                        flex: 1,
+                                                        padding: '12px',
+                                                        border: `2px solid ${s.border}`,
+                                                        background: s.bgInput,
+                                                        color: s.textPrimary,
+                                                        borderRadius: br.md,
+                                                        fontWeight: theme.fontWeight.bold,
+                                                        fontSize: fs.sm,
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Upload size={16} style={{ marginRight: '6px' }} /> Subir Imagen
+                                                </button>
+                                            </div>
+
                                             <div style={{ display: 'flex', gap: sp.sm }}>
                                                 <button type="button" onClick={handlePrevStep} style={btnSecondary}>Atrás</button>
-                                                <button type="button" onClick={handleNextStep} disabled={!fotoBase64} style={{ ...btnPrimary, opacity: !fotoBase64 ? 0.6 : 1, cursor: !fotoBase64 ? 'not-allowed' : 'pointer' }}>Siguiente</button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleNextStep}
+                                                    disabled={rol === "REPARTIDOR" && !fotoBase64}
+                                                    style={{
+                                                        ...btnPrimary,
+                                                        opacity: (rol === "REPARTIDOR" && !fotoBase64) ? 0.6 : 1,
+                                                        cursor: (rol === "REPARTIDOR" && !fotoBase64) ? 'not-allowed' : 'pointer'
+                                                    }}
+                                                >
+                                                    {fotoBase64 || rol === "REPARTIDOR" ? "Siguiente" : "Omitir / Siguiente"}
+                                                </button>
                                             </div>
                                         </div>
                                     )}

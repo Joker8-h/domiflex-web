@@ -301,6 +301,88 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* 4.5. ÚNETE A RAPITIPICA: REGISTRO DIRECTO PARA CLIENTE, NEGOCIO Y REPARTIDOR */}
+      <section style={{ backgroundColor: "#F8F9FA", padding: "48px 20px", borderTop: "1px solid #E5E7EB" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "28px" }}>
+            <h2 style={{ fontSize: "24px", fontWeight: 900, color: "#11141A", margin: "0 0 8px" }}>
+              Únete a Rapitipica
+            </h2>
+            <p style={{ fontSize: "14px", color: "#6B7280", margin: 0 }}>
+              Elige cómo quieres usar la plataforma y crea tu cuenta en minutos
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "22px" }}>
+            {/* Tarjeta Cliente */}
+            <div style={{ backgroundColor: "#FFFFFF", borderRadius: "18px", border: "1px solid #E5E7EB", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" }}>
+              <div>
+                <div style={{ width: 48, height: 48, borderRadius: "14px", backgroundColor: "rgba(227, 6, 19, 0.1)", color: "#E30613", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14 }}>
+                  🍔
+                </div>
+                <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#11141A", margin: "0 0 6px" }}>
+                  Soy Cliente
+                </h3>
+                <p style={{ fontSize: "13.5px", color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                  Pide tus platos favoritos, mercado, bebidas y dulces con entrega rápida en tu dirección.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/register?rol=CLIENTE")}
+                style={{ width: "100%", backgroundColor: "#E30613", color: "#FFFFFF", border: "none", borderRadius: "9999px", padding: "12px 18px", fontWeight: 800, fontSize: "14px", cursor: "pointer" }}
+              >
+                Crear cuenta Cliente
+              </button>
+            </div>
+
+            {/* Tarjeta Negocio / Comercio */}
+            <div style={{ backgroundColor: "#FFFFFF", borderRadius: "18px", border: "1px solid #E5E7EB", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" }}>
+              <div>
+                <div style={{ width: 48, height: 48, borderRadius: "14px", backgroundColor: "rgba(22, 163, 74, 0.12)", color: "#16A34A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14 }}>
+                  🏪
+                </div>
+                <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#11141A", margin: "0 0 6px" }}>
+                  Tengo un Negocio
+                </h3>
+                <p style={{ fontSize: "13.5px", color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                  Registra tu restaurante, supermercado o licorería, publica tu menú y recibe pedidos en vivo.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/register?rol=COMERCIO")}
+                style={{ width: "100%", backgroundColor: "#16A34A", color: "#FFFFFF", border: "none", borderRadius: "9999px", padding: "12px 18px", fontWeight: 800, fontSize: "14px", cursor: "pointer" }}
+              >
+                Registrar mi Negocio
+              </button>
+            </div>
+
+            {/* Tarjeta Repartidor */}
+            <div style={{ backgroundColor: "#FFFFFF", borderRadius: "18px", border: "1px solid #E5E7EB", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" }}>
+              <div>
+                <div style={{ width: 48, height: 48, borderRadius: "14px", backgroundColor: "#0D1117", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14 }}>
+                  🛵
+                </div>
+                <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#11141A", margin: "0 0 6px" }}>
+                  Quiero ser Repartidor
+                </h3>
+                <p style={{ fontSize: "13.5px", color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                  Conéctate cuando quieras, acepta pedidos cercanos con rutas optimizadas y genera ingresos.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/register?rol=REPARTIDOR")}
+                style={{ width: "100%", backgroundColor: "#0D1117", color: "#FFFFFF", border: "none", borderRadius: "9999px", padding: "12px 18px", fontWeight: 800, fontSize: "14px", cursor: "pointer" }}
+              >
+                Registrarme como Repartidor
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. FOOTER OFICIAL EN NEGRO */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
@@ -322,15 +404,15 @@ export default function Landing() {
           <div style={styles.footerCol}>
             <h5 style={styles.footerHeading}>Cuenta</h5>
             <Link to="/login" style={styles.footerLink}>Iniciar sesión</Link>
-            <Link to="/register" style={styles.footerLink}>Registrarse</Link>
+            <Link to="/register?rol=CLIENTE" style={styles.footerLink}>Registrarse como Cliente</Link>
             <Link to="/profile" style={styles.footerLink}>Mi cuenta</Link>
             <Link to="/mis-pedidos" style={styles.footerLink}>Mis pedidos</Link>
           </div>
 
           <div style={styles.footerCol}>
             <h5 style={styles.footerHeading}>Socios</h5>
-            <Link to="/register" style={styles.footerLink}>Registra tu restaurante</Link>
-            <Link to="/register" style={styles.footerLink}>Únete como repartidor</Link>
+            <Link to="/register?rol=COMERCIO" style={styles.footerLink}>Registra tu restaurante</Link>
+            <Link to="/register?rol=REPARTIDOR" style={styles.footerLink}>Únete como repartidor</Link>
             <a
               href="#categorias"
               onClick={(e) => {

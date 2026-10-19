@@ -370,7 +370,7 @@ function Login() {
                                         disabled={loading}
                                         style={{
                                             backgroundColor: loading ? theme.colors.textMuted : theme.colors.accent,
-                                            color: '#000',
+                                            color: '#FFFFFF',
                                             border: 'none',
                                             borderRadius: theme.borderRadius.xl,
                                             padding: '0.875rem 0',
@@ -387,7 +387,7 @@ function Login() {
                                     </button>
                                 </Form>
 
-                                <p className="text-center mt-4 mb-0" style={{
+                                <p className="text-center mt-4 mb-2" style={{
                                     fontSize: theme.fontSize.sm,
                                     color: theme.colors.textSecondary
                                 }}>
@@ -403,6 +403,18 @@ function Login() {
                                         Regístrate
                                     </Link>
                                 </p>
+
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                                    <Link to="/register?rol=CLIENTE" style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '999px', backgroundColor: '#F3F4F6', color: '#11141A', textDecoration: 'none', fontWeight: 700 }}>
+                                        👤 Cliente
+                                    </Link>
+                                    <Link to="/register?rol=COMERCIO" style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '999px', backgroundColor: '#F0FDF4', color: '#16A34A', textDecoration: 'none', fontWeight: 700 }}>
+                                        🏪 Negocio
+                                    </Link>
+                                    <Link to="/register?rol=REPARTIDOR" style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '999px', backgroundColor: '#FEF2F2', color: '#E30613', textDecoration: 'none', fontWeight: 700 }}>
+                                        🛵 Repartidor
+                                    </Link>
+                                </div>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -427,9 +439,6 @@ function Login() {
                     }
                     .dark-modal .modal-title {
                         color: ${theme.colors.textPrimary} !important;
-                    }
-                    .dark-modal .btn-close {
-                        filter: invert(1) !important;
                     }
                 `}</style>
                 <Modal.Header closeButton style={{ borderBottom: `1px solid ${theme.colors.border}` }}>
@@ -463,7 +472,7 @@ function Login() {
                                 width: '100%',
                                 padding: '0.75rem',
                                 backgroundColor: theme.colors.accent,
-                                color: '#000',
+                                color: '#FFFFFF',
                                 border: 'none',
                                 borderRadius: theme.borderRadius.md,
                                 fontWeight: theme.fontWeight.bold,
@@ -501,7 +510,7 @@ function Login() {
                                     flex: 2,
                                     padding: '0.75rem',
                                     backgroundColor: verificando ? theme.colors.textMuted : theme.colors.accent,
-                                    color: '#000',
+                                    color: '#FFFFFF',
                                     border: 'none',
                                     borderRadius: theme.borderRadius.md,
                                     fontWeight: theme.fontWeight.bold,
