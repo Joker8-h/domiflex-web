@@ -516,7 +516,6 @@ function VehicleRegistration() {
                             maxLength="6"
                             style={{ borderRadius: '12px', backgroundColor: '#f8fafb', border: '1px solid #eee', padding: '10px 15px', textTransform: 'uppercase' }}
                             disabled={loading}
-                            readOnly
                           />
                           <Form.Text className="text-muted small">
                             3 letras + 3 números (ej: ABC123)

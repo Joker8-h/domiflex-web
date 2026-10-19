@@ -210,10 +210,11 @@ const VehiculoImage = ({ vehiculo, size = 40, onClick }) => {
     const [imageUrl, setImageUrl] = useState(null);
 
     useEffect(() => {
-        if (vehiculo?.fotoVehiculo) {
-            const url = vehiculo.fotoVehiculo.startsWith('http')
-                ? vehiculo.fotoVehiculo
-                : `${API_BASE_URL}${vehiculo.fotoVehiculo}`;
+        const foto = vehiculo?.fotoVehiculo || vehiculo?.fotoAuto1 || vehiculo?.fotoPlaca;
+        if (foto) {
+            const url = foto.startsWith('http')
+                ? foto
+                : `${API_BASE_URL}${foto}`;
             setImageUrl(url);
             setImageError(false);
         } else {
@@ -793,7 +794,10 @@ const DriverHome = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(formDataSolicitud)
+                body: JSON.stringify({
+                    ...formDataSolicitud,
+                    placaNueva: formDataSolicitud.placa
+                })
             });
 
             if (response.ok) {
@@ -998,7 +1002,8 @@ const DriverHome = () => {
             });
             const data = await resp.json();
             if (data?.error) throw new Error(data.error);
-            toast.success(`Chat del pedido #${pedido.idPedido} listo`);
+            toast.success(`Abriendo chat del pedido #${pedido.idPedido}...`);
+            navigate(`/tracking/${pedido.idPedido}`);
         } catch (e) { toast.error(e.message || 'No se pudo iniciar el chat'); }
     };
 
@@ -1031,7 +1036,7 @@ const DriverHome = () => {
     };
 
     const obtenerLicencia = () => {
-        if (!documentos || documentos.length === 0) return null;
+        if (!Array.isArray(documentos) || documentos.length === 0) return null;
         const licencia = documentos.find(doc =>
             doc.tipoDocumento?.toLowerCase().includes('licencia') ||
             doc.tipoDocumento?.toLowerCase().includes('conducir') ||
@@ -1095,10 +1100,11 @@ const DriverHome = () => {
         (vehiculos.length > 0 ? vehiculos[0] : null);
 
     const handleImageClick = (vehiculo) => {
-        if (vehiculo?.fotoVehiculo) {
-            const url = vehiculo.fotoVehiculo.startsWith('http')
-                ? vehiculo.fotoVehiculo
-                : `${API_BASE_URL}${vehiculo.fotoVehiculo}`;
+        const foto = vehiculo?.fotoVehiculo || vehiculo?.fotoAuto1 || vehiculo?.fotoPlaca;
+        if (foto) {
+            const url = foto.startsWith('http')
+                ? foto
+                : `${API_BASE_URL}${foto}`;
             setSelectedPhoto(url);
             setShowPhotoModal(true);
         }

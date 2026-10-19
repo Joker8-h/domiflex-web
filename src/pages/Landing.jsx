@@ -19,6 +19,8 @@ import {
   Dog,
 } from "lucide-react";
 import RapitipicaLogo from "../components/common/RapitipicaLogo";
+import NavbarCustom from "../components/Navbar";
+import toast from "react-hot-toast";
 import theme from "../styles/theme";
 
 const U = "https://images.unsplash.com";
@@ -147,11 +149,19 @@ const restaurantesPopulares = [
 export default function Landing() {
   const navigate = useNavigate();
   const [direccion, setDireccion] = useState("");
-  const [favoritos, setFavoritos] = useState({});
+  const [favoritos, setFavoritos] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]");
+      return Array.isArray(saved) ? saved.reduce((acc, id) => ({ ...acc, [String(id)]: true }), {}) : {};
+    } catch {
+      return {};
+    }
+  });
 
   const handleBuscar = (e) => {
     e.preventDefault();
     if (direccion.trim()) {
+      localStorage.setItem("domiflex_direccion", direccion.trim());
       navigate(`/restaurantes?dir=${encodeURIComponent(direccion.trim())}`);
     } else {
       navigate("/restaurantes");
@@ -161,11 +171,23 @@ export default function Landing() {
   const toggleFavorito = (id, e) => {
     e.preventDefault();
     e.stopPropagation();
-    setFavoritos((prev) => ({ ...prev, [id]: !prev[id] }));
+    const key = String(id);
+    setFavoritos((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      try {
+        const list = Object.keys(next).filter((k) => next[k]);
+        localStorage.setItem("domiflex_favoritos", JSON.stringify(list));
+        window.dispatchEvent(new Event("domiflex_favoritos_changed"));
+      } catch {
+        // ignore storage error
+      }
+      return next;
+    });
   };
 
   return (
     <div style={styles.page}>
+      <NavbarCustom />
       {/* 1. HERO SECTION (Rapitipica Web Desktop / Mobile) */}
       <section style={styles.heroSection}>
         <div style={styles.heroContainer}>
@@ -418,7 +440,16 @@ export default function Landing() {
             <h5 style={styles.footerHeading}>Socios</h5>
             <Link to="/register" style={styles.footerLink}>Registra tu restaurante</Link>
             <Link to="/register" style={styles.footerLink}>Únete como repartidor</Link>
-            <Link to="/documentacion" style={styles.footerLink}>Centro de ayuda</Link>
+            <a
+              href="#categorias"
+              onClick={(e) => {
+                e.preventDefault();
+                toast("Soporte 24/7 disponible en soporte@rapitipica.com o vía chat en tus pedidos activos.", { icon: "💬" });
+              }}
+              style={styles.footerLink}
+            >
+              Centro de ayuda
+            </a>
           </div>
         </div>
 

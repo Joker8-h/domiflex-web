@@ -368,9 +368,9 @@ function Home() {
         const fullStars = Math.floor(promedio);
         const hasHalfStar = promedio % 1 >= 0.5;
         for (let i = 1; i <= 5; i++) {
-            if (i <= fullStars) stars.push(<Star key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
-            else if (i === fullStars + 1 && hasHalfStar) stars.push(<StarHalf key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
-            else stars.push(<Star key={i} style={{ marginRight: '0.25rem', color: colores.estrella, fontSize: '12px' }} />);
+            if (i <= fullStars) stars.push(<Star key={i} size={14} fill={colores.estrella} style={{ marginRight: '0.25rem', color: colores.estrella }} />);
+            else if (i === fullStars + 1 && hasHalfStar) stars.push(<StarHalf key={i} size={14} fill={colores.estrella} style={{ marginRight: '0.25rem', color: colores.estrella }} />);
+            else stars.push(<Star key={i} size={14} style={{ marginRight: '0.25rem', color: '#cbd5e1' }} />);
         }
         return <div style={{ display: 'flex' }}>{stars}</div>;
     };

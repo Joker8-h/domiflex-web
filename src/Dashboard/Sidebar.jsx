@@ -42,7 +42,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
   }, [badges]);
 
   const fetchPendingCount = useCallback(async () => {
-    if (usuario?.rol === 'ADMIN' && token) {
+    const isAdmin = usuario?.rol === 'ADMIN' || usuario?.rol?.nombre === 'ADMIN' || usuario?.idRol === 1;
+    if (isAdmin && token) {
       try {
         const response = await fetch(`${API_URL}/vehiculos/solicitudes/pendientes/count`, {
           headers: { "Authorization": `Bearer ${token}` }

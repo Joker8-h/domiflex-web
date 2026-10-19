@@ -13,7 +13,7 @@ const SavingsCalculator = () => {
     const brandColor = "#56bca7"; 
     const secondaryColor = "#2d5a52"; 
     const [isMelo, setIsMelo] = useState(false);
-    const costoTotal = datos[0]?.valor || 0;
+    const costoTotal = datos[1]?.valor || 0;
 
     useEffect(() => {
         if (costoTotal > 100000) setIsMelo(true);
@@ -33,10 +33,11 @@ const SavingsCalculator = () => {
         else if (distancia <= 15) tasa = 0.12;
         const comision = redondearCop(subtotal * tasa);
         const totalPedido = redondearCop(subtotal + comision);
+        const totalMensual = redondearCop(totalPedido * pedidos);
         
         setDatos([
-            { name: "Subtotal envío", valor: subtotal, color: "#d1d8d6" },
-            { name: "Total con comisión", valor: totalPedido, color: brandColor }
+            { name: "Por pedido", valor: totalPedido, color: "#d1d8d6" },
+            { name: `Total mes (${pedidos})`, valor: totalMensual, color: brandColor }
         ]);
     }, [distancia, pedidos]);
 

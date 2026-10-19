@@ -225,20 +225,30 @@ export default function Tracking() {
     }
   };
 
-  const handleEnviarMensaje = (e) => {
+  const handleEnviarMensaje = async (e) => {
     e?.preventDefault();
     if (!nuevoMensaje.trim()) return;
     const texto = nuevoMensaje.trim();
     setNuevoMensaje("");
     const remitente = usuario?.nombre || "Cliente";
-    const idRemitente = usuario?.idUsuario || usuario?.id || 0;
-    if (socketApi?.socket) {
+    const idRemitente = usuario?.idUsuarios || usuario?.idUsuario || usuario?.id || 0;
+    if (socketApi?.socket?.connected) {
       socketApi.socket.emit("send_chat_message", {
         idPedido: pedidoId,
         remitente,
         mensaje: texto,
         idRemitente,
       });
+    } else {
+      try {
+        const msg = await api.post("/chat/mensajes", {
+          idPedido: pedidoId,
+          mensaje: texto,
+        });
+        if (msg) setMensajes((prev) => [...prev, msg]);
+      } catch (err) {
+        console.error("Error enviando mensaje por API:", err);
+      }
     }
   };
 
@@ -246,7 +256,7 @@ export default function Tracking() {
     e?.preventDefault();
     setEnviandoCalificacion(true);
     try {
-      const idCalificado = pedido?.repartidor?.idUsuario || pedido?.idRepartidor || pedido?.idComercio;
+      const idCalificado = pedido?.repartidor?.idUsuarios || pedido?.repartidor?.idUsuario || pedido?.idRepartidor || pedido?.idComercio;
       await api.post("/calificaciones", {
         idPedido: pedido.idPedido,
         idCalificado,
@@ -598,9 +608,11 @@ export default function Tracking() {
                   </p>
                 ) : (
                   mensajes.map((m, idx) => {
+                    const senderName = typeof m.remitente === "object" ? m.remitente?.nombre : m.remitente;
+                    const myId = usuario?.idUsuarios || usuario?.idUsuario || usuario?.id;
                     const isMe =
-                      m.remitente === (usuario?.nombre || "Cliente") ||
-                      m.idRemitente === (usuario?.idUsuario || usuario?.id);
+                      senderName === (usuario?.nombre || "Cliente") ||
+                      (myId && Number(m.idRemitente) === Number(myId));
                     return (
                       <div
                         key={m.idMensaje || idx}
@@ -612,7 +624,7 @@ export default function Tracking() {
                           border: isMe ? "none" : `1px solid ${tokens.colors.border}`,
                         }}
                       >
-                        {!isMe && <span style={styles.chatSender}>{m.remitente}</span>}
+                        {!isMe && <span style={styles.chatSender}>{senderName || "Usuario"}</span>}
                         <p style={{ margin: 0, fontSize: tokens.fontSize.sm, fontWeight: isMe ? 600 : 400 }}>
                           {m.mensaje}
                         </p>

@@ -133,8 +133,8 @@ function App() {
             <Route path="/home" element={<ProtectedRoute><HomeBase /></ProtectedRoute>} />
 
             {/* Client - Negocios */}
-            <Route path="/restaurantes" element={<ProtectedRoute><Restaurantes /></ProtectedRoute>} />
-            <Route path="/negocio/:id" element={<ProtectedRoute><RestauranteDetalle /></ProtectedRoute>} />
+            <Route path="/restaurantes" element={<Restaurantes />} />
+            <Route path="/negocio/:id" element={<RestauranteDetalle />} />
             <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} />
             <Route path="/tracking/:pedidoId" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
             <Route path="/pedido/:pedidoId" element={<ProtectedRoute><PedidoDetalle /></ProtectedRoute>} />

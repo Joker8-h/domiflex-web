@@ -6,7 +6,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../pages/context/AuthContext';
 
-function QRScanner({ show, onHide }) {
+function QRScanner({ show, onHide, onScanSuccess }) {
     const [error, setError] = useState('');
     const [scanMethod, setScanMethod] = useState('camera');
     const [scanning, setScanning] = useState(false);
@@ -42,6 +42,12 @@ function QRScanner({ show, onHide }) {
             setLoading(true);
             setError('');
             
+            if (typeof onScanSuccess === 'function') {
+                onScanSuccess(decodedText);
+                onHide();
+                return;
+            }
+
             console.log("📱 QR escaneado (completo):", decodedText);
             
             const partes = decodedText.split('|');
@@ -227,7 +233,23 @@ function QRScanner({ show, onHide }) {
             </Modal.Header>
 
             <Modal.Body className="p-5">
-                <div className="d-flex justify-content-center mb-4">
+                <div className="d-flex justify-content-center gap-2 mb-4">
+                    <Button
+                        variant={scanMethod === 'camera' ? 'primary' : 'outline-secondary'}
+                        onClick={() => { stopScanning(); setScanMethod('camera'); }}
+                        style={scanMethod === 'camera' ? { backgroundColor: colores.primary, borderColor: colores.primary } : {}}
+                    >
+                        <Camera size={16} className="me-2" />
+                        Usar Cámara
+                    </Button>
+                    <Button
+                        variant={scanMethod === 'upload' ? 'primary' : 'outline-secondary'}
+                        onClick={() => { stopScanning(); setScanMethod('upload'); }}
+                        style={scanMethod === 'upload' ? { backgroundColor: colores.primary, borderColor: colores.primary } : {}}
+                    >
+                        <Upload size={16} className="me-2" />
+                        Subir Imagen
+                    </Button>
                 </div>
 
                 {loading && (

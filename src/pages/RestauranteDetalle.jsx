@@ -18,6 +18,7 @@ import { api } from "../api/client";
 import { SkeletonCard } from "../components/ui/Skeleton";
 import ErrorState from "../components/ui/ErrorState";
 import { loadCart, saveCart } from "../lib/cartStorage";
+import NavbarCustom from "../components/Navbar";
 import toast from "react-hot-toast";
 
 const FALLBACK_MENU = [
@@ -177,14 +178,23 @@ export default function RestauranteDetalle() {
 
   const addToCart = (prod) => {
     setCart((prev) => {
-      const exists = prev.find((item) => item.id === prod.id);
+      const hasDifferentRest = prev.length > 0 && prev[0].restauranteId && negocio?.id && String(prev[0].restauranteId) !== String(negocio.id);
+      let baseCart = prev;
+      if (hasDifferentRest) {
+        const confirmReset = window.confirm(
+          `Tu carrito contiene productos de ${prev[0].restauranteNombre || "otro restaurante"}. ¿Deseas vaciarlo y agregar productos de ${negocio.nombre}?`
+        );
+        if (!confirmReset) return prev;
+        baseCart = [];
+      }
+      const exists = baseCart.find((item) => item.id === prod.id);
       let updated;
       if (exists) {
-        updated = prev.map((item) =>
+        updated = baseCart.map((item) =>
           item.id === prod.id ? { ...item, cantidad: item.cantidad + 1 } : item
         );
       } else {
-        updated = [...prev, { ...prod, cantidad: 1, restauranteId: negocio?.id, restauranteNombre: negocio?.nombre }];
+        updated = [...baseCart, { ...prod, cantidad: 1, restauranteId: negocio?.id, restauranteNombre: negocio?.nombre }];
       }
       saveCart(updated, negocio);
       return updated;
@@ -228,6 +238,7 @@ export default function RestauranteDetalle() {
   if (loading) {
     return (
       <div style={styles.page}>
+        <NavbarCustom />
         <div style={styles.headerSkeleton}>
           <SkeletonCard />
         </div>
@@ -237,6 +248,7 @@ export default function RestauranteDetalle() {
 
   return (
     <div style={styles.page}>
+      <NavbarCustom />
       {/* 1. HERO BANNER DEL RESTAURANTE */}
       <div style={styles.heroBanner}>
         <div style={styles.bannerImageWrap}>

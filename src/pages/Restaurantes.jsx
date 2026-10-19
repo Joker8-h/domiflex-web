@@ -13,6 +13,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import NegocioCard from "../components/NegocioCard";
+import NavbarCustom from "../components/Navbar";
 import { SkeletonCard } from "../components/ui/Skeleton";
 import EmptyState from "../components/ui/EmptyState";
 import ErrorState from "../components/ui/ErrorState";
@@ -20,6 +21,7 @@ import { api } from "../api/client";
 
 const FILTER_PILLS = [
   { id: "all", label: "Todos" },
+  { id: "restaurantes", label: "Restaurantes" },
   { id: "comida-rapida", label: "Comida rápida" },
   { id: "italiana", label: "Italiana" },
   { id: "asiatica", label: "Asiática" },
@@ -28,6 +30,12 @@ const FILTER_PILLS = [
   { id: "hamburguesas", label: "Hamburguesas" },
   { id: "pizzas", label: "Pizzas" },
   { id: "sushi", label: "Sushi" },
+  { id: "bebidas", label: "Bebidas" },
+  { id: "tiendas", label: "Tiendas" },
+  { id: "supermercados", label: "Supermercados" },
+  { id: "farmacias", label: "Farmacias" },
+  { id: "mascotas", label: "Mascotas" },
+  { id: "favoritos", label: "❤️ Favoritos" },
 ];
 
 const SIDEBAR_CATEGORIES = [
@@ -120,13 +128,50 @@ export default function Restaurantes() {
   const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [favIds, setFavIds] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
   const initialSearch = searchParams.get("q") || "";
-  const initialCategory = searchParams.get("cat") || "all";
+  const initialCategory = searchParams.get("tab") === "favoritos"
+    ? "favoritos"
+    : (searchParams.get("cat") || "all");
+  const initialDir = searchParams.get("dir") || localStorage.getItem("domiflex_ubicacion") || "Popayán, Colombia";
 
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [activePill, setActivePill] = useState(initialCategory.toLowerCase());
-  const [ubicacionActual, setUbicacionActual] = useState("Popayán, Colombia");
+  const [ubicacionActual, setUbicacionActual] = useState(initialDir);
+
+  useEffect(() => {
+    const qParam = searchParams.get("q");
+    const catParam = searchParams.get("cat");
+    const tabParam = searchParams.get("tab");
+    const dirParam = searchParams.get("dir");
+
+    if (qParam !== null) setSearchQuery(qParam);
+    if (tabParam === "favoritos") setActivePill("favoritos");
+    else if (catParam) setActivePill(catParam.toLowerCase());
+    if (dirParam) {
+      setUbicacionActual(dirParam);
+      localStorage.setItem("domiflex_ubicacion", dirParam);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const syncFavs = () => {
+      try {
+        setFavIds(JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]"));
+      } catch {
+        setFavIds([]);
+      }
+    };
+    window.addEventListener("domiflex_favoritos_changed", syncFavs);
+    return () => window.removeEventListener("domiflex_favoritos_changed", syncFavs);
+  }, []);
 
   useEffect(() => {
     const fetchNegocios = async () => {
@@ -152,6 +197,7 @@ export default function Restaurantes() {
 
   const handlePillClick = (id) => {
     setActivePill(id);
+    searchParams.delete("tab");
     if (id === "all") {
       searchParams.delete("cat");
     } else {
@@ -160,17 +206,30 @@ export default function Restaurantes() {
     setSearchParams(searchParams);
   };
 
+  const handleCambiarUbicacion = () => {
+    const nueva = window.prompt("Ingresa tu dirección o ciudad de entrega:", ubicacionActual);
+    if (nueva && nueva.trim()) {
+      setUbicacionActual(nueva.trim());
+      localStorage.setItem("domiflex_ubicacion", nueva.trim());
+    }
+  };
+
   const filteredNegocios = negocios.filter((n) => {
     const matchQuery =
       (n.nombre || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (n.descripcion || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (n.tipo || "").toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (activePill === "all") return matchQuery;
+    if (activePill === "all" || activePill === "restaurantes") return matchQuery;
+    if (activePill === "favoritos") {
+      const nid = n.id || n.idNegocio;
+      return matchQuery && favIds.includes(nid);
+    }
 
-    const pillLabel = FILTER_PILLS.find((p) => p.id === activePill)?.label.toLowerCase() || "";
+    const pillLabel = FILTER_PILLS.find((p) => p.id === activePill)?.label.toLowerCase() || activePill;
     const matchCategory =
       (n.tipo || "").toLowerCase().includes(pillLabel) ||
+      (n.tipo || "").toLowerCase().includes(activePill) ||
       (n.subcategoria || "").toLowerCase() === activePill ||
       (n.nombre || "").toLowerCase().includes(pillLabel);
 
@@ -179,12 +238,13 @@ export default function Restaurantes() {
 
   return (
     <div style={styles.page}>
+      <NavbarCustom />
       {/* 1. Header con Título, Subtítulo y Selector de Ubicación */}
       <div style={styles.headerBanner}>
         <div style={styles.headerContainer}>
           <div>
             <div style={styles.breadcrumb}>
-              <span>Inicio</span>
+              <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Inicio</span>
               <span>/</span>
               <span style={{ color: "#00E576", fontWeight: 700 }}>Restaurantes</span>
             </div>
@@ -192,14 +252,19 @@ export default function Restaurantes() {
             <p style={styles.pageSubtitle}>Descubre los mejores sabores, cerca de ti.</p>
           </div>
 
-          <div style={styles.locationSelector}>
+          <button
+            type="button"
+            onClick={handleCambiarUbicacion}
+            style={{ ...styles.locationSelector, cursor: "pointer" }}
+            title="Cambiar dirección de entrega"
+          >
             <MapPin size={16} color="#00E576" />
-            <div>
+            <div style={{ textAlign: "left" }}>
               <span style={{ fontSize: "11px", color: "#9CA3AF", display: "block" }}>Tu ubicación</span>
               <span style={{ fontSize: "14px", fontWeight: 700, color: "#F5F7FA" }}>{ubicacionActual}</span>
             </div>
             <ChevronDown size={14} color="#9CA3AF" />
-          </div>
+          </button>
         </div>
       </div>
 

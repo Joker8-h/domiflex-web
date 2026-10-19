@@ -95,27 +95,24 @@ function AdminVehiculos() {
 
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/auth/search?q=${busqueda}`, {
+            const term = busqueda.trim().toLowerCase();
+            const resAll = await fetch(`${API_URL}/vehiculos`, {
                 headers: { "Authorization": "Bearer " + token }
             });
-            if (!response.ok) throw new Error("Error en la búsqueda");
-            const data = await response.json();
-
-            const vehiculosEncontrados = [];
-            data.forEach(usuario => {
-                if (usuario.vehiculos && usuario.vehiculos.length > 0) {
-                    usuario.vehiculos.forEach(v => {
-                        vehiculosEncontrados.push({
-                            ...v,
-                            idUsuario: usuario.idUsuarios,
-                            idVehiculos: v.idVehiculos || v.id
-                        });
-                    });
-                }
-            });
-
-            setVehiculos(vehiculosEncontrados);
-            setPaginaActual(1);
+            if (resAll.ok) {
+                const allVehicles = await resAll.json();
+                const list = Array.isArray(allVehicles) ? allVehicles : [];
+                const filtrados = list.filter(v =>
+                    (v.placa && v.placa.toLowerCase().includes(term)) ||
+                    (v.marca && v.marca.toLowerCase().includes(term)) ||
+                    (v.modelo && v.modelo.toLowerCase().includes(term)) ||
+                    (v.usuario?.nombre && v.usuario.nombre.toLowerCase().includes(term)) ||
+                    (v.usuario?.email && v.usuario.email.toLowerCase().includes(term))
+                );
+                setVehiculos(filtrados);
+                setPaginaActual(1);
+                return;
+            }
         } catch (error) {
             setError("Error al buscar vehículos");
         } finally {
@@ -823,9 +820,9 @@ function AdminVehiculos() {
                                                                         </span>
                                                                         <PlacaValidadaIcon validada={vehiculo.placaValidada} />
                                                                     </div>
-                                                                    {vehiculo.fotoVehiculo && (
+                                                                    {(vehiculo.fotoVehiculo || vehiculo.fotoAuto1 || vehiculo.fotoPlaca) && (
                                                                         <VerFotoButton onClick={() => {
-                                                                            setSelectedPhoto(vehiculo.fotoVehiculo);
+                                                                            setSelectedPhoto(vehiculo.fotoVehiculo || vehiculo.fotoAuto1 || vehiculo.fotoPlaca);
                                                                             setShowPhotoModal(true);
                                                                         }} />
                                                                     )}

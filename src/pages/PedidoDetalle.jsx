@@ -141,7 +141,7 @@ export default function PedidoDetalle() {
           </div>
           <div style={styles.row}>
             <span style={styles.label}>Envío</span>
-            <span style={styles.value}>${Number(pedido.negocio?.costoEnvio || 2000).toLocaleString()}</span>
+            <span style={styles.value}>${Number(pedido.costoEnvio ?? pedido.negocio?.costoEnvio ?? Math.max(0, Number(pedido.total || 0) - Number(pedido.subtotal || 0))).toLocaleString()}</span>
           </div>
           <div style={styles.divider} />
           <div style={styles.row}>
@@ -150,7 +150,7 @@ export default function PedidoDetalle() {
           </div>
           <div style={styles.row}>
             <span style={styles.label}>Método de pago</span>
-            <span style={styles.value}>Efectivo</span>
+            <span style={styles.value}>{pedido.tipoPago || "Efectivo"}</span>
           </div>
         </div>
 

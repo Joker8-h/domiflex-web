@@ -65,6 +65,20 @@ export default function Profile() {
           },
         });
 
+        let promedioReal = 4.9;
+        try {
+          const resCal = await fetch(`${API_URL}/calificaciones/${usuario.idUsuarios}/promedio`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (resCal.ok) {
+            const calData = await resCal.json();
+            const val = Number(calData?.promedio?.promedio ?? calData?.promedio ?? 0);
+            if (val > 0) promedioReal = Number(val.toFixed(1));
+          }
+        } catch {
+          // keep fallback 4.9
+        }
+
         if (res.ok) {
           const data = await res.json();
           const list = Array.isArray(data) ? data : [];
@@ -81,7 +95,7 @@ export default function Profile() {
             entregados,
             cancelados,
             gastado,
-            calificacionPromedio: 4.9,
+            calificacionPromedio: promedioReal,
           });
         }
       } catch (err) {
@@ -200,7 +214,15 @@ export default function Profile() {
               <button
                 type="button"
                 style={styles.navBtn}
-                onClick={() => toast("Las direcciones guardadas se sincronizan automáticamente en el checkout.", { icon: "📍" })}
+                onClick={() => {
+                  const actual = localStorage.getItem("domiflex_direccion") || formData.direccion || "";
+                  const nueva = window.prompt("Ingresa o actualiza tu dirección predeterminada de entrega:", actual);
+                  if (nueva !== null && nueva.trim()) {
+                    localStorage.setItem("domiflex_direccion", nueva.trim());
+                    setFormData((prev) => ({ ...prev, direccion: nueva.trim() }));
+                    toast.success(`Dirección actualizada: ${nueva.trim()}`);
+                  }
+                }}
               >
                 <div style={styles.navBtnContent}>
                   <MapPin size={18} />
@@ -211,7 +233,9 @@ export default function Profile() {
               <button
                 type="button"
                 style={styles.navBtn}
-                onClick={() => toast("Métodos de pago gestionados a través de Wompi Bancolombia.", { icon: "💳" })}
+                onClick={() => {
+                  toast.success("Métodos habilitados: Efectivo contraentrega y Tarjeta / PSE vía Wompi Bancolombia.", { icon: "💳" });
+                }}
               >
                 <div style={styles.navBtnContent}>
                   <CreditCard size={18} />
@@ -427,7 +451,7 @@ export default function Profile() {
                             <button
                               type="button"
                               style={styles.reorderBtn}
-                              onClick={() => navigate(`/negocio/${p.negocioId || 1}`)}
+                              onClick={() => navigate(`/negocio/${p.negocioId || p.idNegocio || p.negocio?.id || 1}`)}
                             >
                               <span>Pedir de nuevo</span>
                             </button>

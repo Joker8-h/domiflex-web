@@ -154,6 +154,7 @@ const AdminVehicleRequests = () => {
                                                 <div className="d-flex flex-wrap gap-1">
                                                     {s.marcaNueva && s.marcaNueva !== s.vehiculo.marca && <Badge bg="info" className="fw-normal">Marca</Badge>}
                                                     {s.modeloNuevo && s.modeloNuevo !== s.vehiculo.modelo && <Badge bg="info" className="fw-normal">Modelo</Badge>}
+                                                    {s.placaNueva && s.placaNueva !== s.vehiculo.placa && <Badge bg="info" className="fw-normal">Placa</Badge>}
                                                     {s.capacidadNueva && s.capacidadNueva !== s.vehiculo.capacidad && <Badge bg="info" className="fw-normal">Capacidad</Badge>}
                                                 </div>
                                             </td>
@@ -200,6 +201,7 @@ const AdminVehicleRequests = () => {
                                     <div className="p-3 bg-light rounded-3">
                                         <p className="mb-1"><strong>Marca:</strong> {selectedSolicitud.vehiculo.marca}</p>
                                         <p className="mb-1"><strong>Modelo:</strong> {selectedSolicitud.vehiculo.modelo}</p>
+                                        <p className="mb-1"><strong>Placa:</strong> {selectedSolicitud.vehiculo.placa}</p>
                                         <p className="mb-0"><strong>Capacidad:</strong> {selectedSolicitud.vehiculo.capacidad} kg</p>
                                     </div>
                                 </Col>
@@ -213,6 +215,10 @@ const AdminVehicleRequests = () => {
                                         <p className="mb-1">
                                             <strong>Modelo:</strong> {selectedSolicitud.modeloNuevo || selectedSolicitud.vehiculo.modelo}
                                             {selectedSolicitud.modeloNuevo && selectedSolicitud.modeloNuevo !== selectedSolicitud.vehiculo.modelo && <ArrowLeftRight className="ms-2 text-primary" size={12} />}
+                                        </p>
+                                        <p className="mb-1">
+                                            <strong>Placa:</strong> {selectedSolicitud.placaNueva || selectedSolicitud.vehiculo.placa}
+                                            {selectedSolicitud.placaNueva && selectedSolicitud.placaNueva !== selectedSolicitud.vehiculo.placa && <ArrowLeftRight className="ms-2 text-primary" size={12} />}
                                         </p>
                                         <p className="mb-0">
                                             <strong>Capacidad:</strong> {selectedSolicitud.capacidadNueva || selectedSolicitud.vehiculo.capacidad} kg

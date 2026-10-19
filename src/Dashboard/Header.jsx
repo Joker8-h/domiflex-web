@@ -18,9 +18,11 @@ function Header() {
   const [noLeidas, setNoLeidas] = useState(0);
   const [pendingRequests, setPendingRequests] = useState(0);
 
+  const isAdmin = usuario?.rol === 'ADMIN' || usuario?.rol?.nombre === 'ADMIN' || usuario?.idRol === 1;
+
   useEffect(() => {
     const fetchPendingCount = async () => {
-      if (usuario?.rol === 'ADMIN' && token) {
+      if (isAdmin && token) {
         try {
           const response = await fetch(`${API_URL}/vehiculos/solicitudes/pendientes/count`, {
             headers: { "Authorization": `Bearer ${token}` }
@@ -37,7 +39,7 @@ function Header() {
 
     fetchPendingCount();
 
-    if (socket && usuario?.rol === 'ADMIN') {
+    if (socket && isAdmin) {
       const handleNewRequest = () => setPendingRequests(prev => prev + 1);
       const handleRequestProcessed = () => fetchPendingCount();
 
@@ -49,7 +51,7 @@ function Header() {
         socket.off("vehicle_change_processed", handleRequestProcessed);
       };
     }
-  }, [socket, usuario, token]);
+  }, [socket, usuario, token, isAdmin]);
 
   useEffect(() => {
     const fetchNotificaciones = async () => {
@@ -125,7 +127,7 @@ function Header() {
           </div>
 
           <div className="d-flex align-items-center gap-3">
-            {usuario?.rol === 'ADMIN' && pendingRequests > 0 && (
+            {isAdmin && pendingRequests > 0 && (
               <div
                 className="d-flex align-items-center justify-content-center p-2 rounded-circle"
                 style={{

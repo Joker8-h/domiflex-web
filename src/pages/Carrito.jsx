@@ -44,6 +44,8 @@ export default function Carrito() {
   const [quote, setQuote] = useState(null);
   const [quoting, setQuoting] = useState(false);
   const [couponCode, setCouponCode] = useState("");
+  const [discountRate, setDiscountRate] = useState(0);
+  const [freeShipping, setFreeShipping] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("EFECTIVO"); // "EFECTIVO" | "ONLINE"
 
   useEffect(() => {
@@ -85,8 +87,11 @@ export default function Carrito() {
     [cart]
   );
   const domicilioLocal = Number(negocio?.costoEnvio ?? 3500);
-  const domicilio = quote ? Number(quote.envio) : domicilioLocal;
-  const total = quote ? Number(quote.total) : subtotal + domicilioLocal;
+  const baseDomicilio = quote ? Number(quote.envio) : domicilioLocal;
+  const domicilio = freeShipping ? 0 : baseDomicilio;
+  const baseTotal = quote ? Number(quote.total) - (freeShipping ? baseDomicilio : 0) : subtotal + domicilio;
+  const discountAmount = Math.round(subtotal * discountRate);
+  const total = Math.max(0, baseTotal - discountAmount);
 
   useEffect(() => {
     if (!coords || cart.length === 0 || !negocio?.latitud || !negocio?.longitud) {
@@ -221,9 +226,14 @@ export default function Carrito() {
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
-    if (!couponCode.trim()) return;
-    if (couponCode.toUpperCase() === "RAPITIPICA" || couponCode.toUpperCase() === "PROMO10") {
-      toast.success("¡Cupón aplicado! 10% de descuento en tu primer pedido.");
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    if (code === "RAPITIPICA" || code === "PROMO10") {
+      setDiscountRate(0.1);
+      toast.success("¡Cupón aplicado! 10% de descuento en tus productos.");
+    } else if (code === "ENVIOGRATIS") {
+      setFreeShipping(true);
+      toast.success("¡Cupón aplicado! Envío gratis activado.");
     } else {
       toast.error("Cupón no válido o expirado.");
     }

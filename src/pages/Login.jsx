@@ -448,7 +448,11 @@ function Login() {
                         borderRadius: theme.borderRadius.lg,
                         overflow: 'hidden'
                     }}>
-                        <video ref={videoRef} autoPlay playsInline style={{ width: '100%' }} />
+                        {fotoPreview ? (
+                            <img src={fotoPreview} alt="Captura facial" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                            <video ref={videoRef} autoPlay playsInline style={{ width: '100%' }} />
+                        )}
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
                     </div>
                     {!fotoPreview ?
@@ -471,26 +475,45 @@ function Login() {
                             Capturar
                         </button>
                         :
-                        <button
-                            onClick={enviarLoginFacial}
-                            disabled={verificando}
-                            style={{
-                                marginTop: '1rem',
-                                width: '100%',
-                                padding: '0.75rem',
-                                backgroundColor: verificando ? theme.colors.textMuted : theme.colors.accent,
-                                color: '#000',
-                                border: 'none',
-                                borderRadius: theme.borderRadius.md,
-                                fontWeight: theme.fontWeight.bold,
-                                fontSize: theme.fontSize.md,
-                                cursor: verificando ? 'not-allowed' : 'pointer',
-                                transition: theme.transitions.fast,
-                                opacity: verificando ? 0.7 : 1
-                            }}
-                        >
-                            {verificando ? 'Verificando...' : 'Confirmar e Iniciar'}
-                        </button>
+                        <div className="d-flex gap-2 mt-3">
+                            <button
+                                type="button"
+                                onClick={abrirFacialModal}
+                                disabled={verificando}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.75rem',
+                                    backgroundColor: 'transparent',
+                                    color: theme.colors.textPrimary,
+                                    border: `1px solid ${theme.colors.border}`,
+                                    borderRadius: theme.borderRadius.md,
+                                    fontWeight: theme.fontWeight.bold,
+                                    fontSize: theme.fontSize.md,
+                                    cursor: verificando ? 'not-allowed' : 'pointer'
+                                }}
+                            >
+                                Volver a tomar
+                            </button>
+                            <button
+                                onClick={enviarLoginFacial}
+                                disabled={verificando}
+                                style={{
+                                    flex: 2,
+                                    padding: '0.75rem',
+                                    backgroundColor: verificando ? theme.colors.textMuted : theme.colors.accent,
+                                    color: '#000',
+                                    border: 'none',
+                                    borderRadius: theme.borderRadius.md,
+                                    fontWeight: theme.fontWeight.bold,
+                                    fontSize: theme.fontSize.md,
+                                    cursor: verificando ? 'not-allowed' : 'pointer',
+                                    transition: theme.transitions.fast,
+                                    opacity: verificando ? 0.7 : 1
+                                }}
+                            >
+                                {verificando ? 'Verificando...' : 'Confirmar e Iniciar'}
+                            </button>
+                        </div>
                     }
                 </Modal.Body>
             </Modal>

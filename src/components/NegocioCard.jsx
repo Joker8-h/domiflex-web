@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { Clock, Star, Heart } from "lucide-react";
 
 export default function NegocioCard({ negocio, onClick }) {
-  const [isFav, setIsFav] = useState(false);
+  const negocioId = negocio.id || negocio.idNegocio;
+  const [isFav, setIsFav] = useState(() => {
+    try {
+      const favs = JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]");
+      return favs.includes(negocioId);
+    } catch {
+      return false;
+    }
+  });
 
   const fallbackImages = {
     COMIDA: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
@@ -23,7 +31,18 @@ export default function NegocioCard({ negocio, onClick }) {
 
   const handleFav = (e) => {
     e.stopPropagation();
-    setIsFav(!isFav);
+    const next = !isFav;
+    setIsFav(next);
+    try {
+      const favs = JSON.parse(localStorage.getItem("domiflex_favoritos") || "[]");
+      const updated = next
+        ? [...new Set([...favs, negocioId])]
+        : favs.filter((id) => id !== negocioId);
+      localStorage.setItem("domiflex_favoritos", JSON.stringify(updated));
+      window.dispatchEvent(new Event("domiflex_favoritos_changed"));
+    } catch {
+      // ignore storage error
+    }
   };
 
   return (
